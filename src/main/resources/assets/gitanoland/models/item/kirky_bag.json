@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gitanoland:item/kirky_bag"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "gitanoland:fill": 0.5
+      },
+      "model": "gitanoland:item/kirky_bag_half"
+    },
+    {
+      "predicate": {
+        "gitanoland:fill": 1.0
+      },
+      "model": "gitanoland:item/kirky_bag_full"
+    }
+  ]
+}

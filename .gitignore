@@ -1,0 +1,17 @@
+# Gradle / build
+.gradle/
+build/
+run/
+bin/
+out/
+# Jars de otros mods: no se redistribuyen (ver LIBS.md)
+libs/
+libs-opt/
+repo/
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/

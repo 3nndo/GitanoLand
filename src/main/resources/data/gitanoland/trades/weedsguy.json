@@ -1,0 +1,71 @@
+{
+ "price": {
+  "thc_per_point": 0.01,
+  "cbd_per_point": 0.005,
+  "max_multiplier": 3.0
+ },
+ "stock": [
+  {
+   "type": "strain",
+   "id": "smokeleafindustries:gummy",
+   "count": 30,
+   "base": 40,
+   "variants": 2
+  },
+  {
+   "type": "strain",
+   "id": "smokeleafindustries:gummy_worm",
+   "count": 20,
+   "base": 40,
+   "variants": 2
+  },
+  {
+   "type": "strain",
+   "id": "smokeleafindustries:bud",
+   "count": 1,
+   "base": 60,
+   "variants": 2
+  },
+  {
+   "type": "strain",
+   "id": "smokeleafindustries:weed",
+   "count": 5,
+   "base": 40,
+   "variants": 2
+  },
+  {
+   "type": "strain",
+   "id": "smokeleafindustries:extract",
+   "count": 1,
+   "base": 100,
+   "variants": 2
+  },
+  {
+   "type": "strain",
+   "id": "smokeleafindustries:bag",
+   "count": 1,
+   "base": 75,
+   "variants": 2
+  },
+  {
+   "type": "item",
+   "id": "smokeleafindustries:smokeleaf_guide",
+   "count": 1,
+   "kirkys": 500
+  },
+  {
+   "type": "item",
+   "id": "smokeleafindustries:manual_grinder",
+   "count": 1,
+   "kirkys": 60,
+   "note": "PRECIO PROVISIONAL"
+  },
+  {
+   "type": "item",
+   "id": "smokeleafindustries:grinder",
+   "count": 1,
+   "kirkys": 250,
+   "note": "PRECIO PROVISIONAL (la máquina)"
+  }
+ ]
+}

@@ -1,0 +1,283 @@
+{
+ "levels": [
+  {
+   "level": 1,
+   "trades": [
+    {
+     "type": "tacz",
+     "kirkys": 64,
+     "id": "tacz:taurus943",
+     "count": 1,
+     "extra": [
+      {
+       "item": "minecraft:iron_ingot",
+       "count": 3
+      }
+     ]
+    },
+    {
+     "type": "tacz",
+     "kirkys": 50,
+     "id": "tacz:hk_mk23",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 40,
+     "id": "tacz:laser_compact",
+     "count": 1
+    }
+   ]
+  },
+  {
+   "level": 2,
+   "trades": [
+    {
+     "type": "tacz",
+     "kirkys": 120,
+     "id": "tacz:glock_17",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 140,
+     "id": "tacz:p320",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 120,
+     "id": "tacz:m1911",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 70,
+     "id": "tacz:muzzle_silencer_mirage",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 80,
+     "id": "tacz:stock_heavy_spas_12",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 80,
+     "id": "tacz:stock_carbon_bone_c5",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 90,
+     "id": "tacz:ak12",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 70,
+     "id": "tacz:stock_m4ss",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 80,
+     "id": "tacz:grip_se_5",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 80,
+     "id": "tacz:grip_vertical_military",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 120,
+     "id": "tacz:sight_552",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 120,
+     "id": "tacz:scope_retro_2x",
+     "count": 1
+    }
+   ]
+  },
+  {
+   "level": 3,
+   "trades": [
+    {
+     "type": "tacz",
+     "kirkys": 100,
+     "id": "tacz:muzzle_silencer_vulture",
+     "count": 1,
+     "note": "PRECIO PROVISIONAL"
+    },
+    {
+     "type": "tacz",
+     "kirkys": 400,
+     "id": "tacz:aug",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 410,
+     "id": "tacz:scar_h",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 420,
+     "id": "tacz:scar_l",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 500,
+     "id": "tacz:hk416d",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 270,
+     "id": "tacz:qr_24",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 270,
+     "id": "tacz:ak47",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 280,
+     "id": "tacz:m4a1",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 450,
+     "id": "tacz:spas_12",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 40,
+     "id": "tacz:grip_td",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 445,
+     "id": "tacz:uzi",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 450,
+     "id": "tacz:hk_mp5a5",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 550,
+     "id": "tacz:p90",
+     "count": 1
+    }
+   ]
+  },
+  {
+   "level": 4,
+   "trades": []
+  },
+  {
+   "level": 5,
+   "trades": [
+    {
+     "type": "tacz",
+     "kirkys": 140,
+     "id": "tacz:muzzle_silencer_wraith",
+     "count": 1,
+     "note": "PRECIO PROVISIONAL"
+    },
+    {
+     "type": "tacz",
+     "kirkys": 89,
+     "id": "tacz:laser_peq6",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 70,
+     "id": "tacz:laser_lopro",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 50,
+     "id": "tacz:laser_ngal",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 173,
+     "id": "tacz:sight_infitac_fmp13",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 230,
+     "id": "tacz:sight_uh1",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 230,
+     "id": "tacz:scope_qmk152",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 400,
+     "id": "tacz:scope_xl50",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 320,
+     "id": "tacz:scope_reap_ir",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 500,
+     "id": "tacz:vector45",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 1500,
+     "id": "tacz:m320",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 1750,
+     "id": "tacz:minigun",
+     "count": 1
+    },
+    {
+     "type": "tacz",
+     "kirkys": 1250,
+     "id": "tacz:pkm",
+     "count": 1,
+     "note": "PRECIO PROVISIONAL"
+    }
+   ]
+  }
+ ]
+}

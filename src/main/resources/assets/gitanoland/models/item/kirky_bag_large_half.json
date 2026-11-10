@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gitanoland:item/kirky_bag_large_half"
+  }
+}
