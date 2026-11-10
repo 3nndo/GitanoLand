@@ -77,3 +77,4 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 ## Pendiente: perfiles de gráficos (Endo lo quiere para el final)
 - Crear 3 instancias de Prism con menos gráficos cada una, a partir de la config de la instancia de Endo (shaders, physics mod, etc.). El perfil más bajo directamente NO lleva ese mod (para que el loader ni lo cargue). **No quitar el HUD** en ninguno. Se hace al final.
 - Endo me deja hacer `git push` a la rama `alpha` sin preguntar cada vez (no a `main`, ni tags/releases).
+- Texturas provisionales de zombi aldeano Gunsmith/Ammo Maker (`textures/entity/zombie_villager/profession/`): copia de las del aldeano (Endo las sustituirá).
