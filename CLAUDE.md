@@ -54,3 +54,7 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - Endo prueba él mismo el cliente: al lanzar `runClient`, no cerrarlo.
 - Para probar shaders: `.\gradlew build` y copiar `build\libs\gitanoland-<versión>.jar` a `D:\Files Program\PrismLauncher\Instances\GitanoLand\minecraft\mods\` (esa instancia ya lleva Iris, Sodium y REI). La copia anterior queda como `gitanoland-1.0.0.jar.bak`.
 - Efecto Stoned y F5 (arreglado en `client/StonedBoost`, sin verificar en juego): vanilla cierra el post-proceso al cambiar de cámara y `StonedShaderManager` de Smokeleaf no lo recarga porque guarda `activeTier`. Si falta el efecto con Stoned activo, se pone `activeTier` a null por reflexión y Smokeleaf lo recarga en su siguiente tick.
+
+## Ramas y releases
+- `main`: solo releases buenas. `alpha` (y luego `beta`): desarrollo de cada fase. Tags por versión (`alpha-1.0`...). Releases de GitHub solo para versiones buenas, con el jar de GitanoLand adjunto (nunca los jars de otros mods).
+- 2026-11-10: rama `alpha` creada y subida con el commit de alpha-1.0. Aún no hay tag ni release.
