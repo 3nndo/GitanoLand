@@ -59,3 +59,9 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - `main`: solo releases buenas. `alpha` (y luego `beta`): desarrollo de cada fase. Tags por versión (`alpha-1.0`...). Releases de GitHub solo para versiones buenas, con el jar de GitanoLand adjunto (nunca los jars de otros mods).
 - 2026-11-10: rama `alpha` creada y subida con el commit de alpha-1.0. Aún no hay tag ni release.
 - jeed (Just Enough Effect Descriptions, en la instancia de Endo): muestra efectos en REI/JEI/EMI. GitanoLand añade descripciones `effect.smokeleafindustries.<id>.description` (en_us y es_es) y `data/gitanoland/recipe/jeed_stoned.json` (receta `jeed:effect_provider` con condición `mod_loaded jeed`) que lista Joint, Blunt, Bong, Dab Rig y comestibles como proveedores de Stoned. Sin verificar en juego. Los demás efectos solo tienen descripción: sus proveedores dependen de la cepa.
+
+## Balance (2026-11-10, solo análisis; nada aplicado aún)
+- Catálogo de las 127 armas, munición y accesorios de la instancia de Endo: `docs/catalogo-tacz.md` (packs `tacz_default_gun` + `daffas`). `config/gitanoland/tacz_ids.txt` no existe en la instancia.
+- TTK: en `config/tacz-server.toml` los multiplicadores base están a 1.0; en `config/tacztweaks.json` `bulletProtection` está en `false` (con `true`, Projectile Protection reduce balas; Protection normal no cuenta) y `balancing.playerDamage`/`playerHeadshot`/`armorIgnore` están a 1.0 (palancas para alargar el TTK contra jugadores sin tocar el daño a mobs).
+- Idea de reparto: cada Gunsmith/Ammo Maker con una especialidad aleatoria al aparecer (pistolas, fusiles, escopetas+SMG, francotiradores/DMR, pesadas) y munición por calibre. +3 % a precios de armas. Sin implementar, pendiente de OK de Endo.
+- Aviso: en `mods/` de la instancia hay dos jars de TaCZ (1.1.8-hotfix-r7 y 1.2.0).
