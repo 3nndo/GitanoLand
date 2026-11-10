@@ -68,3 +68,12 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - TTK (no aplicado, en la instancia de Endo): en `config/tacz-server.toml` los multiplicadores base están a 1.0; en `config/tacztweaks.json` `bulletProtection` está en `false` (con `true`, Projectile Protection reduce balas; Protection normal no cuenta) y `balancing.playerDamage`/`playerHeadshot`/`armorIgnore` están a 1.0. Propuesta: `bulletProtection` true y `playerDamage` x0.7.
 - Pendiente: forma de conseguir Kirkys (que los aldeanos compren cosas, recompensas por jefes, logros solo de arranque).
 - Aviso: en `mods/` de la instancia hay dos jars de TaCZ (1.1.8-hotfix-r7 y 1.2.0).
+
+## Misiones de aldeanos (2026-11-10, sin verificar en juego)
+- Los aldeanos normales con misión (armorer, weaponsmith, toolsmith, cleric, librarian, cartographer) piden objetos difíciles; los de trueque fácil (fletcher/palos, farmer, shepherd, butcher, fisherman, leatherworker, mason) no aparecen y NO dan Kirkys. Datos en `data/gitanoland/missions.json` (override en `config/gitanoland/missions.json`).
+- Clic derecho = la barra de acción dice qué piden; Shift + clic derecho con los objetos = los entrega y cobra Kirkys. Cada aldeano paga una sola vez (`gitanoland_mission_done` en sus datos). Máximo por aldeano: `missionMaxKirkys` 20; con Héroe del Pueblo `missionMaxKirkysHero` 45 (la recompensa se escala en proporción). Código: `mission/Missions`, `event/MissionEvents`.
+- `coinmod` era el nombre antiguo del mod (queda `config/coinmod-server.toml` huérfano en la instancia); todo vive en GitanoLand.
+
+## Pendiente: perfiles de gráficos (Endo lo quiere para el final)
+- Crear 3 instancias de Prism con menos gráficos cada una, a partir de la config de la instancia de Endo (shaders, physics mod, etc.). El perfil más bajo directamente NO lleva ese mod (para que el loader ni lo cargue). **No quitar el HUD** en ninguno. Se hace al final.
+- Endo me deja hacer `git push` a la rama `alpha` sin preguntar cada vez (no a `main`, ni tags/releases).

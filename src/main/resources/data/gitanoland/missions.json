@@ -1,0 +1,36 @@
+{
+  "_comment": "Misiones de aldeanos normales (clave = id de profesión; cada aldeano tiene una, fija por su UUID). Máximo de Kirkys por aldeano: config missionMaxKirkys (20), o missionMaxKirkysHero (45) con Héroe del Pueblo. Las profesiones que no salen aquí (fletcher, farmer, shepherd, butcher, fisherman, leatherworker, mason, nitwit...) tienen trueques fáciles y NO dan Kirkys. Para cambiarlo copia este archivo a config/gitanoland/missions.json.",
+  "missions": {
+    "minecraft:armorer": [
+      { "item": "minecraft:diamond", "count": 3, "reward": 14 },
+      { "item": "minecraft:netherite_scrap", "count": 2, "reward": 20 },
+      { "item": "minecraft:lava_bucket", "count": 2, "reward": 9 }
+    ],
+    "minecraft:weaponsmith": [
+      { "item": "minecraft:diamond", "count": 2, "reward": 10 },
+      { "item": "minecraft:blaze_rod", "count": 5, "reward": 12 },
+      { "item": "minecraft:netherite_scrap", "count": 1, "reward": 12 }
+    ],
+    "minecraft:toolsmith": [
+      { "item": "minecraft:diamond", "count": 3, "reward": 14 },
+      { "item": "minecraft:gold_block", "count": 2, "reward": 10 },
+      { "item": "minecraft:netherite_scrap", "count": 2, "reward": 20 }
+    ],
+    "minecraft:cleric": [
+      { "item": "minecraft:ender_pearl", "count": 4, "reward": 14 },
+      { "item": "minecraft:ghast_tear", "count": 2, "reward": 16 },
+      { "item": "minecraft:blaze_rod", "count": 4, "reward": 11 },
+      { "item": "minecraft:nether_star", "count": 1, "reward": 20 }
+    ],
+    "minecraft:librarian": [
+      { "item": "minecraft:enchanted_book", "count": 1, "reward": 12 },
+      { "item": "minecraft:experience_bottle", "count": 8, "reward": 10 },
+      { "item": "minecraft:lapis_block", "count": 4, "reward": 6 }
+    ],
+    "minecraft:cartographer": [
+      { "item": "minecraft:ender_eye", "count": 2, "reward": 10 },
+      { "item": "minecraft:glow_ink_sac", "count": 4, "reward": 8 },
+      { "item": "minecraft:echo_shard", "count": 1, "reward": 14 }
+    ]
+  }
+}

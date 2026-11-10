@@ -63,5 +63,8 @@
   "gitanoland.specialty.gunsmith.pesado": "Heavy",
   "gitanoland.specialty.ammo_maker.pistola": "Pistol rounds",
   "gitanoland.specialty.ammo_maker.fusil": "Rifle rounds",
-  "gitanoland.specialty.ammo_maker.especial": "Special rounds"
+  "gitanoland.specialty.ammo_maker.especial": "Special rounds",
+  "gitanoland.mission.hint": "Mission: %2$s x%1$s -> %3$s Kirkys (Shift + right-click to hand over)",
+  "gitanoland.mission.missing": "You still need %2$s x%1$s.",
+  "gitanoland.mission.done": "Thanks! Here are %s Kirkys."
 }

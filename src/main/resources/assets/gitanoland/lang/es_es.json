@@ -63,5 +63,8 @@
   "gitanoland.specialty.gunsmith.pesado": "Pesadas",
   "gitanoland.specialty.ammo_maker.pistola": "Munición de pistola",
   "gitanoland.specialty.ammo_maker.fusil": "Munición de fusil",
-  "gitanoland.specialty.ammo_maker.especial": "Munición especial"
+  "gitanoland.specialty.ammo_maker.especial": "Munición especial",
+  "gitanoland.mission.hint": "Misión: %2$s x%1$s -> %3$s Kirkys (Shift + clic derecho para entregar)",
+  "gitanoland.mission.missing": "Aún te faltan %2$s x%1$s.",
+  "gitanoland.mission.done": "¡Gracias! Aquí tienes %s Kirkys."
 }

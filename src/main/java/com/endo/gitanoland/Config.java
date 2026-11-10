@@ -68,5 +68,18 @@ public class Config {
             .comment("Multiplicador de TODOS los precios en Kirkys del Ammo Maker (1.0 = sin cambios).")
             .defineInRange("ammoMakerPriceMultiplier", 1.0, 0.1, 20.0);
 
+    public static final ModConfigSpec.BooleanValue MISSIONS_ENABLED = B
+            .comment("true = los aldeanos normales (herrero de armaduras, clérigo, bibliotecario...) tienen una misión que paga Kirkys.")
+            .define("missionsEnabled", true);
+    public static final ModConfigSpec.IntValue MISSION_MAX_KIRKYS = B
+            .comment("Máximo de Kirkys que paga un aldeano en total (una sola misión por aldeano).")
+            .defineInRange("missionMaxKirkys", 20, 1, 64);
+    public static final ModConfigSpec.IntValue MISSION_MAX_KIRKYS_HERO = B
+            .comment("Igual, pero si el jugador tiene Héroe del Pueblo (la recompensa se escala en proporción).")
+            .defineInRange("missionMaxKirkysHero", 45, 1, 64);
+    public static final ModConfigSpec.BooleanValue MISSION_HINTS = B
+            .comment("Muestra en la barra de acción qué pide el aldeano al hacerle clic derecho.")
+            .define("missionHints", true);
+
     public static final ModConfigSpec SPEC = B.build();
 }
