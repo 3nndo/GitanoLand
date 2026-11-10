@@ -19,7 +19,7 @@ Mod de Endo (modid `gitanoland`, paquete `com.endo.gitanoland`). Responde siempr
 - Tratos: `src/main/resources/data/gitanoland/trades/*.json`. Se copian a `config/gitanoland/trades/` la primera vez y **esa copia manda sobre la del jar**: si se cambian los JSON, hay que borrar esa carpeta en la instancia.
 
 ## Compilar y probar
-La lista de jars de `libs/` está en `LIBS.md`. En Windows (PowerShell):
+La lista de jars de `libs/` y de dónde bajarlos está en `LIBS.md`. En Windows (PowerShell):
 ```powershell
 $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi lleno)
 .\gradlew build                          # el jar sale en build\libs\
@@ -33,9 +33,24 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - Antes de dar algo por hecho, compila. No inventes ids: los ids de armas de TaCZ de la instalación de Endo están en `config/gitanoland/tacz_ids.txt` (se genera con `/gitanoland tacz_ids`). Si faltan, vienen de un gun pack.
 - No añadir texturas elaboradas: las texturas son provisionales (Endo las sustituye él).
 - No tocar `libs/`, `libs-opt/` ni `build/`.
+- **Archivos fuera de la carpeta del proyecto: preguntar antes.** No mirar el contenido de otras carpetas del PC salvo que sea imprescindible. Única excepción permitida por Endo: copiar el jar a la instancia de Prism `D:\Files Program\PrismLauncher\Instances\GitanoLand\minecraft\mods\` (solo ahí; el jar viejo se guarda como `.bak`).
 
-## Pendiente / ideas
-- **Efectos de Smokeleaf con shaders de Iris/Sodium**: el efecto usa `gameRenderer.loadEffect` (post-proceso de vanilla) y con un shaderpack no se ve. Opciones: apagar el shaderpack durante el efecto con la API de Iris (`IrisApi.getInstance().getConfig().setShadersEnabledAndApply`) o rehacer el efecto como overlay propio. Falta la carpeta `shaders/post` del jar de Smokeleaf para ver qué dibuja cada tier.
-- Precios provisionales: silenciador Vulture 100, Wraith 140, PKM 1250, grinders 60/250. Gunsmith nivel 4 vacío.
-- Comprobar que los aldeanos reclaman las mesas de TaCZ (`/gitanoland poi` dice el tipo de POI del bloque que miras).
-- Verificar que el plugin de REI y las categorías de Smokeleaf compilan y se ven bien (se escribieron sin poder compilar).
+## Versiones
+- Nomenclatura: `alpha-X.Y`, luego `beta-X.Y`, etc. (`mod_version` en `gradle.properties`; el jar sale como `gitanoland-<versión>.jar`).
+- Historial: pre-alpha 1.2 (anterior) -> **alpha-1.0** (actual, desde 2026-11-10; F5 verificado por Endo, jar desplegado en Prism).
+- Al subir de versión, el jar nuevo cambia de nombre: antes de copiarlo a Prism hay que quitar el jar viejo de `mods/` (mover a `.bak`) para no duplicar el mod.
+
+## Estado / pendiente
+- Hecho: efectos de Smokeleaf con shaders (arreglado), precios (se quedan los actuales, a Endo le gustan) y aldeanos que reclaman las mesas de TaCZ.
+- **Pendiente:** que los plugins de REI/JEI muestren los crafteos de Smokeleaf (categorías de REI se escribieron sin poder compilar; verificar que compilan y se ven bien). `/gitanoland poi` dice el tipo de POI del bloque que miras.
+
+## Notas de sesión (para retomar en otro dispositivo)
+- Para que el progreso viaje entre dispositivos, el estado va en este archivo (se sincroniza con git), no en la memoria local de Claude.
+- `libs/` y `libs-opt/` están en `.gitignore`: en un PC nuevo hay que volver a bajar los jars (enlaces en `LIBS.md`).
+- `build.gradle` carga UN solo visor en `runClient` (REI y JEI juntos no se pueden): por defecto REI (+ Architectury y Cloth Config); con `.\gradlew runClient -Pjei` carga JEI. El otro solo se usa para compilar su plugin.
+- Smokeleaf trae su propio plugin de JEI (joint, blunt, cepas, gummies...) pero no de REI. Por eso `compat/rei/SmokeleafRei` replica lo que falta: categorías de máquinas con una receta por cepa (grinder, extractor, drying con `dry_bud`, gummy machine), Joint y Blunt en rejilla 3x3 (`SmokeGridCategory`), bolsas, y `registerEntries` para que las variantes por cepa salgan en el buscador. Las cepas salen de `StrainRegistry.ids()` y las variantes de `StrainItemFactory.create(item, id)`.
+- Probado 2026-11-10: Sodium+Iris siguen sin arrancar en `runClient` (ClassNotFoundException en un mixin de Sodium, aunque se extraigan los jar-in-jar). No insistir: los shaders se prueban con el jar de `build\libs` en el launcher normal.
+- Prueba en curso: ver en REI (runClient) Joint, Blunt, gummies y buds por cepa. Compila; sin confirmar visualmente todavía. El plugin de JEI de GitanoLand solo cubre las tiendas, no los crafteos de Smokeleaf (eso lo hace el JEI propio de Smokeleaf).
+- Endo prueba él mismo el cliente: al lanzar `runClient`, no cerrarlo.
+- Para probar shaders: `.\gradlew build` y copiar `build\libs\gitanoland-<versión>.jar` a `D:\Files Program\PrismLauncher\Instances\GitanoLand\minecraft\mods\` (esa instancia ya lleva Iris, Sodium y REI). La copia anterior queda como `gitanoland-1.0.0.jar.bak`.
+- Efecto Stoned y F5 (arreglado en `client/StonedBoost`, sin verificar en juego): vanilla cierra el post-proceso al cambiar de cámara y `StonedShaderManager` de Smokeleaf no lo recarga porque guarda `activeTier`. Si falta el efecto con Stoned activo, se pone `activeTier` a null por reflexión y Smokeleaf lo recarga en su siguiente tick.

@@ -8,6 +8,7 @@ import java.util.List;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
+import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
@@ -26,6 +27,11 @@ public class GitanoReiPlugin implements REIClientPlugin {
                 EntryStacks.of(new ItemStack(GitanoLand.GUNSMITH_EGG.get())),
                 EntryStacks.of(new ItemStack(GitanoLand.WEEDSGUY_EGG.get())));
         SmokeleafRei.registerCategories(registry);
+    }
+
+    @Override
+    public void registerEntries(EntryRegistry registry) {
+        SmokeleafRei.registerEntries(registry);
     }
 
     @Override

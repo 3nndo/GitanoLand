@@ -137,6 +137,15 @@ def optionalJars = files(libJars.findAll { f ->
     (n.startsWith("sodium") && !n.contains("extra")) || n.startsWith("iris") || n.startsWith("fabric-")
 })
 
+// En desarrollo se carga UN solo visor de recetas (REI y JEI juntos no se pueden):
+// por defecto REI (+ Architectury y Cloth Config); con -Pjei se carga JEI en su lugar.
+def useJei = project.hasProperty("jei")
+def viewerRuntime = files(libJars.findAll { f ->
+    def n = f.name.toLowerCase()
+    useJei ? n.startsWith("jei-")
+           : (n.startsWith("roughlyenoughitems") || n.startsWith("architectury") || n.startsWith("cloth-config"))
+})
+
 // Visores de recetas (solo para COMPILAR los plugins de ./libs; no se cargan en desarrollo).
 // Si no hay jar de REI o de JEI en ./libs, sus plugins simplemente no se compilan.
 def reiJars = libJars.findAll { f ->
@@ -169,6 +178,7 @@ dependencies {
     compileOnly modJars
     localRuntime modJars
     localRuntime optionalJars
+    localRuntime viewerRuntime
     compileOnly files(reiJars)
     compileOnly files(jeiJars)
 
