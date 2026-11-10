@@ -33,7 +33,7 @@ public class ShopCategory implements DisplayCategory<ShopDisplay> {
 
     @Override
     public int getDisplayHeight() {
-        return 56;
+        return 52;
     }
 
     @Override
@@ -42,16 +42,19 @@ public class ShopCategory implements DisplayCategory<ShopDisplay> {
         w.add(Widgets.createRecipeBase(bounds));
         w.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 6), display.shop())
                 .noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
-        int x0 = bounds.x + 10;
+        int cols0 = Math.min(3, Math.max(1, display.getInputEntries().size()));
+        int x0 = bounds.getCenterX() - (cols0 * 18 + 10 + 24 + 10 + 18) / 2;
+        int arrowX = x0 + cols0 * 18 + 10;
+        int outX = arrowX + 24 + 10;
         int y0 = bounds.y + 22;
         List<EntryIngredient> in = display.getInputEntries();
         for (int i = 0; i < in.size(); i++) {
             w.add(Widgets.createSlot(new Point(x0 + (i % 3) * 18, y0 + (i / 3) * 18)).entries(in.get(i)).markInput());
         }
-        w.add(Widgets.createArrow(new Point(bounds.x + 70, y0 + 1)));
+        w.add(Widgets.createArrow(new Point(arrowX, y0 + 1)));
         List<EntryIngredient> out = display.getOutputEntries();
         if (!out.isEmpty()) {
-            w.add(Widgets.createSlot(new Point(bounds.x + 108, y0)).entries(out.get(0)).markOutput());
+            w.add(Widgets.createSlot(new Point(outX, y0)).entries(out.get(0)).markOutput());
         }
         return w;
     }

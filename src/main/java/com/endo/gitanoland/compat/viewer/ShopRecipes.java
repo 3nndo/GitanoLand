@@ -20,22 +20,31 @@ public final class ShopRecipes {
             try {
                 TradeTables.Table table = TradeTables.load(shop);
                 // nivel 5 = todos los tratos; la semilla fija solo afecta a los "con suerte"
-                add(out, shop, TradeTables.buildLeveled(table, 5, 0L).offers());
+                if (table.specialties().isEmpty()) {
+                    add(out, shop, Component.translatable("gitanoland.shop.title." + shop),
+                            TradeTables.buildLeveled(table, 5, 0L).offers());
+                } else {
+                    for (TradeTables.Specialty spec : table.specialties()) {
+                        Component name = Component.translatable("gitanoland.shop.title." + shop).copy().append(" · ")
+                                .append(Component.translatable("gitanoland.specialty." + shop + "." + spec.id()));
+                        add(out, shop, name, TradeTables.buildLeveledFor(table, spec, 5, 0L).offers());
+                    }
+                }
             } catch (Exception e) {
                 GitanoLand.LOGGER.warn("[GitanoLand] No se pudieron listar los tratos de '{}' para REI/JEI", shop, e);
             }
         }
         try {
             TradeTables.Table table = TradeTables.load("weedsguy");
-            add(out, "weedsguy", TradeTables.buildStock(table, 0L).offers());
+            add(out, "weedsguy", Component.translatable("gitanoland.shop.title.weedsguy"),
+                    TradeTables.buildStock(table, 0L).offers());
         } catch (Exception e) {
             GitanoLand.LOGGER.warn("[GitanoLand] No se pudieron listar los tratos de 'weedsguy' para REI/JEI", e);
         }
         return out;
     }
 
-    private static void add(List<Entry> out, String shop, List<ShopOffer> offers) {
-        Component name = Component.translatable("gitanoland.shop.title." + shop);
+    private static void add(List<Entry> out, String shop, Component name, List<ShopOffer> offers) {
         for (ShopOffer o : offers) {
             if (!o.result().isEmpty()) out.add(new Entry(shop, name, o));
         }

@@ -1,5 +1,6 @@
 package com.endo.gitanoland.shop;
 
+import com.endo.gitanoland.Config;
 import com.endo.gitanoland.GitanoLand;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -47,8 +48,11 @@ public final class TradeTables {
 
     public record Level(int level, List<Def> trades, double luckyChance, int luckyReplace, List<Def> lucky) {}
 
-    public record Table(List<Level> levels, List<Def> stock, double thcPerPoint, double cbdPerPoint,
-                        double maxMultiplier) {}
+    /** Especialidad de un aldeano: qué vende (cada aldeano recibe una según su UUID, con "weight" como rareza). */
+    public record Specialty(String id, int weight, List<Level> levels) {}
+
+    public record Table(List<Level> levels, List<Specialty> specialties, List<Def> stock, double thcPerPoint,
+                        double cbdPerPoint, double maxMultiplier, double priceMultiplier) {}
 
     public record Result(List<ShopOffer> offers, List<String> missing) {}
 
@@ -65,36 +69,69 @@ public final class TradeTables {
                 }
             }
             try (Reader r = Files.newBufferedReader(file)) {
-                return parse(JsonParser.parseReader(r).getAsJsonObject());
+                return withPriceMultiplier(parse(JsonParser.parseReader(r).getAsJsonObject()), priceMultiplier(name));
             }
         } catch (Exception e) {
             GitanoLand.LOGGER.error("[GitanoLand] No se pudo leer {}: {}", file, e.toString());
-            return new Table(List.of(), List.of(), 0.01, 0.005, 3.0);
+            return new Table(List.of(), List.of(), List.of(), 0.01, 0.005, 3.0, 1.0);
         }
     }
 
+    private static Table withPriceMultiplier(Table t, double mult) {
+        return new Table(t.levels(), t.specialties(), t.stock(), t.thcPerPoint(), t.cbdPerPoint(), t.maxMultiplier(), mult);
+    }
+
+    /** Multiplicador de precios de la tienda (config del servidor). Si la config aún no está cargada (cliente), el valor por defecto. */
+    private static double priceMultiplier(String shop) {
+        try {
+            switch (shop) {
+                case "gunsmith": return Config.GUNSMITH_PRICE_MULTIPLIER.get();
+                case "ammo_maker": return Config.AMMO_PRICE_MULTIPLIER.get();
+                default: return 1.0;
+            }
+        } catch (Exception e) {
+            return shop.equals("gunsmith") ? 1.03 : 1.0;
+        }
+    }
+
+    private static int price(int kirkys, double mult) {
+        if (kirkys <= 0 || mult == 1.0) return kirkys;
+        return Math.max(1, (int) Math.round(kirkys * mult));
+    }
+
     private static Table parse(JsonObject root) {
-        List<Level> levels = new ArrayList<>();
-        if (root.has("levels")) {
-            for (JsonElement le : root.getAsJsonArray("levels")) {
-                JsonObject lo = le.getAsJsonObject();
-                List<Def> trades = defs(lo, "trades");
-                double chance = 0;
-                int replace = 1;
-                List<Def> lucky = List.of();
-                if (lo.has("lucky")) {
-                    JsonObject lk = lo.getAsJsonObject("lucky");
-                    chance = dbl(lk, "chance", 0);
-                    replace = (int) dbl(lk, "replace", 1);
-                    lucky = defs(lk, "offers");
-                }
-                levels.add(new Level((int) dbl(lo, "level", 1), trades, chance, replace, lucky));
+        List<Level> levels = root.has("levels") ? parseLevels(root.getAsJsonArray("levels")) : new ArrayList<>();
+        List<Specialty> specialties = new ArrayList<>();
+        if (root.has("specialties")) {
+            for (JsonElement se : root.getAsJsonArray("specialties")) {
+                JsonObject so = se.getAsJsonObject();
+                specialties.add(new Specialty(so.get("id").getAsString(), Math.max(1, (int) dbl(so, "weight", 1)),
+                        so.has("levels") ? parseLevels(so.getAsJsonArray("levels")) : new ArrayList<>()));
             }
         }
         List<Def> stock = defs(root, "stock");
         JsonObject price = root.has("price") ? root.getAsJsonObject("price") : new JsonObject();
-        return new Table(levels, stock, dbl(price, "thc_per_point", 0.01), dbl(price, "cbd_per_point", 0.005),
-                dbl(price, "max_multiplier", 3.0));
+        return new Table(levels, specialties, stock, dbl(price, "thc_per_point", 0.01), dbl(price, "cbd_per_point", 0.005),
+                dbl(price, "max_multiplier", 3.0), 1.0);
+    }
+
+    private static List<Level> parseLevels(JsonArray arr) {
+        List<Level> levels = new ArrayList<>();
+        for (JsonElement le : arr) {
+            JsonObject lo = le.getAsJsonObject();
+            List<Def> trades = defs(lo, "trades");
+            double chance = 0;
+            int replace = 1;
+            List<Def> lucky = List.of();
+            if (lo.has("lucky")) {
+                JsonObject lk = lo.getAsJsonObject("lucky");
+                chance = dbl(lk, "chance", 0);
+                replace = (int) dbl(lk, "replace", 1);
+                lucky = defs(lk, "offers");
+            }
+            levels.add(new Level((int) dbl(lo, "level", 1), trades, chance, replace, lucky));
+        }
+        return levels;
     }
 
     private static List<Def> defs(JsonObject o, String key) {
@@ -129,11 +166,32 @@ public final class TradeTables {
 
     // ------------------------------------------------------------------ construcción
 
+    /** Especialidad de un aldeano (estable por semilla; la rareza sale de "weight"). null si la tienda no tiene. */
+    public static Specialty specialty(Table t, long seed) {
+        if (t.specialties().isEmpty()) return null;
+        int total = 0;
+        for (Specialty s : t.specialties()) total += s.weight();
+        int roll = new Random(seed * 0x9E3779B97F4A7C15L + 0x5DEECE66DL).nextInt(total);
+        for (Specialty s : t.specialties()) {
+            roll -= s.weight();
+            if (roll < 0) return s;
+        }
+        return t.specialties().get(0);
+    }
+
     /** Ofertas de un aldeano: todos los niveles hasta el actual. Lo "lucky" es estable por aldeano (semilla). */
     public static Result buildLeveled(Table t, int villagerLevel, long seed) {
+        return buildLeveledFor(t, specialty(t, seed), villagerLevel, seed);
+    }
+
+    /** Igual, pero con una especialidad concreta (para REI/JEI). Los "levels" sueltos del JSON son comunes a todas. */
+    public static Result buildLeveledFor(Table t, Specialty spec, int villagerLevel, long seed) {
         List<ShopOffer> offers = new ArrayList<>();
         List<String> missing = new ArrayList<>();
-        for (Level lv : t.levels()) {
+        List<Level> all = new ArrayList<>(t.levels());
+        if (spec != null) all.addAll(spec.levels());
+        all.sort(Comparator.comparingInt(Level::level));
+        for (Level lv : all) {
             if (lv.level() > villagerLevel) continue;
             List<Def> defs = new ArrayList<>(lv.trades());
             if (lv.luckyChance() > 0 && !lv.lucky().isEmpty() && !defs.isEmpty()) {
@@ -150,7 +208,8 @@ public final class TradeTables {
                     missing.add(label(d));
                     continue;
                 }
-                addOffer(offers, missing, d, stack, d.kirkys(), d.xp() >= 0 ? d.xp() : 10 * lv.level());
+                addOffer(offers, missing, d, stack, price(d.kirkys(), t.priceMultiplier()),
+                        d.xp() >= 0 ? d.xp() : 10 * lv.level());
             }
         }
         return new Result(offers, missing);
