@@ -1,0 +1,39 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "jeed"
+    }
+  ],
+  "type": "jeed:effect_provider",
+  "effect": "smokeleafindustries:stoned",
+  "providers": [
+    {
+      "item": "smokeleafindustries:joint"
+    },
+    {
+      "item": "smokeleafindustries:blunt"
+    },
+    {
+      "item": "smokeleafindustries:bong"
+    },
+    {
+      "item": "smokeleafindustries:dab_rig"
+    },
+    {
+      "item": "smokeleafindustries:gummy"
+    },
+    {
+      "item": "smokeleafindustries:gummy_worm"
+    },
+    {
+      "item": "smokeleafindustries:weed_cookie"
+    },
+    {
+      "item": "smokeleafindustries:hash_brownie"
+    },
+    {
+      "item": "smokeleafindustries:herb_cake"
+    }
+  ]
+}
