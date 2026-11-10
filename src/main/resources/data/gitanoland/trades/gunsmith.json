@@ -15,12 +15,6 @@
       },
       {
        "type": "tacz",
-       "kirkys": 50,
-       "id": "tacz:hk_mk23",
-       "count": 1
-      },
-      {
-       "type": "tacz",
        "kirkys": 60,
        "id": "tacz:sight_fastfire_pistol",
        "count": 1
@@ -29,30 +23,6 @@
        "type": "tacz",
        "kirkys": 60,
        "id": "tacz:sight_deltapoint_pistol",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 60,
-       "id": "tacz:light_extended_mag_1",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 64,
-       "id": "tacz:taurus943",
-       "count": 1,
-       "extra": [
-        {
-         "item": "minecraft:iron_ingot",
-         "count": 3
-        }
-       ]
-      },
-      {
-       "type": "tacz",
-       "kirkys": 70,
-       "id": "tacz:cz75",
        "count": 1
       },
       {
@@ -81,20 +51,14 @@
       },
       {
        "type": "tacz",
-       "kirkys": 80,
-       "id": "tacz:tec_9",
-       "count": 1
-      },
-      {
-       "type": "tacz",
        "kirkys": 89,
        "id": "tacz:laser_peq6",
        "count": 1
       },
       {
        "type": "tacz",
-       "kirkys": 90,
-       "id": "tacz:light_extended_mag_2",
+       "kirkys": 100,
+       "id": "tacz:hk_mk23",
        "count": 1
       },
       {
@@ -110,38 +74,8 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 110,
-       "id": "tacz:m9a4",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 120,
-       "id": "tacz:glock_17",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 120,
-       "id": "tacz:m1911",
-       "count": 1
-      },
-      {
-       "type": "tacz",
        "kirkys": 120,
        "id": "tacz:sight_rmr_dot",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 130,
-       "id": "tacz:light_extended_mag_3",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 140,
-       "id": "tacz:p320",
        "count": 1
       },
       {
@@ -152,39 +86,117 @@
       },
       {
        "type": "tacz",
-       "kirkys": 150,
-       "id": "daffas_arsenal:p99_nohak",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 160,
-       "id": "tacz:b93r",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 170,
-       "id": "daffas_arsenal:hk45",
+       "kirkys": 145,
+       "id": "tacz:taurus943",
        "count": 1
       },
       {
        "type": "tacz",
        "kirkys": 190,
-       "id": "daffas_arsenal:p99_hak",
-       "count": 1
+       "id": "tacz:glock_17",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 10
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 240,
+       "kirkys": 195,
        "id": "daffas_arsenal:welrod",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 10
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 260,
+       "kirkys": 205,
+       "id": "daffas_arsenal:p99_hak",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 10
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 205,
+       "id": "tacz:lonetrail",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 10
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 220,
+       "id": "daffas_arsenal:p99_nohak",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 11
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 225,
+       "id": "daffas_arsenal:hk45",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 11
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 225,
+       "id": "daffas_arsenal:hk45_sup",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 11
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 270,
+       "id": "tacz:m9a4",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 14
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 270,
        "id": "tacz:rhino357",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 14
+        }
+       ]
       }
      ]
     },
@@ -193,37 +205,109 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 320,
-       "id": "tacz:timeless50",
-       "count": 1
+       "kirkys": 305,
+       "id": "tacz:m1911",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 15
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 330,
-       "id": "tacz:deagle",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 480,
-       "id": "tacz:lonetrail",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 520,
-       "id": "tacz:taurus500",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 600,
        "id": "tacz:deagle_golden",
        "count": 1,
        "extra": [
         {
-         "item": "minecraft:gold_ingot",
-         "count": 4
+         "item": "minecraft:iron_ingot",
+         "count": 16
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 350,
+       "id": "tacz:cz75",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 18
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 350,
+       "id": "tacz:p320",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 18
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 360,
+       "id": "tacz:timeless50",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 18
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 380,
+       "id": "tacz:deagle",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 19
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 445,
+       "id": "tacz:taurus500",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 450,
+       "id": "tacz:b93r",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 450,
+       "id": "tacz:tec_9",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
         }
        ]
       }
@@ -253,7 +337,13 @@
       {
        "type": "tacz",
        "kirkys": 70,
-       "id": "tacz:stock_ak12",
+       "id": "tacz:stock_moe",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 80,
+       "id": "tacz:grip_magpul_afg",
        "count": 1
       },
       {
@@ -265,7 +355,7 @@
       {
        "type": "tacz",
        "kirkys": 80,
-       "id": "tacz:stock_hk_slim_line",
+       "id": "tacz:stock_tactical_ar",
        "count": 1
       },
       {
@@ -277,13 +367,13 @@
       {
        "type": "tacz",
        "kirkys": 90,
-       "id": "tacz:muzzle_compensator_trident",
+       "id": "tacz:muzzle_brake_pioneer",
        "count": 1
       },
       {
        "type": "tacz",
        "kirkys": 90,
-       "id": "tacz:extended_mag_1",
+       "id": "tacz:muzzle_compensator_trident",
        "count": 1
       }
      ]
@@ -293,8 +383,20 @@
      "trades": [
       {
        "type": "tacz",
+       "kirkys": 110,
+       "id": "tacz:sight_t1",
+       "count": 1
+      },
+      {
+       "type": "tacz",
        "kirkys": 120,
        "id": "tacz:sight_552",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 120,
+       "id": "tacz:muzzle_silencer_socom_rc1",
        "count": 1
       },
       {
@@ -311,14 +413,8 @@
       },
       {
        "type": "tacz",
-       "kirkys": 170,
-       "id": "tacz:sight_srs_02",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 240,
-       "id": "tacz:m16a1",
+       "kirkys": 140,
+       "id": "tacz:sight_exp3",
        "count": 1
       },
       {
@@ -330,31 +426,7 @@
       {
        "type": "tacz",
        "kirkys": 260,
-       "id": "tacz:type_81",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 270,
-       "id": "tacz:ak47",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 270,
-       "id": "tacz:qr_24",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 280,
-       "id": "tacz:m4a1",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 280,
-       "id": "tacz:ak74m",
+       "id": "tacz:scope_acog_ta31",
        "count": 1
       },
       {
@@ -366,19 +438,7 @@
       {
        "type": "tacz",
        "kirkys": 300,
-       "id": "tacz:m16a4",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 300,
-       "id": "tacz:qbz_95",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 300,
-       "id": "daffas_arsenal:ak47",
+       "id": "tacz:scope_lpvo_1_6",
        "count": 1
       }
      ]
@@ -388,111 +448,476 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 320,
-       "id": "tacz:g36k",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 340,
-       "id": "tacz:ak12",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 340,
-       "id": "tacz:mk18",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 340,
-       "id": "daffas_arsenal:g36c",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 340,
-       "id": "daffas_arsenal:aksopmod",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 360,
-       "id": "tacz:urgi",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 360,
-       "id": "tacz:qbz_191",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 360,
-       "id": "daffas_arsenal:ss1_v2",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 380,
-       "id": "daffas_arsenal:ss1_v5",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 400,
-       "id": "tacz:aug",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 400,
-       "id": "daffas_arsenal:pegomc",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 410,
-       "id": "tacz:scar_h",
-       "count": 1
+       "kirkys": 350,
+       "id": "tacz:m16a4",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 18
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 420,
        "id": "tacz:scar_l",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 420,
-       "id": "daffas_arsenal:sg552",
-       "count": 1
+       "kirkys": 440,
+       "id": "tacz:ak12",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 420,
-       "id": "daffas_arsenal:nova",
-       "count": 1
+       "kirkys": 445,
+       "id": "tacz:ak74m",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 445,
+       "id": "tacz:hk_g3",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 450,
-       "id": "tacz:mcx_spear_lt",
-       "count": 1
+       "id": "tacz:fn_fal",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 460,
+       "id": "daffas_arsenal:pegontmc",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 460,
+       "id": "tacz:aug",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 460,
+       "id": "tacz:g36k",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 465,
+       "id": "daffas_arsenal:scarlalala",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 465,
+       "id": "daffas_arsenal:ss1_v2",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 470,
+       "id": "tacz:ak47",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 470,
+       "id": "tacz:m4a1",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 475,
+       "id": "tacz:qr_24",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 480,
-       "id": "daffas_arsenal:hk416",
-       "count": 1
+       "id": "daffas_arsenal:ak47",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 500,
+       "kirkys": 480,
+       "id": "tacz:qbz_95",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 485,
+       "id": "tacz:m16a1",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 485,
+       "id": "tacz:mk18",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 485,
+       "id": "tacz:type_81",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 485,
+       "id": "tacz:urgi",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 495,
+       "id": "daffas_arsenal:ss1_v5",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 515,
+       "id": "daffas_arsenal:aksopmod",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 525,
+       "id": "daffas_arsenal:g36c",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 525,
+       "id": "daffas_arsenal:g36c_commando",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 535,
        "id": "tacz:hk416d",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 535,
+       "id": "tacz:qbz_191",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 545,
+       "id": "daffas_arsenal:sg550",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 550,
+       "id": "daffas_arsenal:hk416",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 550,
+       "id": "daffas_arsenal:nova",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 570,
+       "id": "daffas_arsenal:pegomc",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 585,
+       "id": "daffas_arsenal:hk416_sup",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 585,
+       "id": "daffas_arsenal:ss1_v5g",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 585,
+       "id": "tacz:hcar",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "trades": [
+      {
+       "type": "tacz",
+       "kirkys": 630,
+       "id": "tacz:mcx_spear_lt",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 645,
+       "id": "daffas_arsenal:auxur",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 655,
+       "id": "daffas_arsenal:sg552",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 700,
+       "id": "daffas_arsenal:hk417",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 700,
+       "id": "daffas_arsenal:scarhahaha",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 700,
+       "id": "tacz:scar_h",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
       }
      ]
     }
@@ -505,6 +930,12 @@
     {
      "level": 1,
      "trades": [
+      {
+       "type": "tacz",
+       "kirkys": 60,
+       "id": "tacz:laser_nightstick",
+       "count": 1
+      },
       {
        "type": "tacz",
        "kirkys": 70,
@@ -521,12 +952,6 @@
        "type": "tacz",
        "kirkys": 80,
        "id": "tacz:stock_tactical_spas_12",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 80,
-       "id": "tacz:stock_sba3",
        "count": 1
       },
       {
@@ -550,12 +975,6 @@
       {
        "type": "tacz",
        "kirkys": 90,
-       "id": "tacz:shotgun_extended_mag_1",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 90,
        "id": "tacz:laser_peq15",
        "count": 1
       }
@@ -566,38 +985,20 @@
      "trades": [
       {
        "type": "tacz",
+       "kirkys": 110,
+       "id": "tacz:muzzle_silencer_sg",
+       "count": 1
+      },
+      {
+       "type": "tacz",
        "kirkys": 120,
        "id": "tacz:sight_p90",
        "count": 1
       },
       {
        "type": "tacz",
-       "kirkys": 120,
-       "id": "tacz:sight_rmr_dot",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 120,
-       "id": "tacz:sight_deltapoint_rifle",
-       "count": 1
-      },
-      {
-       "type": "tacz",
        "kirkys": 130,
-       "id": "tacz:shotgun_extended_mag_2",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 180,
-       "id": "tacz:shotgun_extended_mag_3",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 300,
-       "id": "tacz:db_short",
+       "id": "tacz:sight_sro_dot",
        "count": 1
       }
      ]
@@ -607,129 +1008,255 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 340,
-       "id": "tacz:db_long",
-       "count": 1
+       "kirkys": 320,
+       "id": "tacz:db_short",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 16
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 380,
+       "kirkys": 355,
+       "id": "daffas_arsenal:spasi15",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 18
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 365,
        "id": "tacz:m870",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 18
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 380,
-       "id": "daffas_arsenal:mp5k",
-       "count": 1
+       "kirkys": 390,
+       "id": "tacz:db_long",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 20
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 380,
-       "id": "daffas_arsenal:apacoba9",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 400,
-       "id": "tacz:m1897",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 400,
-       "id": "daffas_arsenal:harpa9",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 420,
-       "id": "tacz:ump45",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 420,
-       "id": "daffas_arsenal:nova9",
-       "count": 1
+       "kirkys": 415,
+       "id": "tacz:m1014",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 430,
-       "id": "daffas_arsenal:makten_single",
-       "count": 1
+       "id": "tacz:aa12",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 440,
-       "id": "tacz:m1014",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 445,
-       "id": "tacz:uzi",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 450,
+       "kirkys": 470,
        "id": "tacz:spas_12",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 450,
+       "kirkys": 495,
+       "id": "tacz:uzi",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 520,
+       "id": "daffas_arsenal:apacoba9",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 520,
+       "id": "daffas_arsenal:apacoba9_sup",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 530,
        "id": "tacz:hk_mp5a5",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 450,
-       "id": "daffas_arsenal:pego",
-       "count": 1
+       "kirkys": 535,
+       "id": "daffas_arsenal:mp5k",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 460,
+       "kirkys": 535,
        "id": "daffas_arsenal:pegont",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 480,
-       "id": "daffas_arsenal:spasi15",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 480,
-       "id": "tacz:hk_mp7a1",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 500,
-       "id": "tacz:vector45",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 550,
-       "id": "tacz:p90",
-       "count": 1
+       "id": "daffas_arsenal:pego",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 555,
+       "id": "daffas_arsenal:nova9",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 560,
-       "id": "daffas_arsenal:sgputer",
-       "count": 1
+       "id": "daffas_arsenal:makten_single",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 600,
-       "id": "daffas_arsenal:sgputer2",
-       "count": 1
+       "kirkys": 560,
+       "id": "daffas_arsenal:makten_single_taktis",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 565,
+       "id": "daffas_arsenal:harpa9",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 575,
+       "id": "tacz:m1897",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 585,
+       "id": "daffas_arsenal:sgputer",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 595,
+       "id": "tacz:ump45",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 1
+        }
+       ]
       }
      ]
     },
@@ -738,27 +1265,63 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 650,
-       "id": "tacz:aa12",
-       "count": 1
+       "kirkys": 635,
+       "id": "tacz:p90",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 670,
+       "id": "tacz:hk_mp7a1",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 685,
+       "id": "daffas_arsenal:uji",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 700,
+       "id": "tacz:vector45",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
       }
      ]
     }
    ]
   },
   {
-   "id": "francotirador",
+   "id": "cazador",
    "weight": 2,
    "levels": [
     {
      "level": 1,
      "trades": [
-      {
-       "type": "tacz",
-       "kirkys": 80,
-       "id": "tacz:grip_vertical_ranger",
-       "count": 1
-      },
       {
        "type": "tacz",
        "kirkys": 90,
@@ -778,14 +1341,20 @@
      "trades": [
       {
        "type": "tacz",
+       "kirkys": 130,
+       "id": "tacz:muzzle_silencer_ursus",
+       "count": 1
+      },
+      {
+       "type": "tacz",
        "kirkys": 140,
        "id": "tacz:muzzle_silencer_knight_qd",
        "count": 1
       },
       {
        "type": "tacz",
-       "kirkys": 150,
-       "id": "tacz:sniper_extended_mag_2",
+       "kirkys": 200,
+       "id": "tacz:scope_1866_4x",
        "count": 1
       },
       {
@@ -798,6 +1367,12 @@
        "type": "tacz",
        "kirkys": 220,
        "id": "tacz:scope_98k",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 230,
+       "id": "tacz:scope_qmk152",
        "count": 1
       },
       {
@@ -825,14 +1400,250 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 320,
-       "id": "tacz:scope_reap_ir",
+       "kirkys": 340,
+       "id": "tacz:scope_mk4ert",
        "count": 1
       },
       {
        "type": "tacz",
        "kirkys": 380,
+       "id": "tacz:scope_vudu",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 400,
+       "id": "tacz:scope_xl50",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "level": 4,
+     "trades": [
+      {
+       "type": "tacz",
+       "kirkys": 615,
        "id": "tacz:m1866",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 660,
+       "id": "tacz:springfield1873",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 755,
+       "id": "tacz:svd",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 840,
+       "id": "tacz:mk14",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 855,
+       "id": "tacz:scar_mk20",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 860,
+       "id": "daffas_arsenal:wawan2000",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 860,
+       "id": "daffas_arsenal:wawan20002",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 875,
+       "id": "tacz:sks_tactical",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 895,
+       "id": "tacz:m700",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 920,
+       "id": "daffas_arsenal:nova6",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 985,
+       "id": "tacz:spr15hb",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 1100,
+       "id": "daffas_arsenal:sl8",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 1100,
+       "id": "daffas_arsenal:ssg69",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 1100,
+       "id": "tacz:kar98",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "francotirador_pesado",
+   "weight": 1,
+   "levels": [
+    {
+     "level": 1,
+     "trades": [
+      {
+       "type": "tacz",
+       "kirkys": 89,
+       "id": "tacz:laser_peq6",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 90,
+       "id": "tacz:stock_psg",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "trades": [
+      {
+       "type": "tacz",
+       "kirkys": 110,
+       "id": "tacz:muzzle_brake_trex",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 140,
+       "id": "tacz:muzzle_silencer_wraith",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 300,
+       "id": "tacz:scope_standard_8x",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "level": 3,
+     "trades": [
+      {
+       "type": "tacz",
+       "kirkys": 360,
+       "id": "tacz:scope_xm157",
        "count": 1
       },
       {
@@ -850,31 +1661,7 @@
       {
        "type": "tacz",
        "kirkys": 450,
-       "id": "tacz:sks_tactical",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 450,
        "id": "tacz:scope_amg_10",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 520,
-       "id": "tacz:fn_fal",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 540,
-       "id": "tacz:hk_g3",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 600,
-       "id": "daffas_arsenal:sl8",
        "count": 1
       }
      ]
@@ -884,63 +1671,43 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 650,
-       "id": "tacz:spr15hb",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 650,
-       "id": "tacz:kar98",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 700,
-       "id": "tacz:mk14",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 700,
-       "id": "daffas_arsenal:hk417",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 700,
-       "id": "tacz:springfield1873",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 780,
-       "id": "tacz:scar_mk20",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 800,
-       "id": "tacz:m700",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 850,
-       "id": "tacz:svd",
-       "count": 1
-      },
-      {
-       "type": "tacz",
        "kirkys": 1000,
-       "id": "daffas_arsenal:nova6",
-       "count": 1
+       "id": "tacz:mrad",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 1000,
-       "id": "daffas_arsenal:ssg69",
-       "count": 1
+       "kirkys": 1010,
+       "id": "tacz:ai_awp",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 1025,
+       "id": "tacz:m107",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        },
+        {
+         "item": "minecraft:netherite_ingot",
+         "count": 1
+        }
+       ]
       }
      ]
     },
@@ -949,46 +1716,42 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 1150,
-       "id": "tacz:ai_awp",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1250,
-       "id": "tacz:mrad",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1300,
-       "id": "daffas_arsenal:wawan2000",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1600,
-       "id": "tacz:m107",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1800,
-       "id": "tacz:m95",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 2000,
+       "kirkys": 1110,
        "id": "tacz:hm50b",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        },
+        {
+         "item": "minecraft:netherite_ingot",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 1150,
+       "id": "tacz:m95",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        },
+        {
+         "item": "minecraft:netherite_ingot",
+         "count": 1
+        }
+       ]
       }
      ]
     }
    ]
   },
   {
-   "id": "pesado",
+   "id": "ametrallador",
    "weight": 1,
    "levels": [
     {
@@ -1004,6 +1767,12 @@
        "type": "tacz",
        "kirkys": 80,
        "id": "tacz:grip_vertical_talon",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 89,
+       "id": "tacz:laser_peq6",
        "count": 1
       },
       {
@@ -1032,43 +1801,7 @@
       {
        "type": "tacz",
        "kirkys": 120,
-       "id": "daffas_arsenal:mgup1",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 120,
        "id": "tacz:muzzle_silencer_socom_rc1",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 130,
-       "id": "tacz:light_extended_mag_3",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 160,
-       "id": "daffas_arsenal:mgup2",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 173,
-       "id": "tacz:sight_infitac_fmp13",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 180,
-       "id": "tacz:extended_mag_3",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 210,
-       "id": "tacz:sniper_extended_mag_3",
        "count": 1
       },
       {
@@ -1090,21 +1823,15 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 900,
+       "kirkys": 1095,
        "id": "daffas_arsenal:g36",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1000,
-       "id": "daffas_arsenal:pego762",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1100,
-       "id": "tacz:rpk",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
       }
      ]
     },
@@ -1114,62 +1841,74 @@
       {
        "type": "tacz",
        "kirkys": 1150,
-       "id": "daffas_arsenal:rpd",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1200,
-       "id": "daffas_arsenal:m79",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1250,
-       "id": "tacz:pkm",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1400,
        "id": "tacz:m249",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
       },
       {
        "type": "tacz",
-       "kirkys": 1500,
-       "id": "daffas_arsenal:migraine3",
-       "count": 1
+       "kirkys": 1165,
+       "id": "daffas_arsenal:rpd",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 1185,
+       "id": "tacz:rpk",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "tacz",
+       "kirkys": 1310,
+       "id": "daffas_arsenal:pego762",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 1500,
        "id": "tacz:fn_evolys",
-       "count": 1
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
       },
       {
        "type": "tacz",
        "kirkys": 1500,
-       "id": "tacz:m320",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1700,
-       "id": "daffas_arsenal:mg338",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 1750,
-       "id": "tacz:minigun",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 2000,
-       "id": "tacz:rpg7",
-       "count": 1
+       "id": "tacz:pkm",
+       "count": 1,
+       "extra": [
+        {
+         "item": "minecraft:diamond",
+         "count": 3
+        }
+       ]
       }
      ]
     }

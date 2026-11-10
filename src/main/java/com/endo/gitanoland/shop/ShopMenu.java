@@ -10,6 +10,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,18 +26,18 @@ import net.minecraft.world.item.ItemStack;
  * Incluye los slots del inventario del jugador para que los cambios (Kirkys cobrados, items entregados) se sincronicen.
  */
 public class ShopMenu extends AbstractContainerMenu {
-    public static final int INV_X = 8;
-    public static final int INV_Y = 140;
-    public static final int HOTBAR_Y = 198;
+    public static final int INV_X = 19;
+    public static final int INV_Y = 160;
+    public static final int HOTBAR_Y = 218;
 
     private final String theme;
     private final int markup;
     private final List<ShopOffer> offers;
-    private final Villager villager; // solo en el servidor y solo para aldeanos
+    private final AbstractVillager villager; // solo en el servidor (aldeano o WeedsGuy)
     private final Player owner;
 
     /** Servidor y cliente. */
-    private ShopMenu(int id, Inventory inv, String theme, int markup, List<ShopOffer> offers, Villager villager) {
+    private ShopMenu(int id, Inventory inv, String theme, int markup, List<ShopOffer> offers, AbstractVillager villager) {
         super(ModMenus.SHOP.get(), id);
         this.theme = theme;
         this.markup = markup;
@@ -57,7 +58,7 @@ public class ShopMenu extends AbstractContainerMenu {
 
     /** Abre la tienda a un jugador (servidor). */
     public static void open(ServerPlayer player, Component title, String theme, int markup,
-                            List<ShopOffer> offers, Villager villager) {
+                            List<ShopOffer> offers, AbstractVillager villager) {
         player.openMenu(new net.minecraft.world.SimpleMenuProvider(
                 (id, inv, p) -> new ShopMenu(id, inv, theme, markup, offers, villager), title),
                 buf -> {
@@ -65,6 +66,14 @@ public class ShopMenu extends AbstractContainerMenu {
                     buf.writeVarInt(markup);
                     write(buf, offers);
                 });
+        // Como en el comercio de vanilla: el aldeano se queda quieto y te mira mientras tienes su tienda abierta.
+        if (villager != null) villager.setTradingPlayer(player);
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        if (villager != null && villager.getTradingPlayer() == player) villager.setTradingPlayer(null);
     }
 
     /** Tema visual de la pantalla: "ammo_maker", "gunsmith" o "weedsguy". */
@@ -146,17 +155,17 @@ public class ShopMenu extends AbstractContainerMenu {
     }
 
     private void addXp(int xp) {
-        if (villager == null || xp <= 0) return;
-        villager.setVillagerXp(villager.getVillagerXp() + xp);
-        VillagerData d = villager.getVillagerData();
+        if (!(villager instanceof Villager v) || xp <= 0) return;
+        v.setVillagerXp(v.getVillagerXp() + xp);
+        VillagerData d = v.getVillagerData();
         boolean up = false;
         while (VillagerData.canLevelUp(d.getLevel())
-                && villager.getVillagerXp() >= VillagerData.getMaxXpPerLevel(d.getLevel())) {
+                && v.getVillagerXp() >= VillagerData.getMaxXpPerLevel(d.getLevel())) {
             d = d.setLevel(d.getLevel() + 1);
             up = true;
         }
         if (up) {
-            villager.setVillagerData(d);
+            v.setVillagerData(d);
             owner.sendSystemMessage(colored(Component.translatable("gitanoland.shop.levelup",
                     Component.translatable("gitanoland.level." + d.getLevel())), ChatFormatting.GOLD));
         }
@@ -175,7 +184,7 @@ public class ShopMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return villager == null || villager.isAlive();
+        return villager == null || (villager.isAlive() && player.distanceToSqr(villager) < 64.0);
     }
 
     /** Para la pantalla: ¿es este item un Kirky? (evita depender de GitanoLand desde aquí). */
