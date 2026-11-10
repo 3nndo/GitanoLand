@@ -55,5 +55,13 @@
   "effect.smokeleafindustries.rainbow.description": "Un efecto sobre todo visual que da sabor al colocón de una cepa.",
   "effect.smokeleafindustries.breathing.description": "Un efecto sobre todo ambiental que da sabor al colocón de una cepa.",
   "effect.smokeleafindustries.bubbled.description": "Un efecto sobre todo visual que da sabor al colocón de una cepa.",
-  "effect.smokeleafindustries.melted.description": "Un efecto sobre todo visual que da sabor al colocón de una cepa."
+  "effect.smokeleafindustries.melted.description": "Un efecto sobre todo visual que da sabor al colocón de una cepa.",
+  "gitanoland.specialty.gunsmith.pistolero": "Pistolas",
+  "gitanoland.specialty.gunsmith.fusilero": "Fusiles",
+  "gitanoland.specialty.gunsmith.escopetero": "Subfusiles y escopetas",
+  "gitanoland.specialty.gunsmith.francotirador": "Francotiradores",
+  "gitanoland.specialty.gunsmith.pesado": "Pesadas",
+  "gitanoland.specialty.ammo_maker.pistola": "Munición de pistola",
+  "gitanoland.specialty.ammo_maker.fusil": "Munición de fusil",
+  "gitanoland.specialty.ammo_maker.especial": "Munición especial"
 }

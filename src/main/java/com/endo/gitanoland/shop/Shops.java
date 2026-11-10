@@ -40,8 +40,13 @@ public final class Shops {
                 Config.UNLOCK_ALL_TIERS.get() ? 5 : villager.getVillagerData().getLevel(), seed);
         warn(player, profession, res);
         int markup = Markup.get(villager);
-        ShopMenu.open(player, Component.translatable("gitanoland.shop.title." + profession), profession, markup,
-                Markup.apply(res.offers(), markup), villager);
+        TradeTables.Specialty spec = TradeTables.specialty(table, seed);
+        Component title = Component.translatable("gitanoland.shop.title." + profession);
+        if (spec != null) {
+            title = title.copy().append(" · ")
+                    .append(Component.translatable("gitanoland.specialty." + profession + "." + spec.id()));
+        }
+        ShopMenu.open(player, title, profession, markup, Markup.apply(res.offers(), markup), villager);
     }
 
     private static void doOpenWeedsGuy(ServerPlayer player, WeedsGuyEntity trader) {

@@ -55,5 +55,13 @@
   "effect.smokeleafindustries.rainbow.description": "A mostly visual effect that flavors a strain's high.",
   "effect.smokeleafindustries.breathing.description": "A mostly atmospheric effect that flavors a strain's high.",
   "effect.smokeleafindustries.bubbled.description": "A mostly visual effect that flavors a strain's high.",
-  "effect.smokeleafindustries.melted.description": "A mostly visual effect that flavors a strain's high."
+  "effect.smokeleafindustries.melted.description": "A mostly visual effect that flavors a strain's high.",
+  "gitanoland.specialty.gunsmith.pistolero": "Pistols",
+  "gitanoland.specialty.gunsmith.fusilero": "Rifles",
+  "gitanoland.specialty.gunsmith.escopetero": "SMGs & Shotguns",
+  "gitanoland.specialty.gunsmith.francotirador": "Marksman",
+  "gitanoland.specialty.gunsmith.pesado": "Heavy",
+  "gitanoland.specialty.ammo_maker.pistola": "Pistol rounds",
+  "gitanoland.specialty.ammo_maker.fusil": "Rifle rounds",
+  "gitanoland.specialty.ammo_maker.especial": "Special rounds"
 }

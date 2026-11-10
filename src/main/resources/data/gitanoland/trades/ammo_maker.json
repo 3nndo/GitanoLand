@@ -1,273 +1,398 @@
 {
- "levels": [
+ "specialties": [
   {
-   "level": 1,
-   "trades": [
+   "id": "pistola",
+   "weight": 3,
+   "levels": [
     {
-     "type": "ammo",
-     "kirkys": 10,
-     "id": "tacz:45acp",
-     "count": 45,
-     "extra": [
+     "level": 1,
+     "trades": [
       {
-       "item": "minecraft:gunpowder",
+       "type": "ammo",
+       "kirkys": 10,
+       "id": "tacz:22wmr",
+       "count": 50
+      },
+      {
+       "type": "ammo",
+       "kirkys": 10,
+       "id": "tacz:45acp",
+       "count": 45,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 12,
+       "id": "tacz:9mm",
+       "count": 28,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 12,
+       "id": "daffas_arsenal:acp45",
+       "count": 45,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 1
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 20,
+       "id": "tacz:762x25",
+       "count": 50,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 2
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 20,
+       "id": "tacz:46x30",
+       "count": 40,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 30,
+       "id": "tacz:57x28",
+       "count": 40,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 70,
+       "id": "tacz:357mag",
+       "count": 49,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 100,
+       "id": "tacz:50ae",
+       "count": 36
+      }
+     ]
+    },
+    {
+     "level": 2,
+     "trades": [
+      {
+       "type": "ammo",
+       "kirkys": 110,
+       "id": "daffas_arsenal:500",
+       "count": 20
+      },
+      {
+       "type": "ammo",
+       "kirkys": 120,
+       "id": "tacz:500mag",
+       "count": 32
+      },
+      {
+       "type": "tacz",
+       "kirkys": 120,
+       "id": "tacz:ammo_mod_hp",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 140,
+       "id": "tacz:ammo_mod_fmj",
        "count": 1
       }
      ]
-    },
+    }
+   ]
+  },
+  {
+   "id": "fusil",
+   "weight": 3,
+   "levels": [
     {
-     "type": "ammo",
-     "kirkys": 10,
-     "id": "tacz:22wmr",
-     "count": 50
-    },
-    {
-     "type": "ammo",
-     "kirkys": 12,
-     "id": "tacz:9mm",
-     "count": 28,
-     "extra": [
+     "level": 1,
+     "trades": [
       {
-       "item": "minecraft:gunpowder",
-       "count": 2
+       "type": "ammo",
+       "kirkys": 40,
+       "id": "tacz:300blk",
+       "count": 50,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 5
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 45,
+       "id": "tacz:545x39",
+       "count": 50,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 5
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 48,
+       "id": "tacz:762x39",
+       "count": 50,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 5
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 64,
+       "id": "tacz:556x45",
+       "count": 50,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 6
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 64,
+       "id": "tacz:58x42",
+       "count": 45,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 8
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 72,
+       "id": "tacz:308",
+       "count": 50,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 5
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 85,
+       "id": "tacz:68x51fury",
+       "count": 40,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 6
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 90,
+       "id": "daffas_arsenal:daffas_flechette",
+       "count": 40
       }
      ]
     },
     {
-     "type": "ammo",
-     "kirkys": 20,
-     "id": "tacz:46x30",
-     "count": 40,
-     "extra": [
+     "level": 2,
+     "trades": [
       {
-       "item": "minecraft:gunpowder",
-       "count": 3
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 30,
-     "id": "tacz:57x28",
-     "count": 40,
-     "extra": [
+       "type": "tacz",
+       "kirkys": 120,
+       "id": "tacz:ammo_mod_hp",
+       "count": 1
+      },
       {
-       "item": "minecraft:gunpowder",
-       "count": 3
+       "type": "tacz",
+       "kirkys": 140,
+       "id": "tacz:ammo_mod_fmj",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 150,
+       "id": "tacz:ammo_mod_overpressure_recoil",
+       "count": 1
+      },
+      {
+       "type": "tacz",
+       "kirkys": 160,
+       "id": "tacz:ammo_mod_i",
+       "count": 1
       }
      ]
     }
-   ],
-   "lucky": {
-    "chance": 0.3,
-    "replace": 1,
-    "offers": [
-     {
-      "type": "tacz",
-      "kirkys": 64,
-      "id": "tacz:taurus943",
-      "count": 1,
-      "extra": [
-       {
-        "item": "minecraft:iron_ingot",
-        "count": 3
-       }
-      ]
-     },
-     {
-      "type": "tacz",
-      "kirkys": 50,
-      "id": "tacz:hk_mk23",
-      "count": 1
-     }
-    ]
-   }
+   ]
   },
   {
-   "level": 2,
-   "trades": [
+   "id": "especial",
+   "weight": 2,
+   "levels": [
     {
-     "type": "ammo",
-     "kirkys": 45,
-     "id": "tacz:12g",
-     "count": 30,
-     "extra": [
+     "level": 1,
+     "trades": [
       {
-       "item": "minecraft:gunpowder",
-       "count": 3
+       "type": "ammo",
+       "kirkys": 45,
+       "id": "tacz:12g",
+       "count": 30,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 3
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 73,
+       "id": "tacz:762x54",
+       "count": 60,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 5
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 78,
+       "id": "tacz:792x57",
+       "count": 60,
+       "extra": [
+        {
+         "item": "minecraft:gunpowder",
+         "count": 6
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 80,
+       "id": "tacz:30_06",
+       "count": 36
+      },
+      {
+       "type": "ammo",
+       "kirkys": 80,
+       "id": "tacz:45_70",
+       "count": 40,
+       "extra": [
+        {
+         "item": "minecraft:lapis_lazuli",
+         "count": 5
+        }
+       ]
+      },
+      {
+       "type": "ammo",
+       "kirkys": 89,
+       "id": "tacz:338",
+       "count": 20,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 7
+        }
+       ]
       }
      ]
     },
     {
-     "type": "ammo",
-     "kirkys": 40,
-     "id": "tacz:300blk",
-     "count": 50,
-     "extra": [
+     "level": 2,
+     "trades": [
       {
-       "item": "minecraft:gunpowder",
-       "count": 5
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 45,
-     "id": "tacz:545x39",
-     "count": 50,
-     "extra": [
-      {
-       "item": "minecraft:copper_ingot",
-       "count": 5
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 64,
-     "id": "tacz:556x45",
-     "count": 50,
-     "extra": [
-      {
-       "item": "minecraft:copper_ingot",
+       "type": "ammo",
+       "kirkys": 130,
+       "id": "tacz:40mm",
        "count": 6
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 64,
-     "id": "tacz:58x42",
-     "count": 45,
-     "extra": [
+      },
       {
-       "item": "minecraft:copper_ingot",
-       "count": 8
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "level": 3,
-   "trades": [
-    {
-     "type": "ammo",
-     "kirkys": 72,
-     "id": "tacz:308",
-     "count": 50,
-     "extra": [
-      {
-       "item": "minecraft:gunpowder",
-       "count": 5
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 78,
-     "id": "tacz:792x57",
-     "count": 60,
-     "extra": [
-      {
-       "item": "minecraft:gunpowder",
+       "type": "ammo",
+       "kirkys": 130,
+       "id": "daffas_arsenal:daffas_40mm",
        "count": 6
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 73,
-     "id": "tacz:762x54",
-     "count": 60,
-     "extra": [
+      },
       {
-       "item": "minecraft:gunpowder",
-       "count": 5
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "level": 4,
-   "trades": [
-    {
-     "type": "ammo",
-     "kirkys": 80,
-     "id": "tacz:30_06",
-     "count": 36
-    },
-    {
-     "type": "ammo",
-     "kirkys": 89,
-     "id": "tacz:338",
-     "count": 20,
-     "extra": [
+       "type": "tacz",
+       "kirkys": 130,
+       "id": "tacz:ammo_mod_slug",
+       "count": 1
+      },
       {
-       "item": "minecraft:copper_ingot",
-       "count": 7
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 70,
-     "id": "tacz:357mag",
-     "count": 49,
-     "extra": [
+       "type": "ammo",
+       "kirkys": 150,
+       "id": "tacz:50bmg",
+       "count": 10,
+       "extra": [
+        {
+         "item": "minecraft:copper_ingot",
+         "count": 8
+        }
+       ]
+      },
       {
-       "item": "minecraft:copper_ingot",
-       "count": 3
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 80,
-     "id": "tacz:45_70",
-     "count": 40,
-     "extra": [
+       "type": "tacz",
+       "kirkys": 200,
+       "id": "tacz:ammo_mod_he",
+       "count": 1
+      },
       {
-       "item": "minecraft:lapis_lazuli",
-       "count": 5
+       "type": "ammo",
+       "kirkys": 220,
+       "id": "tacz:rpg_rocket",
+       "count": 2,
+       "extra": [
+        {
+         "item": "minecraft:iron_ingot",
+         "count": 6
+        }
+       ]
       }
      ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 120,
-     "id": "tacz:500mag",
-     "count": 32
-    },
-    {
-     "type": "ammo",
-     "kirkys": 100,
-     "id": "tacz:50ae",
-     "count": 36
-    }
-   ]
-  },
-  {
-   "level": 5,
-   "trades": [
-    {
-     "type": "tacz",
-     "kirkys": 240,
-     "id": "tacz:deagle_golden",
-     "count": 1,
-     "extra": [
-      {
-       "item": "minecraft:gold_ingot",
-       "count": 4
-      }
-     ]
-    },
-    {
-     "type": "ammo",
-     "kirkys": 130,
-     "id": "tacz:40mm",
-     "count": 6
     }
    ]
   }

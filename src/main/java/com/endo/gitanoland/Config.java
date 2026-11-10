@@ -60,5 +60,13 @@ public class Config {
             .comment("Puntos de recargo (%) que se le pasan al aldeano por cada día del juego (0 = nunca se le pasa).")
             .defineInRange("hitMarkupDecayPerDay", 10, 0, 1000);
 
+    public static final ModConfigSpec.DoubleValue GUNSMITH_PRICE_MULTIPLIER = B
+            .comment("Multiplicador de TODOS los precios en Kirkys del Gunsmith (1.03 = +3 %).",
+                    "Se redondea al Kirky más cercano, así que los precios muy bajos pueden no cambiar.")
+            .defineInRange("gunsmithPriceMultiplier", 1.03, 0.1, 20.0);
+    public static final ModConfigSpec.DoubleValue AMMO_PRICE_MULTIPLIER = B
+            .comment("Multiplicador de TODOS los precios en Kirkys del Ammo Maker (1.0 = sin cambios).")
+            .defineInRange("ammoMakerPriceMultiplier", 1.0, 0.1, 20.0);
+
     public static final ModConfigSpec SPEC = B.build();
 }
