@@ -66,5 +66,14 @@
   "gitanoland.specialty.gunsmith.francotirador_pesado": "Francotiradores pesados",
   "gitanoland.specialty.gunsmith.ametrallador": "Ametralladoras",
   "gitanoland.shop.balance_label": "Tus Kirkys",
-  "gitanoland.shop.offer": "%1$s: ¿te interesa %2$s por %3$s Kirkys? (clic derecho)"
+  "key.gitanoland.rewards": "Abrir recompensas",
+  "key.categories.gitanoland": "GitanoLand",
+  "gitanoland.rewards.title": "Recompensas",
+  "gitanoland.rewards.claim": "Reclamar",
+  "gitanoland.rewards.achievements": "Logros",
+  "gitanoland.rewards.pending": "+%s Kirkys",
+  "gitanoland.rewards.daily": "Recompensa diaria",
+  "gitanoland.rewards.tomorrow": "Vuelve mañana",
+  "gitanoland.rewards.earned": "Logro: +%1$s Kirkys por reclamar (%2$s)",
+  "gitanoland.rewards.claimed": "Has reclamado %s Kirkys"
 }

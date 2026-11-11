@@ -66,5 +66,14 @@
   "gitanoland.specialty.gunsmith.francotirador_pesado": "Heavy snipers",
   "gitanoland.specialty.gunsmith.ametrallador": "Machine guns",
   "gitanoland.shop.balance_label": "Your Kirkys",
-  "gitanoland.shop.offer": "%1$s: interested in %2$s for %3$s Kirkys? (right-click)"
+  "key.gitanoland.rewards": "Open rewards",
+  "key.categories.gitanoland": "GitanoLand",
+  "gitanoland.rewards.title": "Rewards",
+  "gitanoland.rewards.claim": "Claim",
+  "gitanoland.rewards.achievements": "Achievements",
+  "gitanoland.rewards.pending": "+%s Kirkys",
+  "gitanoland.rewards.daily": "Daily reward",
+  "gitanoland.rewards.tomorrow": "Come back tomorrow",
+  "gitanoland.rewards.earned": "Achievement: +%1$s Kirkys to claim (%2$s)",
+  "gitanoland.rewards.claimed": "You claimed %s Kirkys"
 }
