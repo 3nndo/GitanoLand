@@ -3,27 +3,30 @@ package com.endo.gitanoland.event;
 import com.endo.gitanoland.Config;
 import com.endo.gitanoland.GitanoLand;
 import com.endo.gitanoland.mission.Missions;
-import com.endo.gitanoland.shop.Wallet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.TradeWithVillagerEvent;
 
 /**
- * Misiones de los aldeanos normales. Clic derecho: la barra de acción dice qué piden. Shift + clic derecho con los
- * objetos en el inventario: los entregas y cobras Kirkys. Cada aldeano paga una sola vez.
+ * Tratos especiales de los aldeanos normales dentro de su GUI de comercio (sin tocar la GUI): al hacerle clic
+ * derecho se añaden los tratos de su nivel (un trato especial + un trueque normal con Kirkys). Cada especial se
+ * puede hacer 2 veces (3 si le caes muy bien) y no se reabastece. El de nivel 4 lo sube a Maestro, da descuento y
+ * reabastece sus tratos normales.
  */
 @EventBusSubscriber(modid = GitanoLand.MODID)
 public class MissionEvents {
@@ -34,33 +37,43 @@ public class MissionEvents {
         if (!(event.getTarget() instanceof Villager villager) || !(event.getEntity() instanceof ServerPlayer player)) return;
         ResourceLocation prof = BuiltInRegistries.VILLAGER_PROFESSION.getKey(villager.getVillagerData().getProfession());
         if (GitanoLand.MODID.equals(prof.getNamespace())) return; // los de GitanoLand son tiendas
+        if (!Missions.hasMissions(villager)) return;
+        Missions.ensure(villager, player);
+    }
 
-        Missions.Mission m = Missions.of(villager);
-        if (m == null || Missions.isDone(villager)) return;
+    @SubscribeEvent
+    public static void onTrade(TradeWithVillagerEvent event) {
+        if (!(event.getAbstractVillager() instanceof Villager v) || !(event.getEntity() instanceof ServerPlayer player)) return;
+        int level = Missions.levelOf(v, event.getMerchantOffer());
+        if (level < 0) return;
+        Missions.Special s = Missions.of(v, level);
+        if (s == null) return;
+        int used = Missions.addUse(v, level);
 
-        int reward = Missions.reward(m, player);
-        Component item = new ItemStack(m.item()).getHoverName();
-
-        if (player.isShiftKeyDown()) {
-            event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.sidedSuccess(false));
-            if (Wallet.countItem(player, m.item()) < m.count()) {
-                player.displayClientMessage(Component.translatable("gitanoland.mission.missing", m.count(), item), true);
-                villager.playSound(SoundEvents.VILLAGER_NO, 1f, 1f);
-                return;
-            }
-            Wallet.takeItem(player, m.item(), m.count());
-            ItemStack coins = new ItemStack(GitanoLand.KIRKY.get(), reward);
+        // Más de un stack de Kirkys no cabe en la casilla de resultado: el resto va directo al inventario.
+        int extra = Missions.reward(v, s) - Missions.STACK;
+        if (extra > 0) {
+            ItemStack coins = new ItemStack(GitanoLand.KIRKY.get(), extra);
             if (!player.getInventory().add(coins)) player.drop(coins, false);
-            Missions.markDone(villager);
-            player.displayClientMessage(Component.translatable("gitanoland.mission.done", reward), true);
-            player.level().playSound(null, villager.blockPosition(), SoundEvents.VILLAGER_YES, SoundSource.NEUTRAL, 1f, 1f);
-            if (player.level() instanceof ServerLevel sl) {
-                sl.sendParticles(ParticleTypes.HAPPY_VILLAGER, villager.getX(), villager.getEyeY(), villager.getZ(), 8, 0.4, 0.3, 0.4, 0.0);
+        }
+        // Repeticiones: la 2.ª y la 3.ª solo dan la mitad de lo que falta para el siguiente nivel.
+        if (used >= 2 && level != 4) {
+            int cur = v.getVillagerData().getLevel();
+            if (VillagerData.canLevelUp(cur)) {
+                int gap = Math.max(0, VillagerData.getMaxXpPerLevel(cur) - v.getVillagerXp());
+                v.setVillagerXp(v.getVillagerXp() + gap / 2);
             }
-        } else if (Config.MISSION_HINTS.get()) {
-            // Sin cancelar: el comercio normal se abre igual; solo avisamos en la barra de acción.
-            player.displayClientMessage(Component.translatable("gitanoland.mission.hint", m.count(), item, reward), true);
+        }
+        // Nivel 4 (el penúltimo): descuento y todos los tratos normales reabastecidos (los especiales no).
+        if (level == 4 && used == 1) {
+            v.getGossips().add(player.getUUID(), GossipType.MAJOR_POSITIVE, 20);
+            for (MerchantOffer o : v.getOffers()) {
+                if (Missions.levelOf(v, o) < 0) o.resetUses();
+            }
+        }
+        player.level().playSound(null, v.blockPosition(), SoundEvents.VILLAGER_CELEBRATE, SoundSource.NEUTRAL, 1f, 1f);
+        if (player.level() instanceof ServerLevel sl) {
+            sl.sendParticles(ParticleTypes.HAPPY_VILLAGER, v.getX(), v.getEyeY(), v.getZ(), 8, 0.4, 0.3, 0.4, 0.0);
         }
     }
 }

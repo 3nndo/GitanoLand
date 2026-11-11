@@ -1,36 +1,47 @@
 {
-  "_comment": "Misiones de aldeanos normales (clave = id de profesión; cada aldeano tiene una, fija por su UUID). Máximo de Kirkys por aldeano: config missionMaxKirkys (20), o missionMaxKirkysHero (45) con Héroe del Pueblo. Las profesiones que no salen aquí (fletcher, farmer, shepherd, butcher, fisherman, leatherworker, mason, nitwit...) tienen trueques fáciles y NO dan Kirkys. Para cambiarlo copia este archivo a config/gitanoland/missions.json.",
+  "_comment": "Tratos especiales de los aldeanos normales (clave = id de profesión). 'levels' = un trato por nivel (1 Novato ... 5 Maestro): el aldeano pide 'count' de 'item' y paga 'reward' Kirkys (si hay 'rewardMax', un valor fijo por aldeano entre reward y rewardMax). El del nivel 4 sube al aldeano a Maestro, da descuento y reabastece sus tratos. Cada trato especial solo se puede hacer 2 veces (3 si le caes muy bien) y no se reabastece. Si la recompensa pasa de 64 Kirkys, el resto va directo al inventario. Las profesiones que no salen aquí (fletcher, farmer, shepherd, butcher, fisherman, leatherworker, mason, nitwit...) NO dan Kirkys. Para cambiarlo copia este archivo a config/gitanoland/missions.json.",
   "missions": {
-    "minecraft:armorer": [
-      { "item": "minecraft:diamond", "count": 3, "reward": 14 },
-      { "item": "minecraft:netherite_scrap", "count": 2, "reward": 20 },
-      { "item": "minecraft:lava_bucket", "count": 2, "reward": 9 }
-    ],
-    "minecraft:weaponsmith": [
-      { "item": "minecraft:diamond", "count": 2, "reward": 10 },
-      { "item": "minecraft:blaze_rod", "count": 5, "reward": 12 },
-      { "item": "minecraft:netherite_scrap", "count": 1, "reward": 12 }
-    ],
-    "minecraft:toolsmith": [
-      { "item": "minecraft:diamond", "count": 3, "reward": 14 },
-      { "item": "minecraft:gold_block", "count": 2, "reward": 10 },
-      { "item": "minecraft:netherite_scrap", "count": 2, "reward": 20 }
-    ],
-    "minecraft:cleric": [
-      { "item": "minecraft:ender_pearl", "count": 4, "reward": 14 },
-      { "item": "minecraft:ghast_tear", "count": 2, "reward": 16 },
-      { "item": "minecraft:blaze_rod", "count": 4, "reward": 11 },
-      { "item": "minecraft:nether_star", "count": 1, "reward": 20 }
-    ],
-    "minecraft:librarian": [
-      { "item": "minecraft:enchanted_book", "count": 1, "reward": 12 },
-      { "item": "minecraft:experience_bottle", "count": 8, "reward": 10 },
-      { "item": "minecraft:lapis_block", "count": 4, "reward": 6 }
-    ],
-    "minecraft:cartographer": [
-      { "item": "minecraft:ender_eye", "count": 2, "reward": 10 },
-      { "item": "minecraft:glow_ink_sac", "count": 4, "reward": 8 },
-      { "item": "minecraft:echo_shard", "count": 1, "reward": 14 }
-    ]
+    "minecraft:armorer": { "levels": [
+      { "item": "minecraft:iron_block", "count": 3, "reward": 6 },
+      { "item": "minecraft:diamond", "count": 2, "reward": 12 },
+      { "item": "minecraft:lava_bucket", "count": 2, "reward": 18 },
+      { "item": "minecraft:netherite_scrap", "count": 2, "reward": 35 },
+      { "item": "minecraft:netherite_ingot", "count": 1, "reward": 50, "rewardMax": 100 }
+    ] },
+    "minecraft:weaponsmith": { "levels": [
+      { "item": "minecraft:gold_ingot", "count": 8, "reward": 6 },
+      { "item": "minecraft:diamond", "count": 2, "reward": 12 },
+      { "item": "minecraft:blaze_rod", "count": 5, "reward": 18 },
+      { "item": "minecraft:netherite_scrap", "count": 2, "reward": 35 },
+      { "item": "minecraft:nether_star", "count": 1, "reward": 60, "rewardMax": 100 }
+    ] },
+    "minecraft:toolsmith": { "levels": [
+      { "item": "minecraft:gold_block", "count": 1, "reward": 6 },
+      { "item": "minecraft:diamond", "count": 3, "reward": 12 },
+      { "item": "minecraft:emerald_block", "count": 3, "reward": 18 },
+      { "item": "minecraft:netherite_scrap", "count": 2, "reward": 35 },
+      { "item": "minecraft:netherite_ingot", "count": 1, "reward": 50, "rewardMax": 100 }
+    ] },
+    "minecraft:cleric": { "levels": [
+      { "item": "minecraft:ender_pearl", "count": 2, "reward": 6 },
+      { "item": "minecraft:ghast_tear", "count": 1, "reward": 12 },
+      { "item": "minecraft:blaze_rod", "count": 4, "reward": 18 },
+      { "item": "minecraft:ghast_tear", "count": 3, "reward": 35 },
+      { "item": "minecraft:nether_star", "count": 1, "reward": 70, "rewardMax": 100 }
+    ] },
+    "minecraft:librarian": { "levels": [
+      { "item": "minecraft:lapis_block", "count": 2, "reward": 6 },
+      { "item": "minecraft:experience_bottle", "count": 8, "reward": 12 },
+      { "item": "minecraft:enchanted_book", "count": 1, "reward": 18 },
+      { "item": "minecraft:diamond", "count": 5, "reward": 35 },
+      { "item": "minecraft:enchanted_golden_apple", "count": 1, "reward": 50, "rewardMax": 100 }
+    ] },
+    "minecraft:cartographer": { "levels": [
+      { "item": "minecraft:glow_ink_sac", "count": 3, "reward": 6 },
+      { "item": "minecraft:ender_eye", "count": 2, "reward": 12 },
+      { "item": "minecraft:echo_shard", "count": 1, "reward": 18 },
+      { "item": "minecraft:heart_of_the_sea", "count": 1, "reward": 35 },
+      { "item": "minecraft:echo_shard", "count": 3, "reward": 50, "rewardMax": 100 }
+    ] }
   }
 }
