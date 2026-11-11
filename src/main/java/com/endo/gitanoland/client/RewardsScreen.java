@@ -36,6 +36,12 @@ public class RewardsScreen extends AbstractContainerScreen<RewardsMenu> {
     protected void containerTick() {
         claimPending.active = menu.pending() > 0;
         claimDaily.active = menu.dailyAvailable();
+        claimDaily.visible = !menu.dailyHidden();
+        int h = menu.dailyHidden() ? 60 : 112;
+        if (h != imageHeight) {
+            imageHeight = h;
+            topPos = (height - imageHeight) / 2;
+        }
     }
 
     @Override
@@ -44,7 +50,7 @@ public class RewardsScreen extends AbstractContainerScreen<RewardsMenu> {
         g.fill(x - 2, y - 2, x + imageWidth + 2, y + imageHeight + 2, GREEN);
         g.fill(x, y, x + imageWidth, y + imageHeight, PANEL);
         g.fill(x + 6, y + 24, x + imageWidth - 6, y + 52, ROW);
-        g.fill(x + 6, y + 68, x + imageWidth - 6, y + 96, ROW);
+        if (!menu.dailyHidden()) g.fill(x + 6, y + 68, x + imageWidth - 6, y + 96, ROW);
     }
 
     @Override
@@ -52,6 +58,7 @@ public class RewardsScreen extends AbstractContainerScreen<RewardsMenu> {
         g.drawString(font, title, 8, 8, 0x6FD87A, false);
         g.drawString(font, Component.translatable("gitanoland.rewards.achievements"), 10, 29, 0xE0E0E0, false);
         g.drawString(font, Component.translatable("gitanoland.rewards.pending", menu.pending()), 10, 40, 0x9A9A9A, false);
+        if (menu.dailyHidden()) return;
         g.drawString(font, Component.translatable("gitanoland.rewards.daily"), 10, 73, 0xE0E0E0, false);
         Component d = menu.dailyAvailable()
                 ? Component.translatable("gitanoland.rewards.pending", menu.dailyAmount())

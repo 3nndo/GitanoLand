@@ -27,6 +27,11 @@ public final class Rewards {
         p.getPersistentData().putInt(PENDING, pending(p) + n);
     }
 
+    /** La recompensa diaria solo existe en servidores dedicados (ni un solo jugador ni LAN). */
+    public static boolean dailySupported(Player p) {
+        return p.getServer() != null && p.getServer().isDedicatedServer();
+    }
+
     public static boolean dailyAvailable(Player p) {
         CompoundTag t = p.getPersistentData();
         return !t.contains(DAILY) || t.getLong(DAILY) < LocalDate.now().toEpochDay();
@@ -40,7 +45,7 @@ public final class Rewards {
     }
 
     public static void claimDaily(ServerPlayer p) {
-        if (!dailyAvailable(p)) return;
+        if (!dailySupported(p) || !dailyAvailable(p)) return;
         p.getPersistentData().putLong(DAILY, LocalDate.now().toEpochDay());
         give(p, Config.DAILY_KIRKYS.get());
     }

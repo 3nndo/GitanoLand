@@ -32,6 +32,8 @@ public class RewardsMenu extends AbstractContainerMenu {
     /** Kirkys pendientes de logros. */
     public int pending() { return data.get(0); }
     public boolean dailyAvailable() { return data.get(1) == 1; }
+    /** true si este mundo no ofrece recompensa diaria (un jugador o LAN): no se dibuja. */
+    public boolean dailyHidden() { return data.get(1) == -1; }
     public int dailyAmount() { return data.get(2); }
 
     public static void open(ServerPlayer player) {
@@ -39,7 +41,7 @@ public class RewardsMenu extends AbstractContainerMenu {
             @Override public int get(int i) {
                 return switch (i) {
                     case 0 -> Rewards.pending(player);
-                    case 1 -> Rewards.dailyAvailable(player) ? 1 : 0;
+                    case 1 -> !Rewards.dailySupported(player) ? -1 : Rewards.dailyAvailable(player) ? 1 : 0;
                     default -> Config.DAILY_KIRKYS.get();
                 };
             }
