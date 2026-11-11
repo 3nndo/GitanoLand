@@ -74,6 +74,8 @@
   "gitanoland.rewards.pending": "+%s Kirkys",
   "gitanoland.rewards.daily": "Daily reward",
   "gitanoland.rewards.tomorrow": "Come back tomorrow",
-  "gitanoland.rewards.earned": "Achievement: +%1$s Kirkys to claim (%2$s)",
-  "gitanoland.rewards.claimed": "You claimed %s Kirkys"
+  "gitanoland.rewards.claimed": "You claimed %s Kirkys",
+  "gitanoland.toast.title": "Achievement reward",
+  "gitanoland.toast.title_challenge": "Challenge reward",
+  "gitanoland.toast.line": "+%1$s Kirkys to claim (%2$s)"
 }

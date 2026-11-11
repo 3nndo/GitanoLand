@@ -5,7 +5,8 @@ import com.endo.gitanoland.GitanoLand;
 import com.endo.gitanoland.reward.Rewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.network.chat.Component;
+import com.endo.gitanoland.net.RewardToastPayload;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -24,8 +25,7 @@ public class RewardEvents {
         int n = d.getType() == AdvancementType.CHALLENGE ? Config.ACHIEVEMENT_CHALLENGE_KIRKYS.get() : Config.ACHIEVEMENT_KIRKYS.get();
         if (n <= 0) return;
         Rewards.addPending(p, n);
-        p.displayClientMessage(Component.translatable("gitanoland.rewards.earned", n,
-                Component.keybind("key.gitanoland.rewards")), true);
+        PacketDistributor.sendToPlayer(p, new RewardToastPayload(n, d.getType() == AdvancementType.CHALLENGE));
     }
 
     /** Al morir, lo pendiente y la recompensa diaria pasan al jugador nuevo. */

@@ -74,6 +74,8 @@
   "gitanoland.rewards.pending": "+%s Kirkys",
   "gitanoland.rewards.daily": "Recompensa diaria",
   "gitanoland.rewards.tomorrow": "Vuelve mañana",
-  "gitanoland.rewards.earned": "Logro: +%1$s Kirkys por reclamar (%2$s)",
-  "gitanoland.rewards.claimed": "Has reclamado %s Kirkys"
+  "gitanoland.rewards.claimed": "Has reclamado %s Kirkys",
+  "gitanoland.toast.title": "Recompensa de logro",
+  "gitanoland.toast.title_challenge": "Recompensa de desafío",
+  "gitanoland.toast.line": "+%1$s Kirkys por reclamar (%2$s)"
 }

@@ -74,10 +74,10 @@ public class Config {
 
     public static final ModConfigSpec.IntValue ACHIEVEMENT_KIRKYS = B
             .comment("Kirkys por cada logro normal (se reclaman en el menú de recompensas).")
-            .defineInRange("achievementKirkys", 5, 0, 1000);
+            .defineInRange("achievementKirkys", 3, 0, 1000);
     public static final ModConfigSpec.IntValue ACHIEVEMENT_CHALLENGE_KIRKYS = B
             .comment("Kirkys por cada logro de desafío (los morados).")
-            .defineInRange("achievementChallengeKirkys", 10, 0, 1000);
+            .defineInRange("achievementChallengeKirkys", 7, 0, 1000);
     public static final ModConfigSpec.IntValue DAILY_KIRKYS = B
             .comment("Kirkys de la recompensa diaria (una vez por día real).")
             .defineInRange("dailyKirkys", 5, 0, 1000);
