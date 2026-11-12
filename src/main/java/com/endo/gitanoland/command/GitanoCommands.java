@@ -29,9 +29,12 @@ public class GitanoCommands {
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("gitanoland")
-                .requires(s -> s.hasPermission(2))
-                .then(Commands.literal("tacz_ids").executes(ctx -> dumpIds(ctx.getSource())))
-                .then(Commands.literal("poi").executes(ctx -> checkPoi(ctx.getSource()))));
+                .then(Commands.literal("rewards").executes(ctx -> {
+                    com.endo.gitanoland.reward.RewardsMenu.open(ctx.getSource().getPlayerOrException());
+                    return 1;
+                }))
+                .then(Commands.literal("tacz_ids").requires(s -> s.hasPermission(2)).executes(ctx -> dumpIds(ctx.getSource())))
+                .then(Commands.literal("poi").requires(s -> s.hasPermission(2)).executes(ctx -> checkPoi(ctx.getSource()))));
     }
 
     /** Vuelca todos los ids de TaCZ (armas, munición, accesorios) a config/gitanoland/tacz_ids.txt. */

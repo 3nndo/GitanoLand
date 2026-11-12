@@ -35,6 +35,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.SHOP.get(), ShopScreen::new);
+        event.register(ModMenus.REWARDS.get(), com.endo.gitanoland.client.RewardsScreen::new);
     }
 
     /** Propiedad "fill" de las bolsas: elige el modelo vacío / medio / lleno. */

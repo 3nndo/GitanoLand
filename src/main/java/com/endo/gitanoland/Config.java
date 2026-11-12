@@ -69,17 +69,18 @@ public class Config {
             .defineInRange("ammoMakerPriceMultiplier", 1.0, 0.1, 20.0);
 
     public static final ModConfigSpec.BooleanValue MISSIONS_ENABLED = B
-            .comment("true = los aldeanos normales (herrero de armaduras, clérigo, bibliotecario...) tienen una misión que paga Kirkys.")
+            .comment("true = los aldeanos normales (herrero de armaduras, clérigo, bibliotecario...) tienen un trato especial por nivel que paga Kirkys (y algún trueque normal con Kirkys).")
             .define("missionsEnabled", true);
-    public static final ModConfigSpec.IntValue MISSION_MAX_KIRKYS = B
-            .comment("Máximo de Kirkys que paga un aldeano en total (una sola misión por aldeano).")
-            .defineInRange("missionMaxKirkys", 20, 1, 64);
-    public static final ModConfigSpec.IntValue MISSION_MAX_KIRKYS_HERO = B
-            .comment("Igual, pero si el jugador tiene Héroe del Pueblo (la recompensa se escala en proporción).")
-            .defineInRange("missionMaxKirkysHero", 45, 1, 64);
-    public static final ModConfigSpec.BooleanValue MISSION_HINTS = B
-            .comment("Muestra en la barra de acción qué pide el aldeano al hacerle clic derecho.")
-            .define("missionHints", true);
+
+    public static final ModConfigSpec.IntValue ACHIEVEMENT_KIRKYS = B
+            .comment("Kirkys por cada logro normal (se reclaman en el menú de recompensas).")
+            .defineInRange("achievementKirkys", 3, 0, 1000);
+    public static final ModConfigSpec.IntValue ACHIEVEMENT_CHALLENGE_KIRKYS = B
+            .comment("Kirkys por cada logro de desafío (los morados).")
+            .defineInRange("achievementChallengeKirkys", 7, 0, 1000);
+    public static final ModConfigSpec.IntValue DAILY_KIRKYS = B
+            .comment("Kirkys de la recompensa diaria (una vez por día real).")
+            .defineInRange("dailyKirkys", 5, 0, 1000);
 
     public static final ModConfigSpec SPEC = B.build();
 }

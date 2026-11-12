@@ -119,18 +119,6 @@
        "kirkys": 120,
        "id": "tacz:500mag",
        "count": 32
-      },
-      {
-       "type": "tacz",
-       "kirkys": 120,
-       "id": "tacz:ammo_mod_hp",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 140,
-       "id": "tacz:ammo_mod_fmj",
-       "count": 1
       }
      ]
     }
@@ -234,35 +222,6 @@
        "count": 40
       }
      ]
-    },
-    {
-     "level": 2,
-     "trades": [
-      {
-       "type": "tacz",
-       "kirkys": 120,
-       "id": "tacz:ammo_mod_hp",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 140,
-       "id": "tacz:ammo_mod_fmj",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 150,
-       "id": "tacz:ammo_mod_overpressure_recoil",
-       "count": 1
-      },
-      {
-       "type": "tacz",
-       "kirkys": 160,
-       "id": "tacz:ammo_mod_i",
-       "count": 1
-      }
-     ]
     }
    ]
   },
@@ -346,24 +305,6 @@
      "trades": [
       {
        "type": "ammo",
-       "kirkys": 130,
-       "id": "tacz:40mm",
-       "count": 6
-      },
-      {
-       "type": "ammo",
-       "kirkys": 130,
-       "id": "daffas_arsenal:daffas_40mm",
-       "count": 6
-      },
-      {
-       "type": "tacz",
-       "kirkys": 130,
-       "id": "tacz:ammo_mod_slug",
-       "count": 1
-      },
-      {
-       "type": "ammo",
        "kirkys": 150,
        "id": "tacz:50bmg",
        "count": 10,
@@ -371,24 +312,6 @@
         {
          "item": "minecraft:copper_ingot",
          "count": 8
-        }
-       ]
-      },
-      {
-       "type": "tacz",
-       "kirkys": 200,
-       "id": "tacz:ammo_mod_he",
-       "count": 1
-      },
-      {
-       "type": "ammo",
-       "kirkys": 220,
-       "id": "tacz:rpg_rocket",
-       "count": 2,
-       "extra": [
-        {
-         "item": "minecraft:iron_ingot",
-         "count": 6
         }
        ]
       }

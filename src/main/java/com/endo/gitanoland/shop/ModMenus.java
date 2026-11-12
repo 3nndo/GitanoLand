@@ -14,6 +14,9 @@ public class ModMenus {
     public static final DeferredHolder<MenuType<?>, MenuType<ShopMenu>> SHOP =
             MENUS.register("shop", () -> IMenuTypeExtension.create(ShopMenu::new));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<com.endo.gitanoland.reward.RewardsMenu>> REWARDS =
+            MENUS.register("rewards", () -> IMenuTypeExtension.create((id, inv, buf) -> new com.endo.gitanoland.reward.RewardsMenu(id, inv)));
+
     public static void register(IEventBus bus) {
         MENUS.register(bus);
     }

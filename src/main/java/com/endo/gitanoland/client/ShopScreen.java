@@ -19,8 +19,8 @@ import net.minecraft.world.item.ItemStack;
 public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     private static final int LIST_X = 7;
     private static final int LIST_Y = 18;
-    private static final int LIST_W = 162;
-    private static final int ROW_H = 22;
+    private static final int LIST_W = 186;
+    private static final int ROW_H = 24;
     private static final int VISIBLE = 5;
 
     /** Colores de la pantalla por tienda (ARGB; text* sin alfa). */
@@ -46,8 +46,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             case "weedsguy" -> WEEDS;
             default -> GUNSMITH;
         };
-        this.imageWidth = 176;
-        this.imageHeight = 222;
+        this.imageWidth = 200;
+        this.imageHeight = 240;
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -102,33 +102,34 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
             boolean can = canAfford(o);
             g.fill(rx, ry, rx + LIST_W, ry + ROW_H - 1, hover ? th.rowHover() : (can ? th.row() : th.rowNo()));
 
-            g.renderItem(o.result(), rx + 3, ry + 3);
-            g.renderItemDecorations(font, o.result(), rx + 3, ry + 3);
-            String name = font.plainSubstrByWidth(o.result().getHoverName().getString(), 62);
-            g.drawString(font, name, rx + 24, ry + 7, 0xFFFFFF, true);
+            g.renderItem(o.result(), rx + 3, ry + 4);
+            g.renderItemDecorations(font, o.result(), rx + 3, ry + 4);
+            // Dos líneas: nombre arriba (todo el ancho) y precio + materiales abajo, para que nada se solape.
+            String name = font.plainSubstrByWidth(o.result().getHoverName().getString(), LIST_W - 30);
+            g.drawString(font, name, rx + 24, ry + 3, 0xFFFFFF, true);
 
-            // precio
-            int cx = rx + 88;
+            int cx = rx + 24;
+            int ty = ry + 14;
             if (o.kirkys() > 0) {
-                g.renderItem(kirkyIcon, cx, ry + 3);
-                cx += 17;
+                smallItem(g, kirkyIcon, cx, ty - 1);
+                cx += 10;
                 if (o.baseKirkys() != o.kirkys()) {
                     // Como el comercio de vanilla: precio base tachado en gris y el nuevo al lado.
                     String b = String.valueOf(o.baseKirkys());
-                    g.drawString(font, b, cx, ry + 7, 0xFF888888, false);
-                    g.fill(cx - 1, ry + 11, cx + font.width(b), ry + 12, 0xFF888888);
+                    g.drawString(font, b, cx, ty, 0xFF888888, false);
+                    g.fill(cx - 1, ty + 4, cx + font.width(b), ty + 5, 0xFF888888);
                     cx += font.width(b) + 3;
                 }
                 String t = String.valueOf(o.kirkys());
-                g.drawString(font, t, cx, ry + 7, have >= o.kirkys() ? 0xFFFFFF : 0xFF5555, true);
-                cx += font.width(t) + 4;
+                g.drawString(font, t, cx, ty, have >= o.kirkys() ? 0xFFFFFF : 0xFF5555, true);
+                cx += font.width(t) + 8;
             }
             for (ShopOffer.Cost c : o.extras()) {
-                g.renderItem(new ItemStack(c.item()), cx, ry + 3);
+                smallItem(g, new ItemStack(c.item()), cx, ty - 1);
                 String t = String.valueOf(c.count());
                 boolean enough = Wallet.countItem(minecraft.player, c.item()) >= c.count();
-                g.drawString(font, t, cx + 17, ry + 7, enough ? 0xFFFFFF : 0xFF5555, true);
-                cx += 17 + font.width(t) + 4;
+                g.drawString(font, t, cx + 10, ty, enough ? 0xFFFFFF : 0xFF5555, true);
+                cx += 10 + font.width(t) + 8;
             }
         }
 
@@ -147,11 +148,22 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         }
     }
 
+    /** Un item a la mitad de tamaño (iconos de precio y materiales). */
+    private static void smallItem(GuiGraphics g, ItemStack s, int x, int y) {
+        g.pose().pushPose();
+        g.pose().translate(x, y, 0);
+        g.pose().scale(0.5f, 0.5f, 1f);
+        g.renderItem(s, 0, 0);
+        g.pose().popPose();
+    }
+
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
-        g.drawString(font, title, titleLabelX, titleLabelY, th.title(), false);
+        // Título arriba; el saldo en su propia línea debajo de la lista, así no se pisan.
+        String t = font.plainSubstrByWidth(title.getString(), imageWidth - 16);
+        g.drawString(font, t, 8, 6, th.title(), false);
         String balance = Component.translatable("gitanoland.shop.balance", have).getString();
-        g.drawString(font, balance, imageWidth - 8 - font.width(balance), titleLabelY, th.balance(), false);
+        g.drawString(font, balance, imageWidth - 8 - font.width(balance), LIST_Y + VISIBLE * ROW_H + 5, th.balance(), false);
     }
 
     @Override
