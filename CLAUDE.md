@@ -36,6 +36,7 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - **Archivos fuera de la carpeta del proyecto: preguntar antes.** No mirar el contenido de otras carpetas del PC salvo que sea imprescindible. Única excepción permitida por Endo: copiar el jar a la instancia de Prism `D:\Files Program\PrismLauncher\Instances\GitanoLand\minecraft\mods\` (solo ahí; el jar viejo se guarda como `.bak`).
 
 ## Versiones
+- **Desde 2026-11-12: fase pre-release.** `mod_version=1.0.0-pre.1` (rama `pre-release`, tag `v1.0.0-pre.N`). Cada commit anterior quedó como `alpha-0.1` ... `alpha-0.17` (tabla en `docs/versiones.md`). Las releases de GitHub no se pueden crear desde aquí (no hay `gh` ni conector): se hacen a mano con las notas de ese archivo.
 - Nomenclatura: ALPHA X.Y, luego BETA X.Y. **`mod_version` debe empezar por número** (NeoForge rechaza `alpha-1.0` con "Illegal version number" y el juego crashea): ALPHA 1.0 = `1.0.0-alpha`, BETA 1.0 = `1.0.0-beta`. Ramas y tags sí pueden llamarse `alpha-1.0`. El jar sale como `gitanoland-<mod_version>.jar`.
 - Historial: pre-alpha 1.2 (anterior) -> **ALPHA 1.0 = `1.0.0-alpha`** (actual, desde 2026-11-10; F5 verificado por Endo).
 - Al subir de versión, el jar nuevo cambia de nombre: antes de copiarlo a Prism hay que quitar el jar viejo de `mods/` (mover a `.bak`) para no duplicar el mod.
