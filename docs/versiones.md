@@ -23,3 +23,4 @@ Cada commit hasta ahora es una versión **alpha 0.N** (tag `alpha-0.N`). Desde e
 | alpha 0.17 | `alpha-0.17` | `9d8671c` | 12-11-2026 | Texturas propias de los zombis aldeanos Gunsmith y Ammo Maker |
 | **pre-release 1.0.0-pre.1** | `v1.0.0-pre.1` | (este commit) | 12-11-2026 | Inicio de la pre-release: mismo contenido que alpha 0.17 |
 | **pre-release 1.0.0-pre.2** | `v1.0.0-pre.2` | (este commit) | 12-11-2026 | Texturas propias de `kirky` (151x149) y `tab_icon` (639x639) |
+| **pre-release 1.0.0-pre.3** | `v1.0.0-pre.3` | (este commit) | 12-11-2026 | Contextos de teclas: las de TaCZ, dragon (Ice and Fire) y camara (SecurityCraft) ya no se pisan con las de otros mods |
