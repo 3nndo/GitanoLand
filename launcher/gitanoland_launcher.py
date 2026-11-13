@@ -20,6 +20,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 REPO = "3nndo/GitanoLand"
+LAUNCHER_VERSION = "1.2.0"
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 HOME = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "GitanoLand")
 PRISM_DIR = os.path.join(HOME, "Prism")
@@ -212,6 +213,56 @@ def patch_instance_cfg(profile):
         f.write("\n".join(lines) + "\n")
 
 
+# ------------------------------------------------------------------ auto-actualizacion del launcher
+def vtuple(tag):
+    nums = tag.split("launcher-", 1)[-1].lstrip("v").split("-")[0].split(".")
+    return tuple(int(n) for n in nums if n.isdigit())
+
+
+def newer_launcher():
+    """(tag, url) de la release del launcher mas nueva que la actual, o None."""
+    best = None
+    for rel in get_json(f"https://api.github.com/repos/{REPO}/releases?per_page=30"):
+        if rel.get("draft") or not rel["tag_name"].startswith("launcher-"):
+            continue
+        asset = next((a for a in rel["assets"] if a["name"].lower().endswith(".exe")), None)
+        if asset and (best is None or vtuple(rel["tag_name"]) > vtuple(best[0])):
+            best = (rel["tag_name"], asset["browser_download_url"])
+    if best and vtuple(best[0]) > vtuple(LAUNCHER_VERSION):
+        return best
+    return None
+
+
+def apply_update(url, exe, progress):
+    """Baja el exe nuevo y lo deja en lugar del actual (Windows deja renombrar un exe en marcha, no borrarlo)."""
+    new, old = exe + ".new", exe + ".old"
+    with http(url, timeout=120) as r, open(new, "wb") as f:
+        size = int(r.headers.get("Content-Length") or 0) or 1
+        done = 0
+        while True:
+            b = r.read(1 << 18)
+            if not b:
+                break
+            f.write(b)
+            done += len(b)
+            progress(done / size)
+    if os.path.getsize(new) < 1_000_000:
+        os.remove(new)
+        raise IOError("La descarga del launcher salio incompleta")
+    if os.path.exists(old):
+        os.remove(old)
+    os.replace(exe, old)
+    os.replace(new, exe)
+
+
+def cleanup_old_exe():
+    if getattr(sys, "frozen", False):
+        try:
+            os.remove(sys.executable + ".old")
+        except OSError:
+            pass
+
+
 # ------------------------------------------------------------------ otros launchers
 NEOFORGE = "21.1.265"
 NEOFORGE_INSTALLER = f"https://maven.neoforged.net/releases/net/neoforged/neoforge/{NEOFORGE}/neoforge-{NEOFORGE}-installer.jar"
@@ -400,7 +451,7 @@ class App(tk.Tk):
         self.configure(padx=18, pady=14)
         state = load_state()
         self.state_cfg = state.get("_config", {})
-        tk.Label(self, text="GitanoLand", font=("Segoe UI", 18, "bold")).pack(anchor="w")
+        tk.Label(self, text="GitanoLand  v" + LAUNCHER_VERSION, font=("Segoe UI", 18, "bold")).pack(anchor="w")
         tk.Label(self, text="1) Con que launcher juegas?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(6, 2))
         self.launcher = tk.StringVar(value=self.state_cfg.get("launcher", "prism"))
         for key, text in LAUNCHERS.items():
@@ -421,6 +472,34 @@ class App(tk.Tk):
         self.status = tk.Label(self, text="", font=("Segoe UI", 9), anchor="w", justify="left", wraplength=520)
         self.status.pack(anchor="w", pady=(4, 0))
         self.refresh()
+        threading.Thread(target=self.check_self_update, daemon=True).start()
+
+    def check_self_update(self):
+        try:
+            found = newer_launcher()
+        except Exception:  # noqa: BLE001
+            return
+        if not found:
+            return
+        tag, url = found
+        if not getattr(sys, "frozen", False):
+            return
+        nl = chr(10)
+        ver = tag.split("-", 1)[1]
+        if not self.ask("Nueva version del launcher",
+                        f"Hay una version nueva del launcher ({ver}) y tienes la {LAUNCHER_VERSION}." + nl +
+                        "¿La instalo ahora? Se reinicia solo."):
+            return
+        try:
+            self.after(0, lambda: self.button.config(state="disabled"))
+            self.log("Actualizando el launcher...")
+            apply_update(url, sys.executable, self.progress)
+            subprocess.Popen([sys.executable])
+            self.after(0, self.destroy)
+        except Exception as e:  # noqa: BLE001
+            msg = str(e)
+            self.log(f"No se pudo actualizar el launcher: {msg}")
+            self.after(0, lambda: self.button.config(state="normal"))
 
     def key_for(self, profile, mode=None):
         mode = mode or self.launcher.get()
@@ -564,4 +643,5 @@ class App(tk.Tk):
 
 
 if __name__ == "__main__":
+    cleanup_old_exe()
     App().mainloop()
