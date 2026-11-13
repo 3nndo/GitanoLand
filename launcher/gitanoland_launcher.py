@@ -20,10 +20,16 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 REPO = "3nndo/GitanoLand"
+LAUNCHER_VERSION = "1.3.0"
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 HOME = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "GitanoLand")
 PRISM_DIR = os.path.join(HOME, "Prism")
 STATE_FILE = os.path.join(HOME, "state.json")
+VARIANTS = {
+    "java21": "Java 21 (recomendado: el mas compatible)",
+    "java25": "Java 25 (con Reimagined Intro; el launcher baja su propia Java 25)",
+}
+JDK25_URL = "https://aka.ms/download-jdk/microsoft-jdk-25.0.1-windows-x64.zip"
 PROFILES = {
     "Alto": "PC bueno: shaders y todos los efectos (8 GB de RAM o mas)",
     "Medio": "PC medio: shaders ligeros, sin extras pesados (6 GB de RAM)",
@@ -157,12 +163,59 @@ def save_state(state):
         json.dump(state, f, indent=1)
 
 
-def instance_id(profile):
-    return f"GitanoLand-{profile}"
+def instance_id(profile, variant="java21"):
+    return f"GitanoLand-{profile}" + ("-J25" if variant == "java25" else "")
 
 
-def instance_dir(profile):
-    return os.path.join(PRISM_DIR, "instances", instance_id(profile))
+def instance_dir(profile, variant="java21"):
+    return os.path.join(PRISM_DIR, "instances", instance_id(profile, variant))
+
+
+def ensure_jdk25(log, progress):
+    """Devuelve la ruta de javaw.exe de una Java 25 propia del launcher (la baja si hace falta)."""
+    import glob
+    root = os.path.join(HOME, "Java25")
+
+    def find():
+        hits = glob.glob(os.path.join(root, "*", "bin", "javaw.exe"))
+        return hits[0].replace(chr(92), "/") if hits else None
+    found = find()
+    if found:
+        return found
+    log("Descargando Java 25 (una sola vez, unos 220 MB)...")
+    os.makedirs(root, exist_ok=True)
+    tmp = os.path.join(HOME, "jdk25.zip")
+    with http(JDK25_URL, timeout=120) as r, open(tmp, "wb") as f:
+        size = int(r.headers.get("Content-Length") or 220_000_000)
+        done = 0
+        while True:
+            b = r.read(1 << 18)
+            if not b:
+                break
+            f.write(b)
+            done += len(b)
+            progress(done / size)
+    with zipfile.ZipFile(tmp) as z:
+        z.extractall(root)
+    os.remove(tmp)
+    found = find()
+    if not found:
+        raise IOError("No se encontro javaw.exe tras descomprimir Java 25")
+    return found
+
+
+def patch_java(profile, variant, javaw):
+    """Hace que la instancia Prism use esa Java y no comprueba la version."""
+    path = os.path.join(instance_dir(profile, variant), "instance.cfg")
+    if not os.path.exists(path):
+        return
+    drop = ("OverrideJavaLocation=", "JavaPath=", "IgnoreJavaCompatibility=", "AutomaticJava=", "JavaVersion=")
+    lines = [l for l in open(path, encoding="utf-8").read().splitlines() if not l.startswith(drop)]
+    i = lines.index("[General]") + 1 if "[General]" in lines else 0
+    lines[i:i] = ["OverrideJavaLocation=true", "JavaPath=" + javaw, "IgnoreJavaCompatibility=true", "AutomaticJava=false"]
+    nl = chr(10)
+    with open(path, "w", encoding="utf-8", newline=nl) as f:
+        f.write(nl.join(lines) + nl)
 
 
 # ------------------------------------------------------------------ Prism
@@ -201,8 +254,8 @@ def install_icon():
         dst.write(src.read())
 
 
-def patch_instance_cfg(profile):
-    path = os.path.join(instance_dir(profile), "instance.cfg")
+def patch_instance_cfg(profile, variant="java21"):
+    path = os.path.join(instance_dir(profile, variant), "instance.cfg")
     if not os.path.exists(path):
         return
     lines = [l for l in open(path, encoding="utf-8").read().splitlines() if not l.startswith("iconKey=")]
@@ -212,14 +265,139 @@ def patch_instance_cfg(profile):
         f.write("\n".join(lines) + "\n")
 
 
-# ------------------------------------------------------------------ release
-def latest_release():
-    """Ultima release del mod (ignora las de herramientas como 'launcher-*')."""
+# ------------------------------------------------------------------ auto-actualizacion del launcher
+def vtuple(tag):
+    nums = tag.split("launcher-", 1)[-1].lstrip("v").split("-")[0].split(".")
+    return tuple(int(n) for n in nums if n.isdigit())
+
+
+def newer_launcher():
+    """(tag, url) de la release del launcher mas nueva que la actual, o None."""
+    best = None
     for rel in get_json(f"https://api.github.com/repos/{REPO}/releases?per_page=30"):
-        if rel.get("draft") or rel["tag_name"].startswith("launcher"):
+        if rel.get("draft") or not rel["tag_name"].startswith("launcher-"):
             continue
-        return rel
-    raise IOError("No hay releases del mod")
+        asset = next((a for a in rel["assets"] if a["name"].lower().endswith(".exe")), None)
+        if asset and (best is None or vtuple(rel["tag_name"]) > vtuple(best[0])):
+            best = (rel["tag_name"], asset["browser_download_url"])
+    if best and vtuple(best[0]) > vtuple(LAUNCHER_VERSION):
+        return best
+    return None
+
+
+def apply_update(url, exe, progress):
+    """Baja el exe nuevo y lo deja en lugar del actual (Windows deja renombrar un exe en marcha, no borrarlo)."""
+    new, old = exe + ".new", exe + ".old"
+    with http(url, timeout=120) as r, open(new, "wb") as f:
+        size = int(r.headers.get("Content-Length") or 0) or 1
+        done = 0
+        while True:
+            b = r.read(1 << 18)
+            if not b:
+                break
+            f.write(b)
+            done += len(b)
+            progress(done / size)
+    if os.path.getsize(new) < 1_000_000:
+        os.remove(new)
+        raise IOError("La descarga del launcher salio incompleta")
+    if os.path.exists(old):
+        os.remove(old)
+    os.replace(exe, old)
+    os.replace(new, exe)
+
+
+def cleanup_old_exe():
+    if getattr(sys, "frozen", False):
+        try:
+            os.remove(sys.executable + ".old")
+        except OSError:
+            pass
+
+
+# ------------------------------------------------------------------ otros launchers
+NEOFORGE = "21.1.265"
+NEOFORGE_INSTALLER = f"https://maven.neoforged.net/releases/net/neoforged/neoforge/{NEOFORGE}/neoforge-{NEOFORGE}-installer.jar"
+
+
+def appdata():
+    return os.environ.get("APPDATA", os.path.expanduser("~"))
+
+
+def minecraft_dir():
+    return os.path.join(appdata(), ".minecraft")
+
+
+def curseforge_instances():
+    """Carpeta de perfiles de CurseForge (la de siempre, si existe)."""
+    home = os.path.expanduser("~")
+    for c in (os.path.join(home, "curseforge", "minecraft", "Instances"),
+              os.path.join(home, "Documents", "curseforge", "minecraft", "Instances")):
+        if os.path.isdir(c):
+            return c
+    return None
+
+
+def find_java():
+    import glob
+    import shutil
+    cands = []
+    j = shutil.which("java")
+    if j:
+        cands.append(j)
+    for pat in ("C:/Program Files/Java/*/bin/java.exe", "C:/Program Files/Eclipse Adoptium/*/bin/java.exe",
+                "C:/Program Files/Microsoft/jdk*/bin/java.exe", "C:/Program Files/Zulu/*/bin/java.exe",
+                os.path.join(appdata(), ".minecraft", "runtime", "*", "*", "*", "bin", "java.exe"),
+                os.path.join(appdata(), ".tlauncher", "**", "bin", "java.exe")):
+        cands += sorted(glob.glob(pat, recursive=True), reverse=True)
+    for c in cands:
+        try:
+            out = subprocess.run([c, "-version"], capture_output=True, text=True, timeout=20).stderr
+            ver = out.split('"')[1] if '"' in out else ""
+            major = int(ver.split(".")[0]) if ver and ver.split(".")[0].isdigit() else 0
+            if major >= 17:
+                return c
+        except Exception:  # noqa: BLE001
+            continue
+    return None
+
+
+def ensure_neoforge(log):
+    """Instala NeoForge en .minecraft (para TLauncher y similares) si no esta."""
+    mc = minecraft_dir()
+    if os.path.isdir(os.path.join(mc, "versions", f"neoforge-{NEOFORGE}")):
+        return
+    java = find_java()
+    if not java:
+        raise IOError("No encuentro Java 17 o superior. Instala Java 21 (adoptium.net), o abre una vez Minecraft desde tu launcher, y vuelve a probar.")
+    log(f"Descargando NeoForge {NEOFORGE}...")
+    os.makedirs(mc, exist_ok=True)
+    installer = os.path.join(HOME, "neoforge-installer.jar")
+    os.makedirs(HOME, exist_ok=True)
+    with http(NEOFORGE_INSTALLER, timeout=120) as r, open(installer, "wb") as f:
+        f.write(r.read())
+    profiles = os.path.join(mc, "launcher_profiles.json")
+    if not os.path.exists(profiles):
+        with open(profiles, "w", encoding="utf-8") as f:
+            json.dump({"profiles": {}, "version": 3}, f)
+    log("Instalando NeoForge (tarda un par de minutos)...")
+    res = subprocess.run([java, "-jar", installer, "--installClient", mc], capture_output=True, text=True,
+                         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    if res.returncode != 0 or not os.path.isdir(os.path.join(mc, "versions", f"neoforge-{NEOFORGE}")):
+        tail = (res.stdout + res.stderr).strip().splitlines()[-4:]
+        raise IOError("No se pudo instalar NeoForge:" + chr(10) + chr(10).join(tail))
+
+
+# ------------------------------------------------------------------ release
+def latest_release(variant="java21"):
+    """Ultima release del mod de esa variante (ignora las de herramientas 'launcher-*')."""
+    for rel in get_json(f"https://api.github.com/repos/{REPO}/releases?per_page=30"):
+        tag = rel["tag_name"]
+        if rel.get("draft") or tag.startswith("launcher"):
+            continue
+        if (variant == "java25") == tag.endswith("-java25"):
+            return rel
+    raise IOError("No hay releases del mod para " + variant)
 
 
 def profile_asset(rel, profile):
@@ -230,19 +408,24 @@ def profile_asset(rel, profile):
     raise IOError(f"La release {rel['tag_name']} no tiene el perfil {profile}")
 
 
-def sync(profile, rel, log, progress):
-    """Deja la instancia igual que el zip de la release, bajando solo lo que cambia."""
+def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21"):
+    """Deja la carpeta igual que el zip de la release, bajando solo lo que cambia.
+
+    mode "prism": instancia completa (instance.cfg, mmc-pack.json y minecraft/). Otros: solo el contenido de minecraft/."""
     asset = profile_asset(rel, profile)
     url = asset["browser_download_url"]
     state = load_state()
-    prof = state.get(profile, {})
+    prof = state.get(key, {})
     installed = prof.get("files", {})  # ruta relativa -> crc con el que se instalo
     first_install = not prof
-    dest = instance_dir(profile)
     log("Leyendo la lista de archivos de la version...")
     entries = [e for e in read_central_directory(url) if not e.name.endswith("/")]
     root = entries[0].name.split("/", 1)[0] + "/"
     remote = {e.name[len(root):]: e for e in entries if e.name.startswith(root)}
+    mods_prefix = MODS_PREFIX
+    if mode != "prism":
+        remote = {k[len("minecraft/"):]: e for k, e in remote.items() if k.startswith("minecraft/")}
+        mods_prefix = "mods/"
 
     todo = []
     for rel_path, e in remote.items():
@@ -256,7 +439,7 @@ def sync(profile, rel, log, progress):
             old = installed.get(rel_path)
             if old is not None and old == e.crc:
                 continue  # la release no lo cambio: respeta lo que hayas tocado tu
-            if old is not None and not rel_path.startswith(MODS_PREFIX):
+            if old is not None and not rel_path.startswith(mods_prefix):
                 if file_crc(target) != old:
                     continue  # lo cambiaste tu y la release tambien: gana lo tuyo (salvo mods)
         todo.append((rel_path, e))
@@ -278,20 +461,37 @@ def sync(profile, rel, log, progress):
     # mods que ya no estan en la version nueva
     removed = 0
     for rel_path in list(installed):
-        if rel_path.startswith(MODS_PREFIX) and rel_path not in remote:
+        if rel_path.startswith(mods_prefix) and rel_path not in remote:
             p = os.path.join(dest, *rel_path.split("/"))
             if os.path.exists(p):
                 os.remove(p)
                 removed += 1
-    if first_install:
-        patch_instance_cfg(profile)
-    install_icon()
-    state[profile] = {"tag": rel["tag_name"], "files": {p: e.crc for p, e in remote.items()}}
+    if mode == "prism":
+        if first_install:
+            patch_instance_cfg(profile, variant)
+        install_icon()
+    state[key] = {"tag": rel["tag_name"], "dest": dest, "files": {p: e.crc for p, e in remote.items()}}
     save_state(state)
     log(f"Listo: {len(todo_entries)} archivos nuevos o cambiados, {removed} mods quitados.")
 
 
 # ------------------------------------------------------------------ interfaz
+LAUNCHERS = {
+    "prism": "Prism Launcher (te lo preparo yo; necesita cuenta de Microsoft)",
+    "curseforge": "CurseForge (la app de CurseForge)",
+    "tlauncher": "TLauncher",
+    "otro": "Otro launcher (te pregunto la carpeta del juego)",
+}
+
+CF_STEPS = (
+    "Falta un paso en CurseForge, una sola vez:\n"
+    "1. Abre CurseForge > Minecraft > Crear perfil personalizado.\n"
+    "2. Nombre: GitanoLand. Minecraft 1.21.1 y cargador NeoForge 21.1.265.\n"
+    "3. Dale a Crear (no hace falta ejecutarlo) y vuelve aqui a pulsar el boton.\n"
+    "Luego en CurseForge, en los ajustes del perfil, pon la memoria RAM: {ram}.")
+RAM = {"Alto": "6 GB", "Medio": "5 GB", "Bajo": "4 GB"}
+
+
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -304,20 +504,75 @@ class App(tk.Tk):
             pass
         self.configure(padx=18, pady=14)
         state = load_state()
-        tk.Label(self, text="GitanoLand", font=("Segoe UI", 18, "bold")).pack(anchor="w")
-        tk.Label(self, text="Elige como va tu PC y pulsa Jugar. Yo hago el resto.", font=("Segoe UI", 10)).pack(anchor="w", pady=(0, 8))
-        last = next((p for p in PROFILES if p in state), "Medio")
-        self.profile = tk.StringVar(value=last)
+        self.state_cfg = state.get("_config", {})
+        tk.Label(self, text="GitanoLand  v" + LAUNCHER_VERSION, font=("Segoe UI", 18, "bold")).pack(anchor="w")
+        tk.Label(self, text="1) Con que launcher juegas?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(6, 2))
+        self.launcher = tk.StringVar(value=self.state_cfg.get("launcher", "prism"))
+        for key, text in LAUNCHERS.items():
+            tk.Radiobutton(self, text=text, variable=self.launcher, value=key, font=("Segoe UI", 10),
+                           anchor="w", command=self.refresh).pack(anchor="w")
+        tk.Label(self, text="2) Que Java usas?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(8, 2))
+        self.variant = tk.StringVar(value=self.state_cfg.get("variant", "java21"))
+        for vkey, text in VARIANTS.items():
+            tk.Radiobutton(self, text=text, variable=self.variant, value=vkey, font=("Segoe UI", 10),
+                           anchor="w", command=self.refresh).pack(anchor="w")
+        tk.Label(self, text="3) Como va tu PC?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(8, 2))
+        self.profile = tk.StringVar(value=self.state_cfg.get("profile", "Medio"))
+        self.radios = {}
         for name, desc in PROFILES.items():
-            inst = f"  [instalada: {state[name]['tag']}]" if name in state else ""
-            tk.Radiobutton(self, text=f"{name}: {desc}{inst}", variable=self.profile, value=name,
-                           font=("Segoe UI", 10), anchor="w", justify="left").pack(anchor="w", pady=1)
+            r = tk.Radiobutton(self, text="", variable=self.profile, value=name, font=("Segoe UI", 10),
+                               anchor="w", justify="left")
+            r.pack(anchor="w", pady=1)
+            self.radios[name] = (r, desc)
         self.button = tk.Button(self, text="Jugar", font=("Segoe UI", 12, "bold"), bg="#3FAE4B", fg="white", command=self.play)
         self.button.pack(fill="x", pady=(12, 6), ipady=4)
-        self.bar = ttk.Progressbar(self, length=480, maximum=1.0)
+        self.bar = ttk.Progressbar(self, length=520, maximum=1.0)
         self.bar.pack(fill="x")
-        self.status = tk.Label(self, text="", font=("Segoe UI", 9), anchor="w", justify="left", wraplength=480)
+        self.status = tk.Label(self, text="", font=("Segoe UI", 9), anchor="w", justify="left", wraplength=520)
         self.status.pack(anchor="w", pady=(4, 0))
+        self.refresh()
+        threading.Thread(target=self.check_self_update, daemon=True).start()
+
+    def check_self_update(self):
+        try:
+            found = newer_launcher()
+        except Exception:  # noqa: BLE001
+            return
+        if not found:
+            return
+        tag, url = found
+        if not getattr(sys, "frozen", False):
+            return
+        nl = chr(10)
+        ver = tag.split("-", 1)[1]
+        if not self.ask("Nueva version del launcher",
+                        f"Hay una version nueva del launcher ({ver}) y tienes la {LAUNCHER_VERSION}." + nl +
+                        "¿La instalo ahora? Se reinicia solo."):
+            return
+        try:
+            self.after(0, lambda: self.button.config(state="disabled"))
+            self.log("Actualizando el launcher...")
+            apply_update(url, sys.executable, self.progress)
+            subprocess.Popen([sys.executable])
+            self.after(0, self.destroy)
+        except Exception as e:  # noqa: BLE001
+            msg = str(e)
+            self.log(f"No se pudo actualizar el launcher: {msg}")
+            self.after(0, lambda: self.button.config(state="normal"))
+
+    def key_for(self, profile, mode=None, variant=None):
+        mode = mode or self.launcher.get()
+        variant = variant or self.variant.get()
+        base = profile if mode == "prism" else f"{mode}:{profile}"
+        return base + ("@java25" if variant == "java25" else "")
+
+    def refresh(self):
+        state = load_state()
+        mode = self.launcher.get()
+        for name, (radio, desc) in self.radios.items():
+            tag = state.get(self.key_for(name, mode), {}).get("tag")
+            radio.config(text=f"{name}: {desc}" + (f"  [instalada: {tag}]" if tag else ""))
+        self.button.config(text="Jugar" if mode == "prism" else "Instalar / actualizar")
 
     def log(self, text):
         self.after(0, lambda: self.status.config(text=text))
@@ -327,50 +582,134 @@ class App(tk.Tk):
 
     def play(self):
         self.button.config(state="disabled")
-        threading.Thread(target=self.work, args=(self.profile.get(),), daemon=True).start()
+        state = load_state()
+        state["_config"] = {"launcher": self.launcher.get(), "profile": self.profile.get(), "variant": self.variant.get()}
+        save_state(state)
+        threading.Thread(target=self.work, args=(self.launcher.get(), self.profile.get(), self.variant.get()), daemon=True).start()
 
-    def ask(self, title, text):
-        result = {}
-        ev = threading.Event()
+    def call(self, fn):
+        """Ejecuta fn en el hilo de la interfaz y espera su resultado."""
+        result, ev = {}, threading.Event()
 
         def run():
-            result["v"] = messagebox.askyesno(title, text)
-            ev.set()
+            try:
+                result["v"] = fn()
+            finally:
+                ev.set()
         self.after(0, run)
         ev.wait()
-        return result["v"]
+        return result.get("v")
 
-    def work(self, profile):
+    def ask(self, title, text):
+        return self.call(lambda: messagebox.askyesno(title, text))
+
+    def info(self, title, text):
+        self.call(lambda: messagebox.showinfo(title, text))
+
+    def pick_dir(self, title, initial=None):
+        from tkinter import filedialog
+        return self.call(lambda: filedialog.askdirectory(title=title, initialdir=initial or os.path.expanduser("~")))
+
+    # -------------------------------------------------------------- destinos
+    def destination(self, mode, profile, key, state, variant="java21"):
+        """Carpeta donde dejar los archivos (None si hay que parar)."""
+        saved = state.get(key, {}).get("dest")
+        if saved and os.path.isdir(saved):
+            return saved
+        if mode == "curseforge":
+            inst = curseforge_instances()
+            if not inst:
+                self.info("CurseForge", "No encuentro la carpeta de perfiles de CurseForge.\n\n" + CF_STEPS.format(ram=RAM[profile]) +
+                          "\n\nSi ya lo hiciste y no la encuentro, elige tu carpeta 'Instances' en la siguiente ventana.")
+                inst = self.pick_dir("Carpeta 'Instances' de CurseForge")
+                if not inst:
+                    return None
+            names = sorted(d for d in os.listdir(inst) if os.path.isdir(os.path.join(inst, d)))
+            gl = [d for d in names if "gitano" in d.lower()]
+            if not gl:
+                self.info("CurseForge", CF_STEPS.format(ram=RAM[profile]))
+                return None
+            return os.path.join(inst, gl[0])
+        if mode == "tlauncher":
+            return os.path.join(HOME, f"Juego-{profile}" + ("-J25" if variant == "java25" else ""))
+        folder = self.pick_dir("Carpeta del juego de tu launcher (donde estan 'mods' y 'config')")
+        return folder or None
+
+    def work(self, mode, profile, variant="java21"):
         try:
-            ensure_prism(self.log, self.progress)
-            install_icon()
-            installed_tag = load_state().get(profile, {}).get("tag")
+            state = load_state()
+            key = self.key_for(profile, mode, variant)
+            installed_tag = state.get(key, {}).get("tag")
+            if mode == "prism":
+                ensure_prism(self.log, self.progress)
+                install_icon()
+                dest = instance_dir(profile, variant)
+            else:
+                dest = self.destination(mode, profile, key, state, variant)
+                if not dest:
+                    self.log("Cancelado.")
+                    self.after(0, lambda: self.button.config(state="normal"))
+                    return
             self.log("Buscando actualizaciones...")
             rel = None
             try:
-                rel = latest_release()
+                rel = latest_release(variant)
             except Exception:  # noqa: BLE001
                 if not installed_tag:
                     raise
-                self.log("Sin conexion con GitHub: abro la version que ya tienes.")
+                self.log("Sin conexion con GitHub: sigo con la version que ya tienes.")
+            changed = False
             if rel is not None:
                 if installed_tag is None:
-                    sync(profile, rel, self.log, self.progress)
+                    sync(key, profile, rel, dest, self.log, self.progress, mode, variant)
+                    changed = True
                 elif installed_tag != rel["tag_name"]:
                     if self.ask("Hay una actualizacion",
                                 f"Tienes {installed_tag} y ya esta {rel['tag_name']}.\n"
                                 "¿Quieres instalarla ahora? (solo se bajan los archivos que cambian)"):
-                        sync(profile, rel, self.log, self.progress)
-            self.log("Abriendo Prism Launcher... (la primera vez tendras que iniciar sesion con tu cuenta de Minecraft)")
-            subprocess.Popen([prism_exe(), "--launch", instance_id(profile)], cwd=PRISM_DIR)
-            time.sleep(2)
-            self.after(0, self.destroy)
+                        sync(key, profile, rel, dest, self.log, self.progress, mode, variant)
+                        changed = True
+            javaw = None
+            if variant == "java25":
+                javaw = ensure_jdk25(self.log, self.progress)
+                if mode == "prism":
+                    patch_java(profile, variant, javaw)
+            if mode == "prism":
+                self.log("Abriendo Prism Launcher... (la primera vez tendras que iniciar sesion con tu cuenta de Minecraft)")
+                subprocess.Popen([prism_exe(), "--launch", instance_id(profile, variant)], cwd=PRISM_DIR)
+                time.sleep(2)
+                self.after(0, self.destroy)
+                return
+            if mode == "tlauncher":
+                ensure_neoforge(self.log)
+            self.after(0, lambda: self.bar.config(value=1.0))
+            self.log("Listo.")
+            self.info("GitanoLand", self.final_text(mode, profile, dest, changed, javaw))
+            self.after(0, lambda: (self.refresh(), self.button.config(state="normal")))
         except Exception as e:  # noqa: BLE001
             msg = str(e)
             self.log(f"Error: {msg}")
             self.after(0, lambda: (self.button.config(state="normal"),
                                    messagebox.showerror("GitanoLand", f"Algo ha fallado:\n{msg}\n\nSi se repite, mandale una captura a Endo.")))
 
+    @staticmethod
+    def final_text(mode, profile, dest, changed, javaw=None):
+        head = "Archivos instalados." if changed else "Todo estaba al dia."
+        if javaw:
+            head += chr(10) + chr(10) + "Usa esta Java 25 en tu launcher (ruta del ejecutable):" + chr(10) + javaw
+        if mode == "curseforge":
+            return f"{head}\n\nAbre CurseForge, entra en el perfil GitanoLand y dale a Jugar.\nMemoria recomendada: {RAM[profile]}."
+        if mode == "tlauncher":
+            return (f"{head}\n\nEn TLauncher:\n"
+                    f"1. Elige la version 'NeoForge {NEOFORGE}' (si no sale, marca 'Mostrar versiones instaladas').\n"
+                    "2. Ajustes > Directorio del juego (Game directory): ponlo en\n"
+                    f"   {dest}\n"
+                    f"3. Memoria RAM: {RAM[profile]}.\n"
+                    "Y a jugar.")
+        return (f"{head}\n\nLos archivos estan en:\n{dest}\n\nTu launcher debe usar Minecraft 1.21.1 con NeoForge {NEOFORGE}, "
+                f"esa carpeta como carpeta del juego y {RAM[profile]} de RAM.")
+
 
 if __name__ == "__main__":
+    cleanup_old_exe()
     App().mainloop()

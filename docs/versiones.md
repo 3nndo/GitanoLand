@@ -28,3 +28,5 @@ Cada commit hasta ahora es una versión **alpha 0.N** (tag `alpha-0.N`). Desde e
 | **pre-release 1.0.0-pre.5** | `v1.0.0-pre.5` | (este commit) | 13-11-2026 | Teclas: la exclusion se calcula en cada pulsacion (no al arrancar) y ya no empareja teclas sin asignar |
 | **release 1.0.0** | `v1.0.0` | (este commit) | 13-11-2026 | Primera version completa: mismo contenido que pre.5 (teclas sin conflictos entre mods) con perfiles Alto/Medio/Bajo y server files |
 | **hotfix 1.0.1** | `v1.0.1` | (este commit) | 13-11-2026 | Hotfix: el menu de recompensas (Alt+K) se pide por un paquete propio en vez de por el comando de chat; se anade un log al pulsar la tecla |
+| **release 1.0.2 (java21)** | `v1.0.2-java21` | rama `java21` | 13-11-2026 | Mismo codigo que 1.0.1. Pack estandar para Java 21 (Alto/Medio/Bajo + ServerFiles) |
+| **release 1.0.2 (java25)** | `v1.0.2-java25` | rama `java25` | 13-11-2026 | Pack con Reimagined Intro 3.0.0 (solo carga con Java 25). Probado a mano con Java 25.0.1 de Microsoft |
