@@ -26,3 +26,4 @@ Cada commit hasta ahora es una versión **alpha 0.N** (tag `alpha-0.N`). Desde e
 | **pre-release 1.0.0-pre.3** | `v1.0.0-pre.3` | (este commit) | 12-11-2026 | Contextos de teclas: las de TaCZ, dragon (Ice and Fire) y camara (SecurityCraft) ya no se pisan con las de otros mods |
 | **pre-release 1.0.0-pre.4** | `v1.0.0-pre.4` | (este commit) | 13-11-2026 | Contextos de teclas ampliados: envuelven el contexto original de cada tecla (Quark, mochila, voice chat, dragon...) en vez de saltarse las que no eran "en juego" |
 | **pre-release 1.0.0-pre.5** | `v1.0.0-pre.5` | (este commit) | 13-11-2026 | Teclas: la exclusion se calcula en cada pulsacion (no al arrancar) y ya no empareja teclas sin asignar |
+| **release 1.0.0** | `v1.0.0` | (este commit) | 13-11-2026 | Primera version completa: mismo contenido que pre.5 (teclas sin conflictos entre mods) con perfiles Alto/Medio/Bajo y server files |
