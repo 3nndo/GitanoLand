@@ -5,9 +5,6 @@ import com.endo.gitanoland.GitanoLand;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
 import com.tacz.guns.api.item.IGun;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -73,35 +70,46 @@ public final class KeyContexts {
 
     private enum Kind { TACZ, DRAGON, CAMERA, FREE }
 
-    /** Envuelve el contexto original de una tecla y le anade exclusiones; no cambia nada mas. */
+    /** Teclas "que mandan" en cada situacion (se rellenan al arrancar). */
+    private static final java.util.List<KeyMapping> TACZ_KEYS = new java.util.ArrayList<>();
+    private static final java.util.List<KeyMapping> DRAGON_KEYS = new java.util.ArrayList<>();
+    private static final java.util.List<KeyMapping> CAMERA_KEYS = new java.util.ArrayList<>();
+
+    /** true si la tecla comparte AHORA combinacion con alguna de la lista (se mira en cada pulsacion, no al arrancar). */
+    private static boolean clashes(KeyMapping owner, java.util.List<KeyMapping> list) {
+        if (owner.getKey() == InputConstants.UNKNOWN) return false;
+        for (KeyMapping s : list) {
+            if (s != owner && s.getKey().equals(owner.getKey()) && s.getKeyModifier() == owner.getKeyModifier()) return true;
+        }
+        return false;
+    }
+
+    /** Envuelve el contexto original de una tecla. Las "FREE" se excluyen solo mientras choquen con una tecla especial. */
     private static final class Ctx implements IKeyConflictContext {
         final Kind kind;
         final IKeyConflictContext delegate;
-        final boolean exGun, exDragon, exCamera;
+        final KeyMapping owner;
 
-        Ctx(Kind kind, IKeyConflictContext delegate, boolean exGun, boolean exDragon, boolean exCamera) {
+        Ctx(Kind kind, IKeyConflictContext delegate, KeyMapping owner) {
             this.kind = kind;
             this.delegate = delegate;
-            this.exGun = exGun;
-            this.exDragon = exDragon;
-            this.exCamera = exCamera;
+            this.owner = owner;
         }
 
         @Override
         public boolean isActive() {
-            return delegate.isActive()
-                    && !(exGun && holdingGun())
-                    && !(exDragon && ridingDragon())
-                    && !(exCamera && viewingSecurityCamera());
+            if (!delegate.isActive()) return false;
+            if (kind != Kind.FREE) return true;
+            return !(clashes(owner, TACZ_KEYS) && holdingGun())
+                    && !(clashes(owner, DRAGON_KEYS) && ridingDragon())
+                    && !(clashes(owner, CAMERA_KEYS) && viewingSecurityCamera());
         }
 
         @Override
         public boolean conflicts(IKeyConflictContext other) {
             if (other instanceof Ctx o) {
-                // Una tecla excluida cuando hay arma/dragon/camara no choca con la tecla que manda en ese caso.
-                if (exGun && o.kind == Kind.TACZ || o.exGun && kind == Kind.TACZ) return false;
-                if (exDragon && o.kind == Kind.DRAGON || o.exDragon && kind == Kind.DRAGON) return false;
-                if (exCamera && o.kind == Kind.CAMERA || o.exCamera && kind == Kind.CAMERA) return false;
+                // Una tecla "libre" y una especial con la misma combinacion no se pisan: manda cada una en su situacion.
+                if ((kind == Kind.FREE) != (o.kind == Kind.FREE)) return false;
                 return delegate.conflicts(o.delegate);
             }
             return delegate.conflicts(other);
@@ -141,38 +149,29 @@ public final class KeyContexts {
         if (mc.options == null) return;
         KeyMapping[] all = mc.options.keyMappings;
 
-        // 1) Marcar las teclas de TaCZ, dragon y camara y apuntar sus combinaciones.
-        Map<String, Set<Kind>> specials = new HashMap<>();
+        // 1) Marcar las teclas de TaCZ, dragon y camara (conservan su contexto y comportamiento).
         int marked = 0;
         for (KeyMapping k : all) {
-            if (untouchable(k)) continue;
-            if (k.getKeyConflictContext() instanceof Ctx c) {
-                if (c.kind != Kind.FREE) specials.computeIfAbsent(combo(k), x -> EnumSet.noneOf(Kind.class)).add(c.kind);
-                continue;
-            }
+            if (untouchable(k) || k.getKeyConflictContext() instanceof Ctx) continue;
             Kind kind = specialKind(k.getName());
             if (kind == null) continue;
-            k.setKeyConflictContext(new Ctx(kind, k.getKeyConflictContext(), false, false, false));
-            specials.computeIfAbsent(combo(k), x -> EnumSet.noneOf(Kind.class)).add(kind);
+            k.setKeyConflictContext(new Ctx(kind, k.getKeyConflictContext(), k));
+            (switch (kind) { case TACZ -> TACZ_KEYS; case DRAGON -> DRAGON_KEYS; default -> CAMERA_KEYS; }).add(k);
             marked++;
         }
 
-        // 2) Las demas teclas de mods que comparten combinacion con alguna de esas: se excluyen en ese caso.
+        // 2) Resto de teclas de mods: se excluyen solo mientras comparten combinacion con una de las anteriores.
         int free = 0;
         for (KeyMapping k : all) {
             if (untouchable(k) || k.getKeyConflictContext() instanceof Ctx) continue;
-            Set<Kind> sp = specials.get(combo(k));
-            if (sp == null || sp.isEmpty()) continue;
-            var original = k.getKeyConflictContext();
-            k.setKeyConflictContext(new Ctx(Kind.FREE, original, sp.contains(Kind.TACZ), sp.contains(Kind.DRAGON), sp.contains(Kind.CAMERA)));
+            k.setKeyConflictContext(new Ctx(Kind.FREE, k.getKeyConflictContext(), k));
             free++;
-            if (!applied) LOG.info("[GitanoLand] Tecla {} (contexto {}) excluida con {}", k.getName(), ctxName(original), sp);
         }
         if (marked + free == 0) return;
         KeyMapping.resetMapping();
         if (!applied) {
             applied = true;
-            LOG.info("[GitanoLand] Contextos de teclas: {} de TaCZ/dragon/camara marcadas, {} de otros mods con exclusion.", marked, free);
+            LOG.info("[GitanoLand] Contextos de teclas: {} de TaCZ/dragon/camara marcadas, {} de otros mods vigiladas (solo se excluyen mientras chocan).", marked, free);
             logLeftovers(all);
         }
     }
