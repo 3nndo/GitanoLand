@@ -20,11 +20,16 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 REPO = "3nndo/GitanoLand"
-LAUNCHER_VERSION = "1.2.0"
+LAUNCHER_VERSION = "1.3.0"
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 HOME = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "GitanoLand")
 PRISM_DIR = os.path.join(HOME, "Prism")
 STATE_FILE = os.path.join(HOME, "state.json")
+VARIANTS = {
+    "java21": "Java 21 (recomendado: el mas compatible)",
+    "java25": "Java 25 (con Reimagined Intro; el launcher baja su propia Java 25)",
+}
+JDK25_URL = "https://aka.ms/download-jdk/microsoft-jdk-25.0.1-windows-x64.zip"
 PROFILES = {
     "Alto": "PC bueno: shaders y todos los efectos (8 GB de RAM o mas)",
     "Medio": "PC medio: shaders ligeros, sin extras pesados (6 GB de RAM)",
@@ -158,12 +163,59 @@ def save_state(state):
         json.dump(state, f, indent=1)
 
 
-def instance_id(profile):
-    return f"GitanoLand-{profile}"
+def instance_id(profile, variant="java21"):
+    return f"GitanoLand-{profile}" + ("-J25" if variant == "java25" else "")
 
 
-def instance_dir(profile):
-    return os.path.join(PRISM_DIR, "instances", instance_id(profile))
+def instance_dir(profile, variant="java21"):
+    return os.path.join(PRISM_DIR, "instances", instance_id(profile, variant))
+
+
+def ensure_jdk25(log, progress):
+    """Devuelve la ruta de javaw.exe de una Java 25 propia del launcher (la baja si hace falta)."""
+    import glob
+    root = os.path.join(HOME, "Java25")
+
+    def find():
+        hits = glob.glob(os.path.join(root, "*", "bin", "javaw.exe"))
+        return hits[0].replace(chr(92), "/") if hits else None
+    found = find()
+    if found:
+        return found
+    log("Descargando Java 25 (una sola vez, unos 220 MB)...")
+    os.makedirs(root, exist_ok=True)
+    tmp = os.path.join(HOME, "jdk25.zip")
+    with http(JDK25_URL, timeout=120) as r, open(tmp, "wb") as f:
+        size = int(r.headers.get("Content-Length") or 220_000_000)
+        done = 0
+        while True:
+            b = r.read(1 << 18)
+            if not b:
+                break
+            f.write(b)
+            done += len(b)
+            progress(done / size)
+    with zipfile.ZipFile(tmp) as z:
+        z.extractall(root)
+    os.remove(tmp)
+    found = find()
+    if not found:
+        raise IOError("No se encontro javaw.exe tras descomprimir Java 25")
+    return found
+
+
+def patch_java(profile, variant, javaw):
+    """Hace que la instancia Prism use esa Java y no comprueba la version."""
+    path = os.path.join(instance_dir(profile, variant), "instance.cfg")
+    if not os.path.exists(path):
+        return
+    drop = ("OverrideJavaLocation=", "JavaPath=", "IgnoreJavaCompatibility=", "AutomaticJava=", "JavaVersion=")
+    lines = [l for l in open(path, encoding="utf-8").read().splitlines() if not l.startswith(drop)]
+    i = lines.index("[General]") + 1 if "[General]" in lines else 0
+    lines[i:i] = ["OverrideJavaLocation=true", "JavaPath=" + javaw, "IgnoreJavaCompatibility=true", "AutomaticJava=false"]
+    nl = chr(10)
+    with open(path, "w", encoding="utf-8", newline=nl) as f:
+        f.write(nl.join(lines) + nl)
 
 
 # ------------------------------------------------------------------ Prism
@@ -202,8 +254,8 @@ def install_icon():
         dst.write(src.read())
 
 
-def patch_instance_cfg(profile):
-    path = os.path.join(instance_dir(profile), "instance.cfg")
+def patch_instance_cfg(profile, variant="java21"):
+    path = os.path.join(instance_dir(profile, variant), "instance.cfg")
     if not os.path.exists(path):
         return
     lines = [l for l in open(path, encoding="utf-8").read().splitlines() if not l.startswith("iconKey=")]
@@ -337,13 +389,15 @@ def ensure_neoforge(log):
 
 
 # ------------------------------------------------------------------ release
-def latest_release():
-    """Ultima release del mod (ignora las de herramientas como 'launcher-*')."""
+def latest_release(variant="java21"):
+    """Ultima release del mod de esa variante (ignora las de herramientas 'launcher-*')."""
     for rel in get_json(f"https://api.github.com/repos/{REPO}/releases?per_page=30"):
-        if rel.get("draft") or rel["tag_name"].startswith("launcher"):
+        tag = rel["tag_name"]
+        if rel.get("draft") or tag.startswith("launcher"):
             continue
-        return rel
-    raise IOError("No hay releases del mod")
+        if (variant == "java25") == tag.endswith("-java25"):
+            return rel
+    raise IOError("No hay releases del mod para " + variant)
 
 
 def profile_asset(rel, profile):
@@ -354,7 +408,7 @@ def profile_asset(rel, profile):
     raise IOError(f"La release {rel['tag_name']} no tiene el perfil {profile}")
 
 
-def sync(key, profile, rel, dest, log, progress, mode="prism"):
+def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21"):
     """Deja la carpeta igual que el zip de la release, bajando solo lo que cambia.
 
     mode "prism": instancia completa (instance.cfg, mmc-pack.json y minecraft/). Otros: solo el contenido de minecraft/."""
@@ -414,7 +468,7 @@ def sync(key, profile, rel, dest, log, progress, mode="prism"):
                 removed += 1
     if mode == "prism":
         if first_install:
-            patch_instance_cfg(profile)
+            patch_instance_cfg(profile, variant)
         install_icon()
     state[key] = {"tag": rel["tag_name"], "dest": dest, "files": {p: e.crc for p, e in remote.items()}}
     save_state(state)
@@ -457,7 +511,12 @@ class App(tk.Tk):
         for key, text in LAUNCHERS.items():
             tk.Radiobutton(self, text=text, variable=self.launcher, value=key, font=("Segoe UI", 10),
                            anchor="w", command=self.refresh).pack(anchor="w")
-        tk.Label(self, text="2) Como va tu PC?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(8, 2))
+        tk.Label(self, text="2) Que Java usas?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(8, 2))
+        self.variant = tk.StringVar(value=self.state_cfg.get("variant", "java21"))
+        for vkey, text in VARIANTS.items():
+            tk.Radiobutton(self, text=text, variable=self.variant, value=vkey, font=("Segoe UI", 10),
+                           anchor="w", command=self.refresh).pack(anchor="w")
+        tk.Label(self, text="3) Como va tu PC?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(8, 2))
         self.profile = tk.StringVar(value=self.state_cfg.get("profile", "Medio"))
         self.radios = {}
         for name, desc in PROFILES.items():
@@ -501,9 +560,11 @@ class App(tk.Tk):
             self.log(f"No se pudo actualizar el launcher: {msg}")
             self.after(0, lambda: self.button.config(state="normal"))
 
-    def key_for(self, profile, mode=None):
+    def key_for(self, profile, mode=None, variant=None):
         mode = mode or self.launcher.get()
-        return profile if mode == "prism" else f"{mode}:{profile}"
+        variant = variant or self.variant.get()
+        base = profile if mode == "prism" else f"{mode}:{profile}"
+        return base + ("@java25" if variant == "java25" else "")
 
     def refresh(self):
         state = load_state()
@@ -522,9 +583,9 @@ class App(tk.Tk):
     def play(self):
         self.button.config(state="disabled")
         state = load_state()
-        state["_config"] = {"launcher": self.launcher.get(), "profile": self.profile.get()}
+        state["_config"] = {"launcher": self.launcher.get(), "profile": self.profile.get(), "variant": self.variant.get()}
         save_state(state)
-        threading.Thread(target=self.work, args=(self.launcher.get(), self.profile.get()), daemon=True).start()
+        threading.Thread(target=self.work, args=(self.launcher.get(), self.profile.get(), self.variant.get()), daemon=True).start()
 
     def call(self, fn):
         """Ejecuta fn en el hilo de la interfaz y espera su resultado."""
@@ -550,7 +611,7 @@ class App(tk.Tk):
         return self.call(lambda: filedialog.askdirectory(title=title, initialdir=initial or os.path.expanduser("~")))
 
     # -------------------------------------------------------------- destinos
-    def destination(self, mode, profile, key, state):
+    def destination(self, mode, profile, key, state, variant="java21"):
         """Carpeta donde dejar los archivos (None si hay que parar)."""
         saved = state.get(key, {}).get("dest")
         if saved and os.path.isdir(saved):
@@ -570,21 +631,21 @@ class App(tk.Tk):
                 return None
             return os.path.join(inst, gl[0])
         if mode == "tlauncher":
-            return os.path.join(HOME, f"Juego-{profile}")
+            return os.path.join(HOME, f"Juego-{profile}" + ("-J25" if variant == "java25" else ""))
         folder = self.pick_dir("Carpeta del juego de tu launcher (donde estan 'mods' y 'config')")
         return folder or None
 
-    def work(self, mode, profile):
+    def work(self, mode, profile, variant="java21"):
         try:
             state = load_state()
-            key = self.key_for(profile, mode)
+            key = self.key_for(profile, mode, variant)
             installed_tag = state.get(key, {}).get("tag")
             if mode == "prism":
                 ensure_prism(self.log, self.progress)
                 install_icon()
-                dest = instance_dir(profile)
+                dest = instance_dir(profile, variant)
             else:
-                dest = self.destination(mode, profile, key, state)
+                dest = self.destination(mode, profile, key, state, variant)
                 if not dest:
                     self.log("Cancelado.")
                     self.after(0, lambda: self.button.config(state="normal"))
@@ -592,7 +653,7 @@ class App(tk.Tk):
             self.log("Buscando actualizaciones...")
             rel = None
             try:
-                rel = latest_release()
+                rel = latest_release(variant)
             except Exception:  # noqa: BLE001
                 if not installed_tag:
                     raise
@@ -600,17 +661,22 @@ class App(tk.Tk):
             changed = False
             if rel is not None:
                 if installed_tag is None:
-                    sync(key, profile, rel, dest, self.log, self.progress, mode)
+                    sync(key, profile, rel, dest, self.log, self.progress, mode, variant)
                     changed = True
                 elif installed_tag != rel["tag_name"]:
                     if self.ask("Hay una actualizacion",
                                 f"Tienes {installed_tag} y ya esta {rel['tag_name']}.\n"
                                 "¿Quieres instalarla ahora? (solo se bajan los archivos que cambian)"):
-                        sync(key, profile, rel, dest, self.log, self.progress, mode)
+                        sync(key, profile, rel, dest, self.log, self.progress, mode, variant)
                         changed = True
+            javaw = None
+            if variant == "java25":
+                javaw = ensure_jdk25(self.log, self.progress)
+                if mode == "prism":
+                    patch_java(profile, variant, javaw)
             if mode == "prism":
                 self.log("Abriendo Prism Launcher... (la primera vez tendras que iniciar sesion con tu cuenta de Minecraft)")
-                subprocess.Popen([prism_exe(), "--launch", instance_id(profile)], cwd=PRISM_DIR)
+                subprocess.Popen([prism_exe(), "--launch", instance_id(profile, variant)], cwd=PRISM_DIR)
                 time.sleep(2)
                 self.after(0, self.destroy)
                 return
@@ -618,7 +684,7 @@ class App(tk.Tk):
                 ensure_neoforge(self.log)
             self.after(0, lambda: self.bar.config(value=1.0))
             self.log("Listo.")
-            self.info("GitanoLand", self.final_text(mode, profile, dest, changed))
+            self.info("GitanoLand", self.final_text(mode, profile, dest, changed, javaw))
             self.after(0, lambda: (self.refresh(), self.button.config(state="normal")))
         except Exception as e:  # noqa: BLE001
             msg = str(e)
@@ -627,8 +693,10 @@ class App(tk.Tk):
                                    messagebox.showerror("GitanoLand", f"Algo ha fallado:\n{msg}\n\nSi se repite, mandale una captura a Endo.")))
 
     @staticmethod
-    def final_text(mode, profile, dest, changed):
+    def final_text(mode, profile, dest, changed, javaw=None):
         head = "Archivos instalados." if changed else "Todo estaba al dia."
+        if javaw:
+            head += chr(10) + chr(10) + "Usa esta Java 25 en tu launcher (ruta del ejecutable):" + chr(10) + javaw
         if mode == "curseforge":
             return f"{head}\n\nAbre CurseForge, entra en el perfil GitanoLand y dale a Jugar.\nMemoria recomendada: {RAM[profile]}."
         if mode == "tlauncher":
