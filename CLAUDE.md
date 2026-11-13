@@ -37,6 +37,7 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 
 ## Versiones
 - **Desde 2026-11-12: fase pre-release.** `mod_version=1.0.0-pre.1` (rama `pre-release`, tag `v1.0.0-pre.N`). Cada commit anterior quedó como `alpha-0.1` ... `alpha-0.17` (tabla en `docs/versiones.md`). Las releases de GitHub no se pueden crear desde aquí (no hay `gh` ni conector): se hacen a mano con las notas de ese archivo.
+- **2026-11-13: hotfix 1.0.1** (Alt+K no abria recompensas; ahora `OpenRewardsPayload` cliente->servidor, registrado junto a `RewardToastPayload`; causa exacta no confirmada, sin verificar en juego). Mini launcher en `launcher/` (release aparte `launcher-1.0.0`, ver `launcher/LEEME.md`).
 - **Desde 2026-11-13: release 1.0.0** (`mod_version=1.0.0`, tag `v1.0.0`, rama `main`). Fin de la fase pre-release; mismo codigo que pre.5. Los releases de GitHub se hacen con `gh` (instalado en `C:Program FilesGitHub CLIgh.exe`) y llevan zips de perfiles Alto/Medio/Bajo y ServerFiles.
 - Nomenclatura: ALPHA X.Y, luego BETA X.Y. **`mod_version` debe empezar por número** (NeoForge rechaza `alpha-1.0` con "Illegal version number" y el juego crashea): ALPHA 1.0 = `1.0.0-alpha`, BETA 1.0 = `1.0.0-beta`. Ramas y tags sí pueden llamarse `alpha-1.0`. El jar sale como `gitanoland-<mod_version>.jar`.
 - Historial: pre-alpha 1.2 (anterior) -> **ALPHA 1.0 = `1.0.0-alpha`** (actual, desde 2026-11-10; F5 verificado por Endo).

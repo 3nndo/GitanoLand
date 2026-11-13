@@ -28,8 +28,10 @@ public record RewardToastPayload(int kirkys, boolean challenge) implements Custo
     public static class Register {
         @SubscribeEvent
         public static void register(RegisterPayloadHandlersEvent event) {
-            event.registrar("1").optional().playToClient(TYPE, CODEC,
+            var registrar = event.registrar("1").optional();
+            registrar.playToClient(TYPE, CODEC,
                     (payload, ctx) -> ctx.enqueueWork(() -> com.endo.gitanoland.client.RewardToast.show(payload.kirkys(), payload.challenge())));
+            registrar.playToServer(OpenRewardsPayload.TYPE, OpenRewardsPayload.CODEC, OpenRewardsPayload::handle);
         }
     }
 }
