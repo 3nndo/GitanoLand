@@ -16,6 +16,7 @@ import org.lwjgl.glfw.GLFW;
 /** Atajo del menú de recompensas. Lleva Alt de modificador para no pisar teclas sueltas de otros mods. */
 @EventBusSubscriber(modid = GitanoLand.MODID, value = Dist.CLIENT)
 public class ClientKeys {
+    private static final org.slf4j.Logger LOG = com.mojang.logging.LogUtils.getLogger();
     public static final KeyMapping REWARDS = new KeyMapping("key.gitanoland.rewards", KeyConflictContext.IN_GAME,
             KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.categories.gitanoland");
 
@@ -28,7 +29,9 @@ public class ClientKeys {
     public static void tick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         while (REWARDS.consumeClick()) {
-            if (mc.player != null) mc.player.connection.sendCommand("gitanoland rewards");
+            if (mc.player == null) continue;
+            LOG.info("[GitanoLand] Alt+K pulsado: pidiendo el menu de recompensas");
+            net.neoforged.neoforge.network.PacketDistributor.sendToServer(com.endo.gitanoland.net.OpenRewardsPayload.INSTANCE);
         }
     }
 }
