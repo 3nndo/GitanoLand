@@ -43,6 +43,7 @@ public class ClientEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
         ResourceLocation fill = ResourceLocation.fromNamespaceAndPath(GitanoLand.MODID, "fill");
         event.enqueueWork(() -> {
+            com.endo.gitanoland.client.KeyContexts.apply();
             for (var bag : new net.minecraft.world.item.Item[]{GitanoLand.KIRKY_BAG_SMALL.get(),
                     GitanoLand.KIRKY_BAG.get(), GitanoLand.KIRKY_BAG_LARGE.get()}) {
                 ItemProperties.register(bag, fill, (stack, level, entity, seed) -> KirkyBagItem.fillState(stack));
