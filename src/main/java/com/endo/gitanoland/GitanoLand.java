@@ -84,6 +84,7 @@ public class GitanoLand {
         ITEMS.register(modEventBus);
         TABS.register(modEventBus);
         COMPONENTS.register(modEventBus);
+        com.endo.gitanoland.recipe.CopyDiscRecipe.SERIALIZERS.register(modEventBus);
         ModVillagers.register(modEventBus);
         ModEntities.register(modEventBus);
         ModMenus.register(modEventBus);
