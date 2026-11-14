@@ -1,6 +1,6 @@
 """GitanoLand Launcher: elige Alto / Medio / Bajo y se encarga de todo.
 
-- Descarga un Prism Launcher portable propio (no toca el que tengas instalado).
+- Descarga un Prism Launcher o Freesm Launcher portable propio (no toca el que tengas instalado). Freesm admite cuentas sin conexion.
 - Instala la instancia elegida bajandose SOLO lo que falta (lee el zip de la release de GitHub por rangos).
 - Al abrir, mira si hay version nueva y pregunta si quieres instalarla (solo baja los archivos que cambian).
 - Conserva tus ajustes (options.txt, configs que hayas tocado, etc.) al actualizar.
@@ -20,10 +20,29 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 REPO = "3nndo/GitanoLand"
-LAUNCHER_VERSION = "1.3.0"
+LAUNCHER_VERSION = "1.4.0"
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 HOME = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "GitanoLand")
 PRISM_DIR = os.path.join(HOME, "Prism")
+FREESM_DIR = os.path.join(HOME, "Freesm")
+# Launchers de la familia Prism que el launcher prepara solo (instancia completa): Prism (cuenta de Microsoft)
+# y Freesm (acepta cuentas sin conexion y de Microsoft).
+FLAVORS = {
+    "prism": {"name": "Prism Launcher", "dir": PRISM_DIR, "exe": "prismlauncher.exe", "api": PRISM_API,
+              "asset": "PrismLauncher-Windows-MSVC-Portable-", "marker": "prismlauncher_portable.txt"},
+    "freesm": {"name": "Freesm Launcher", "dir": FREESM_DIR, "exe": "freesmlauncher.exe",
+               "api": "https://api.github.com/repos/FreesmTeam/FreesmLauncher/releases/latest",
+               "asset": "FreesmLauncher-Windows-MSVC-Portable-", "marker": "portable.txt"},
+}
+CUR = ["prism"]  # launcher de la familia Prism en uso
+
+
+def fl():
+    return FLAVORS[CUR[0]]
+
+
+def is_full(mode):
+    return mode in FLAVORS
 STATE_FILE = os.path.join(HOME, "state.json")
 VARIANTS = {
     "java21": "Java 21 (recomendado: el mas compatible)",
@@ -168,7 +187,7 @@ def instance_id(profile, variant="java21"):
 
 
 def instance_dir(profile, variant="java21"):
-    return os.path.join(PRISM_DIR, "instances", instance_id(profile, variant))
+    return os.path.join(fl()["dir"], "instances", instance_id(profile, variant))
 
 
 def ensure_jdk25(log, progress):
@@ -220,16 +239,16 @@ def patch_java(profile, variant, javaw):
 
 # ------------------------------------------------------------------ Prism
 def prism_exe():
-    return os.path.join(PRISM_DIR, "prismlauncher.exe")
+    return os.path.join(fl()["dir"], fl()["exe"])
 
 
 def ensure_prism(log, progress):
     if os.path.exists(prism_exe()):
         return
-    log("Descargando Prism Launcher (una sola vez)...")
-    rel = get_json(PRISM_API)
+    log(f"Descargando {fl()['name']} (una sola vez)...")
+    rel = get_json(fl()["api"])
     asset = next(a for a in rel["assets"]
-                 if a["name"].startswith("PrismLauncher-Windows-MSVC-Portable-") and a["name"].endswith(".zip"))
+                 if a["name"].startswith(fl()["asset"]) and a["name"].endswith(".zip"))
     buf = io.BytesIO()
     with http(asset["browser_download_url"], timeout=120) as r:
         size = int(r.headers.get("Content-Length") or asset["size"])
@@ -239,16 +258,16 @@ def ensure_prism(log, progress):
                 break
             buf.write(b)
             progress(buf.tell() / size)
-    os.makedirs(PRISM_DIR, exist_ok=True)
+    os.makedirs(fl()["dir"], exist_ok=True)
     with zipfile.ZipFile(buf) as z:
-        z.extractall(PRISM_DIR)
-    open(os.path.join(PRISM_DIR, "prismlauncher_portable.txt"), "a").close()
+        z.extractall(fl()["dir"])
+    open(os.path.join(fl()["dir"], fl()["marker"]), "a").close()
     if not os.path.exists(prism_exe()):
-        raise IOError("No se encontro prismlauncher.exe tras descomprimir Prism")
+        raise IOError(f"No se encontro {fl()['exe']} tras descomprimir {fl()['name']}")
 
 
 def install_icon():
-    icons = os.path.join(PRISM_DIR, "icons")
+    icons = os.path.join(fl()["dir"], "icons")
     os.makedirs(icons, exist_ok=True)
     with open(resource("icon.png"), "rb") as src, open(os.path.join(icons, "gitanoland.png"), "wb") as dst:
         dst.write(src.read())
@@ -411,7 +430,7 @@ def profile_asset(rel, profile):
 def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21"):
     """Deja la carpeta igual que el zip de la release, bajando solo lo que cambia.
 
-    mode "prism": instancia completa (instance.cfg, mmc-pack.json y minecraft/). Otros: solo el contenido de minecraft/."""
+    mode "prism" o "freesm": instancia completa (instance.cfg, mmc-pack.json y minecraft/). Otros: solo el contenido de minecraft/."""
     asset = profile_asset(rel, profile)
     url = asset["browser_download_url"]
     state = load_state()
@@ -423,7 +442,7 @@ def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21")
     root = entries[0].name.split("/", 1)[0] + "/"
     remote = {e.name[len(root):]: e for e in entries if e.name.startswith(root)}
     mods_prefix = MODS_PREFIX
-    if mode != "prism":
+    if not is_full(mode):
         remote = {k[len("minecraft/"):]: e for k, e in remote.items() if k.startswith("minecraft/")}
         mods_prefix = "mods/"
 
@@ -466,7 +485,7 @@ def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21")
             if os.path.exists(p):
                 os.remove(p)
                 removed += 1
-    if mode == "prism":
+    if is_full(mode):
         if first_install:
             patch_instance_cfg(profile, variant)
         install_icon()
@@ -477,6 +496,7 @@ def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21")
 
 # ------------------------------------------------------------------ interfaz
 LAUNCHERS = {
+    "freesm": "Freesm Launcher (te lo preparo yo; sirve con o sin cuenta de Microsoft)",
     "prism": "Prism Launcher (te lo preparo yo; necesita cuenta de Microsoft)",
     "curseforge": "CurseForge (la app de CurseForge)",
     "tlauncher": "TLauncher",
@@ -489,6 +509,11 @@ CF_STEPS = (
     "2. Nombre: GitanoLand. Minecraft 1.21.1 y cargador NeoForge 21.1.265.\n"
     "3. Dale a Crear (no hace falta ejecutarlo) y vuelve aqui a pulsar el boton.\n"
     "Luego en CurseForge, en los ajustes del perfil, pon la memoria RAM: {ram}.")
+FREESM_ACCOUNT = (
+    "Para usar tu cuenta de Microsoft, Freesm se abre ahora y la anades una sola vez:\n\n"
+    "Arriba a la derecha, tu cuenta > Gestionar cuentas > 'Anadir Microsoft' y sigue los pasos.\n\n"
+    "Si NO tienes cuenta de Microsoft: cierra Freesm, escribe tu nombre de jugador en la casilla de "
+    "'Freesm sin cuenta' y pulsa Jugar. Si ya la anadiste, cierra Freesm y pulsa Jugar otra vez.")
 RAM = {"Alto": "6 GB", "Medio": "5 GB", "Bajo": "4 GB"}
 
 
@@ -511,6 +536,10 @@ class App(tk.Tk):
         for key, text in LAUNCHERS.items():
             tk.Radiobutton(self, text=text, variable=self.launcher, value=key, font=("Segoe UI", 10),
                            anchor="w", command=self.refresh).pack(anchor="w")
+        tk.Label(self, text="Freesm sin cuenta de Microsoft: tu nombre de jugador (vacio = usa tu cuenta)",
+                 font=("Segoe UI", 9)).pack(anchor="w", pady=(4, 0))
+        self.nick = tk.StringVar(value=self.state_cfg.get("nick", ""))
+        tk.Entry(self, textvariable=self.nick, font=("Segoe UI", 10), width=24).pack(anchor="w")
         tk.Label(self, text="2) Que Java usas?", font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(8, 2))
         self.variant = tk.StringVar(value=self.state_cfg.get("variant", "java21"))
         for vkey, text in VARIANTS.items():
@@ -563,7 +592,7 @@ class App(tk.Tk):
     def key_for(self, profile, mode=None, variant=None):
         mode = mode or self.launcher.get()
         variant = variant or self.variant.get()
-        base = profile if mode == "prism" else f"{mode}:{profile}"
+        base = profile if mode == "prism" else f"{mode}:{profile}"  # prism conserva la clave antigua
         return base + ("@java25" if variant == "java25" else "")
 
     def refresh(self):
@@ -572,7 +601,7 @@ class App(tk.Tk):
         for name, (radio, desc) in self.radios.items():
             tag = state.get(self.key_for(name, mode), {}).get("tag")
             radio.config(text=f"{name}: {desc}" + (f"  [instalada: {tag}]" if tag else ""))
-        self.button.config(text="Jugar" if mode == "prism" else "Instalar / actualizar")
+        self.button.config(text="Jugar" if is_full(mode) else "Instalar / actualizar")
 
     def log(self, text):
         self.after(0, lambda: self.status.config(text=text))
@@ -583,7 +612,9 @@ class App(tk.Tk):
     def play(self):
         self.button.config(state="disabled")
         state = load_state()
-        state["_config"] = {"launcher": self.launcher.get(), "profile": self.profile.get(), "variant": self.variant.get()}
+        self.nick_value = "".join(c for c in self.nick.get().strip() if c.isalnum() or c == "_")[:16]
+        state["_config"] = {"launcher": self.launcher.get(), "profile": self.profile.get(), "variant": self.variant.get(),
+                            "nick": self.nick_value}
         save_state(state)
         threading.Thread(target=self.work, args=(self.launcher.get(), self.profile.get(), self.variant.get()), daemon=True).start()
 
@@ -640,7 +671,8 @@ class App(tk.Tk):
             state = load_state()
             key = self.key_for(profile, mode, variant)
             installed_tag = state.get(key, {}).get("tag")
-            if mode == "prism":
+            if is_full(mode):
+                CUR[0] = mode
                 ensure_prism(self.log, self.progress)
                 install_icon()
                 dest = instance_dir(profile, variant)
@@ -672,11 +704,25 @@ class App(tk.Tk):
             javaw = None
             if variant == "java25":
                 javaw = ensure_jdk25(self.log, self.progress)
-                if mode == "prism":
+                if is_full(mode):
                     patch_java(profile, variant, javaw)
-            if mode == "prism":
-                self.log("Abriendo Prism Launcher... (la primera vez tendras que iniciar sesion con tu cuenta de Minecraft)")
-                subprocess.Popen([prism_exe(), "--launch", instance_id(profile, variant)], cwd=PRISM_DIR)
+            if is_full(mode):
+                nick = getattr(self, "nick_value", "") if mode == "freesm" else ""
+                if mode == "freesm" and nick:
+                    self.log(f"Abriendo Freesm Launcher sin cuenta (jugador: {nick})...")
+                    subprocess.Popen([prism_exe(), "--launch", instance_id(profile, variant), "--offline", nick], cwd=fl()["dir"])
+                    time.sleep(2)
+                    self.after(0, self.destroy)
+                    return
+                if mode == "freesm" and not os.path.exists(os.path.join(fl()["dir"], "accounts.json")):
+                    self.info("Freesm Launcher: tu cuenta", FREESM_ACCOUNT)
+                    self.log("Abriendo Freesm Launcher... (la primera vez anade tu cuenta)")
+                    subprocess.Popen([prism_exe()], cwd=fl()["dir"])
+                    time.sleep(2)
+                    self.after(0, lambda: (self.refresh(), self.button.config(state="normal")))
+                    return
+                self.log(f"Abriendo {fl()['name']}..." + (" (la primera vez tendras que iniciar sesion con tu cuenta de Minecraft)" if mode == "prism" else ""))
+                subprocess.Popen([prism_exe(), "--launch", instance_id(profile, variant)], cwd=fl()["dir"])
                 time.sleep(2)
                 self.after(0, self.destroy)
                 return

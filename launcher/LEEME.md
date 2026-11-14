@@ -2,7 +2,7 @@
 
 Programa para jugadores: elige Alto / Medio / Bajo, pulsa Jugar y se encarga de todo (Prism portable propio, instancia, mods y actualizaciones).
 
-- Elige launcher: Prism (propio, portable), CurseForge (perfil GitanoLand creado a mano), TLauncher (instala NeoForge en .minecraft y deja los archivos en una carpeta aparte) u otro (carpeta a elegir). Solo Prism esta probado de punta a punta.
+- Elige launcher: Freesm (propio, portable; admite cuenta de Microsoft o solo un nombre de jugador, via `--offline`), Prism (propio, portable, solo con cuenta de Microsoft), CurseForge (perfil GitanoLand creado a mano), TLauncher (instala NeoForge en .minecraft y deja los archivos en una carpeta aparte) u otro (carpeta a elegir). Prism esta probado de punta a punta; Freesm solo hasta abrir la instancia (sin probar el juego completo).
 - Se actualiza solo: al abrir mira si hay una release `launcher-X.Y.Z` mas nueva (sube `LAUNCHER_VERSION` en cada release) y pregunta si instalarla.
 - Variantes Java 21 (por defecto) y Java 25: con la 25 baja un JDK propio a `%LOCALAPPDATA%GitanoLandJava25` y parchea `instance.cfg` (Prism) o muestra la ruta (otros launchers). Instancias Java 25 se llaman `GitanoLand-<Perfil>-J25`.
 - Datos en `%LOCALAPPDATA%\GitanoLand` (Prism, instancias y `state.json`).
