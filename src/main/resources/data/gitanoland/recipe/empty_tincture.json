@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [
+    { "type": "neoforge:mod_loaded", "modid": "smokeleafindustries" }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [" I ", "IPI", " I "],
+  "key": {
+    "I": {"item": "smokeleafindustries:hemp_plastic"},
+    "P": {"item": "minecraft:glass_pane"}
+  },
+  "result": {"id": "smokeleafindustries:empty_tincture", "count": 1}
+}

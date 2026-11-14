@@ -18,7 +18,7 @@ public class Config {
             .defineInRange("bagCapacity", 1000, 1, 1_000_000);
     public static final ModConfigSpec.IntValue BAG_CAPACITY_LARGE = B
             .comment("Kirkys que caben en la Bolsa grande.")
-            .defineInRange("bagCapacityLarge", 2000, 1, 1_000_000);
+            .defineInRange("bagCapacityLarge", 3000, 1, 1_000_000);
 
     public static final ModConfigSpec.BooleanValue UNLOCK_ALL_TIERS = B
             .comment("true = los aldeanos-tienda ofrecen TODOS los tratos desde el principio.",
@@ -61,12 +61,17 @@ public class Config {
             .defineInRange("hitMarkupDecayPerDay", 10, 0, 1000);
 
     public static final ModConfigSpec.DoubleValue GUNSMITH_PRICE_MULTIPLIER = B
-            .comment("Multiplicador de TODOS los precios en Kirkys del Gunsmith (1.03 = +3 %).",
+            .comment("Multiplicador de TODOS los precios en Kirkys del Gunsmith (1.0 = precio base).",
                     "Se redondea al Kirky más cercano, así que los precios muy bajos pueden no cambiar.")
-            .defineInRange("gunsmithPriceMultiplier", 1.03, 0.1, 20.0);
+            .defineInRange("gunsmithPriceMultiplier", 1.0, 0.1, 20.0);
     public static final ModConfigSpec.DoubleValue AMMO_PRICE_MULTIPLIER = B
             .comment("Multiplicador de TODOS los precios en Kirkys del Ammo Maker (1.0 = sin cambios).")
             .defineInRange("ammoMakerPriceMultiplier", 1.0, 0.1, 20.0);
+
+    public static final ModConfigSpec.IntValue WEEDSGUY_SPAWN_CHANCE = B
+            .comment("Probabilidad (en %) de que cada día aparezca el WeedsGuy cerca de un jugador del Overworld, como el Wandering Trader (0 = nunca).",
+                    "Solo hay un WeedsGuy a la vez y se va solo a los 2 días del juego.")
+            .defineInRange("weedsGuySpawnChancePerDay", 25, 0, 100);
 
     public static final ModConfigSpec.BooleanValue MISSIONS_ENABLED = B
             .comment("true = los aldeanos normales (herrero de armaduras, clérigo, bibliotecario...) tienen un trato especial por nivel que paga Kirkys (y algún trueque normal con Kirkys).")
