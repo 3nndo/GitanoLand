@@ -120,3 +120,4 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - **Receta del Empty Tincture (1.0.7):** hemp_plastic x4 + cristal fino en cruz (Smokeleaf no trae receta; Empty Bag y Empty Vial ya tienen la suya).
 - **1.0.7 publicada** (java21 + java25, tamaños verificados). Incluye Spud's Shops 1.10.3 (cliente y servidor). Pendiente: probar en mundo aldeas con Stoner, WeedsGuy y recetas; subir a Exaroton el jar nuevo y spudaciousshops.
 - **1.0.8 (14-11):** `recipe/CopyDiscRecipe` (gitanoland:copy_disc) copia discos con disco en blanco de Etched; Etch and Copy esta roto en 1.21.1 (su serializer no se registra y su receta esta en `recipes/`).
+- **Etched parcheado (1.0.8):** Etched 5.1.0 crashea al sacar un disco de la boombox (PlayingRecordComponent usa ItemStack.STREAM_CODEC no opcional). Parche ASM: GETSTATIC STREAM_CODEC -> OPTIONAL_STREAM_CODEC en <clinit>; jar `etched-5.1.0-patched.jar` (GPLv3, atribuido en las notas). Sin probar en cliente.
