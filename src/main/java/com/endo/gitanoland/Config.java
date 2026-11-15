@@ -61,9 +61,9 @@ public class Config {
             .defineInRange("hitMarkupDecayPerDay", 10, 0, 1000);
 
     public static final ModConfigSpec.DoubleValue GUNSMITH_PRICE_MULTIPLIER = B
-            .comment("Multiplicador de TODOS los precios en Kirkys del Gunsmith (1.0 = precio base).",
+            .comment("Multiplicador de TODOS los precios en Kirkys del Gunsmith (1.0 = precio base, 0.85 = -15 %).",
                     "Se redondea al Kirky más cercano, así que los precios muy bajos pueden no cambiar.")
-            .defineInRange("gunsmithPriceMultiplier", 1.0, 0.1, 20.0);
+            .defineInRange("gunsmithPriceMultiplier", 0.85, 0.1, 20.0);
     public static final ModConfigSpec.DoubleValue AMMO_PRICE_MULTIPLIER = B
             .comment("Multiplicador de TODOS los precios en Kirkys del Ammo Maker (1.0 = sin cambios).")
             .defineInRange("ammoMakerPriceMultiplier", 1.0, 0.1, 20.0);
@@ -79,13 +79,17 @@ public class Config {
 
     public static final ModConfigSpec.IntValue ACHIEVEMENT_KIRKYS = B
             .comment("Kirkys por cada logro normal (se reclaman en el menú de recompensas).")
-            .defineInRange("achievementKirkys", 3, 0, 1000);
+            .defineInRange("achievementKirkys", 5, 0, 1000);
     public static final ModConfigSpec.IntValue ACHIEVEMENT_CHALLENGE_KIRKYS = B
             .comment("Kirkys por cada logro de desafío (los morados).")
-            .defineInRange("achievementChallengeKirkys", 7, 0, 1000);
+            .defineInRange("achievementChallengeKirkys", 12, 0, 1000);
     public static final ModConfigSpec.IntValue DAILY_KIRKYS = B
             .comment("Kirkys de la recompensa diaria (una vez por día real).")
-            .defineInRange("dailyKirkys", 5, 0, 1000);
+            .defineInRange("dailyKirkys", 10, 0, 1000);
+
+    public static final ModConfigSpec.IntValue BANK_TAX_PERCENT = B
+            .comment("Impuesto (en %) que se cobra al depositar Kirkys en el banco (/banco). Retirar es gratis (0 = sin impuesto).")
+            .defineInRange("bankDepositTaxPercent", 5, 0, 100);
 
     public static final ModConfigSpec SPEC = B.build();
 }

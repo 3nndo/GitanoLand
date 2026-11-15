@@ -23,7 +23,7 @@ import java.util.List;
 public class StonerTrades {
     private static final ResourceLocation STONER = ResourceLocation.fromNamespaceAndPath("smokeleafindustries", "stoner");
     private static final int EMERALD_PERCENT = 35;
-    private static final int KIRKYS_PER_EMERALD = 3;
+    private static final int KIRKYS_PER_EMERALD = 4;
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onTrades(VillagerTradesEvent event) {
