@@ -1,0 +1,27 @@
+{
+  "parent": "root.json",
+  "text": "comandos.txt",
+  "title": "gitanoland.book.comandos",
+  "linked_page_buttons": [],
+  "images": [],
+  "item_renders": [
+    {
+      "item": "minecraft:command_block",
+      "x": 25,
+      "y": 14,
+      "page": 0,
+      "scale": 2.0
+    },
+    {
+      "item": "minecraft:command_block",
+      "x": 70,
+      "y": 70,
+      "page": 1,
+      "scale": 4.0
+    }
+  ],
+  "recipes": [],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

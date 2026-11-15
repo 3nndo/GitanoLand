@@ -1,0 +1,45 @@
+{
+  "parent": "root.json",
+  "text": "bolsas.txt",
+  "title": "gitanoland.book.bolsas",
+  "linked_page_buttons": [],
+  "images": [],
+  "item_renders": [
+    {
+      "item": "gitanoland:kirky_bag_large",
+      "x": 25,
+      "y": 14,
+      "page": 0,
+      "scale": 2.0
+    }
+  ],
+  "recipes": [
+    {
+      "recipe": "gitanoland:kirky_bag_small",
+      "shapeless": false,
+      "x": 20,
+      "y": 20,
+      "page": 1,
+      "scale": 1.3
+    },
+    {
+      "recipe": "gitanoland:kirky_bag",
+      "shapeless": false,
+      "x": 20,
+      "y": 100,
+      "page": 1,
+      "scale": 1.3
+    },
+    {
+      "recipe": "gitanoland:kirky_bag_large",
+      "shapeless": false,
+      "x": 210,
+      "y": 60,
+      "page": 1,
+      "scale": 1.3
+    }
+  ],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

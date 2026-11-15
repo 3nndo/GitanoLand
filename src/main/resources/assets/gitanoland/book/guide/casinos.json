@@ -1,0 +1,34 @@
+{
+  "parent": "root.json",
+  "text": "casinos.txt",
+  "title": "gitanoland.book.casinos",
+  "linked_page_buttons": [],
+  "images": [],
+  "item_renders": [
+    {
+      "item": "jackpot:red_slot_machine",
+      "x": 25,
+      "y": 14,
+      "page": 0,
+      "scale": 2.0
+    },
+    {
+      "item": "jackpot:red_slot_machine",
+      "x": 50,
+      "y": 50,
+      "page": 1,
+      "scale": 3.0
+    },
+    {
+      "item": "jackpot:plinko",
+      "x": 140,
+      "y": 60,
+      "page": 1,
+      "scale": 3.0
+    }
+  ],
+  "recipes": [],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

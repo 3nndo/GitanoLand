@@ -33,6 +33,12 @@ public class GitanoCommands {
                     com.endo.gitanoland.reward.RewardsMenu.open(ctx.getSource().getPlayerOrException());
                     return 1;
                 }))
+                .then(Commands.literal("libro").executes(ctx -> {
+                    ServerPlayer p = ctx.getSource().getPlayerOrException();
+                    net.minecraft.world.item.ItemStack book = com.endo.gitanoland.item.GuideBook.create();
+                    if (!p.getInventory().add(book)) p.drop(book, false);
+                    return 1;
+                }))
                 .then(Commands.literal("tacz_ids").requires(s -> s.hasPermission(2)).executes(ctx -> dumpIds(ctx.getSource())))
                 .then(Commands.literal("poi").requires(s -> s.hasPermission(2)).executes(ctx -> checkPoi(ctx.getSource()))));
     }

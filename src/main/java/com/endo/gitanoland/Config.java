@@ -42,6 +42,25 @@ public class Config {
             .comment("Premio (en Kirkys) por jackpot.")
             .defineInRange("slotJackpotReward", 64, 0, 64);
 
+    public static final ModConfigSpec.IntValue PLINKO_COST = B
+            .comment("Plinko (Jackpot): Kirkys que cuesta una partida.")
+            .defineInRange("plinkoCost", 3, 0, 64);
+    public static final ModConfigSpec.IntValue PLINKO_REWARD = B
+            .comment("Plinko (Jackpot): Kirkys del premio.")
+            .defineInRange("plinkoReward", 8, 0, 64);
+    public static final ModConfigSpec.IntValue CARDS_COST = B
+            .comment("Mesa de cartas, blackjack y poker (Jackpot): Kirkys de la apuesta.")
+            .defineInRange("cardsCost", 5, 0, 64);
+    public static final ModConfigSpec.IntValue CARDS_REWARD = B
+            .comment("Mesa de cartas, blackjack y poker (Jackpot): Kirkys del premio.")
+            .defineInRange("cardsReward", 10, 0, 64);
+    public static final ModConfigSpec.IntValue POOL_COST = B
+            .comment("Mesa de billar (Jackpot): Kirkys que cuesta una partida.")
+            .defineInRange("poolCost", 5, 0, 64);
+    public static final ModConfigSpec.IntValue POOL_REWARD = B
+            .comment("Mesa de billar (Jackpot): Kirkys del premio por ganar.")
+            .defineInRange("poolReward", 12, 0, 64);
+
     public static final ModConfigSpec.BooleanValue INFINITE_REWARDS = B
             .comment("false = la máquina paga desde un cofre enlazado (economía cerrada: los Kirkys perdidos",
                     "van al cofre y los premios salen de él). true = premios infinitos (crea Kirkys de la nada).")
@@ -60,10 +79,21 @@ public class Config {
             .comment("Puntos de recargo (%) que se le pasan al aldeano por cada día del juego (0 = nunca se le pasa).")
             .defineInRange("hitMarkupDecayPerDay", 10, 0, 1000);
 
+    public static final ModConfigSpec.BooleanValue CASINO_ATTACKS = B
+            .comment("Atentados en equipo: /atentado equipo [nombre] [jugador]... (en cualquier sitio) saca para todos el titulo ATENTADO",
+                    "con el equipo y los nombres, y cada miembro ve en pantalla la vida de su equipo mientras dura. false = desactivado.")
+            .define("casinoAttacksEnabled", true);
+    public static final ModConfigSpec.IntValue CASINO_ATTACK_DURATION = B
+            .comment("Minutos que dura un atentado (el cuadro con la vida del equipo se quita solo; tambien con /atentado fin).")
+            .defineInRange("casinoAttackDurationMinutes", 15, 1, 240);
+    public static final ModConfigSpec.IntValue CASINO_ATTACK_COOLDOWN = B
+            .comment("Minutos que tiene que esperar un jugador entre dos atentados.")
+            .defineInRange("casinoAttackCooldownMinutes", 10, 0, 1440);
+
     public static final ModConfigSpec.DoubleValue GUNSMITH_PRICE_MULTIPLIER = B
-            .comment("Multiplicador de TODOS los precios en Kirkys del Gunsmith (1.0 = precio base, 0.85 = -15 %).",
+            .comment("Multiplicador de TODOS los precios en Kirkys del Gunsmith (1.0 = precio base, 0.50 = -50 %).",
                     "Se redondea al Kirky más cercano, así que los precios muy bajos pueden no cambiar.")
-            .defineInRange("gunsmithPriceMultiplier", 0.85, 0.1, 20.0);
+            .defineInRange("gunsmithPriceMultiplier", 0.50, 0.1, 20.0);
     public static final ModConfigSpec.DoubleValue AMMO_PRICE_MULTIPLIER = B
             .comment("Multiplicador de TODOS los precios en Kirkys del Ammo Maker (1.0 = sin cambios).")
             .defineInRange("ammoMakerPriceMultiplier", 1.0, 0.1, 20.0);
@@ -72,6 +102,11 @@ public class Config {
             .comment("Probabilidad (en %) de que cada día aparezca el WeedsGuy cerca de un jugador del Overworld, como el Wandering Trader (0 = nunca).",
                     "Solo hay un WeedsGuy a la vez y se va solo a los 2 días del juego.")
             .defineInRange("weedsGuySpawnChancePerDay", 25, 0, 100);
+
+    public static final ModConfigSpec.IntValue SPECIALTY_CHANGE_BASE = B
+            .comment("Kirkys base para pagarle a un aldeano-tienda que cambie de especialidad (boton de la tienda).",
+                    "El precio de cada especialidad = base x (peso total / peso de esa especialidad): cuanto mas rara, mas cara (0 = gratis).")
+            .defineInRange("specialtyChangeBaseKirkys", 60, 0, 100000);
 
     public static final ModConfigSpec.BooleanValue MISSIONS_ENABLED = B
             .comment("true = los aldeanos normales (herrero de armaduras, clérigo, bibliotecario...) tienen un trato especial por nivel que paga Kirkys (y algún trueque normal con Kirkys).")

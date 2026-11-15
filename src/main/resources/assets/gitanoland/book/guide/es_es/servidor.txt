@@ -1,0 +1,9 @@
+Si el servidor no pide cuenta de Microsoft, la primera vez tienes que registrarte:
+<NEWLINE>
+/register contraseña contraseña
+<NEWLINE>
+Y las siguientes veces:
+<NEWLINE>
+/login contraseña
+<NEWLINE>
+Si juegas con una cuenta de Microsoft entras solo.

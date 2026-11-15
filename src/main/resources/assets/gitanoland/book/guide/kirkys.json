@@ -1,0 +1,48 @@
+{
+  "parent": "root.json",
+  "text": "kirkys.txt",
+  "title": "gitanoland.book.kirkys",
+  "linked_page_buttons": [],
+  "images": [],
+  "item_renders": [
+    {
+      "item": "gitanoland:kirky",
+      "x": 25,
+      "y": 14,
+      "page": 0,
+      "scale": 2.0
+    },
+    {
+      "item": "gitanoland:kirky",
+      "x": 40,
+      "y": 40,
+      "page": 1,
+      "scale": 3.0
+    },
+    {
+      "item": "minecraft:emerald",
+      "x": 120,
+      "y": 60,
+      "page": 1,
+      "scale": 2.0
+    },
+    {
+      "item": "minecraft:gold_ingot",
+      "x": 40,
+      "y": 120,
+      "page": 1,
+      "scale": 2.0
+    },
+    {
+      "item": "minecraft:diamond",
+      "x": 120,
+      "y": 140,
+      "page": 1,
+      "scale": 2.0
+    }
+  ],
+  "recipes": [],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

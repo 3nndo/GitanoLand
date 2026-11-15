@@ -1,0 +1,48 @@
+{
+  "parent": "root.json",
+  "text": "armas.txt",
+  "title": "gitanoland.book.armas",
+  "linked_page_buttons": [],
+  "images": [],
+  "item_renders": [
+    {
+      "item": "tacz:gun_smith_table",
+      "x": 25,
+      "y": 14,
+      "page": 0,
+      "scale": 2.0
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "x": 50,
+      "y": 40,
+      "page": 1,
+      "scale": 3.0
+    },
+    {
+      "item": "minecraft:gold_ingot",
+      "x": 130,
+      "y": 40,
+      "page": 1,
+      "scale": 3.0
+    },
+    {
+      "item": "minecraft:netherite_ingot",
+      "x": 50,
+      "y": 130,
+      "page": 1,
+      "scale": 3.0
+    },
+    {
+      "item": "minecraft:nether_star",
+      "x": 130,
+      "y": 130,
+      "page": 1,
+      "scale": 3.0
+    }
+  ],
+  "recipes": [],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

@@ -35,15 +35,24 @@ public class ShopMenu extends AbstractContainerMenu {
     private final List<ShopOffer> offers;
     private final AbstractVillager villager; // solo en el servidor (aldeano o WeedsGuy)
     private final Player owner;
+    private final List<SpecChoice> specs;
+
+    /** Una especialidad a la que se puede cambiar al aldeano, con su precio en Kirkys (cuanto mas rara, mas cara). */
+    public record SpecChoice(String id, int cost, boolean current) {}
+
+    /** Los ids de boton >= SPEC_BASE son 'cambiar a la especialidad (id - SPEC_BASE)'; los demas son compras. */
+    public static final int SPEC_BASE = 1000;
 
     /** Servidor y cliente. */
-    private ShopMenu(int id, Inventory inv, String theme, int markup, List<ShopOffer> offers, AbstractVillager villager) {
+    private ShopMenu(int id, Inventory inv, String theme, int markup, List<ShopOffer> offers, AbstractVillager villager,
+                     List<SpecChoice> specs) {
         super(ModMenus.SHOP.get(), id);
         this.theme = theme;
         this.markup = markup;
         this.offers = offers;
         this.villager = villager;
         this.owner = inv.player;
+        this.specs = specs;
         for (int row = 0; row < 3; row++)
             for (int col = 0; col < 9; col++)
                 addSlot(new Slot(inv, col + row * 9 + 9, INV_X + col * 18, INV_Y + row * 18));
@@ -53,18 +62,24 @@ public class ShopMenu extends AbstractContainerMenu {
 
     /** Cliente: lee las ofertas que mandó el servidor. */
     public ShopMenu(int id, Inventory inv, RegistryFriendlyByteBuf buf) {
-        this(id, inv, buf.readUtf(), buf.readVarInt(), read(buf), null);
+        this(id, inv, buf.readUtf(), buf.readVarInt(), read(buf), null, readSpecs(buf));
     }
 
     /** Abre la tienda a un jugador (servidor). */
     public static void open(ServerPlayer player, Component title, String theme, int markup,
-                            List<ShopOffer> offers, AbstractVillager villager) {
+                            List<ShopOffer> offers, AbstractVillager villager, List<SpecChoice> specs) {
         player.openMenu(new net.minecraft.world.SimpleMenuProvider(
-                (id, inv, p) -> new ShopMenu(id, inv, theme, markup, offers, villager), title),
+                (id, inv, p) -> new ShopMenu(id, inv, theme, markup, offers, villager, specs), title),
                 buf -> {
                     buf.writeUtf(theme);
                     buf.writeVarInt(markup);
                     write(buf, offers);
+                    buf.writeVarInt(specs.size());
+                    for (SpecChoice c : specs) {
+                        buf.writeUtf(c.id());
+                        buf.writeVarInt(c.cost());
+                        buf.writeBoolean(c.current());
+                    }
                 });
         // Como en el comercio de vanilla: el aldeano se queda quieto y te mira mientras tienes su tienda abierta.
         if (villager != null) villager.setTradingPlayer(player);
@@ -88,6 +103,18 @@ public class ShopMenu extends AbstractContainerMenu {
 
     public List<ShopOffer> offers() {
         return offers;
+    }
+
+    /** Especialidades a las que se puede cambiar (vacio si la tienda no tiene o solo hay una). */
+    public List<SpecChoice> specs() {
+        return specs;
+    }
+
+    private static List<SpecChoice> readSpecs(RegistryFriendlyByteBuf buf) {
+        int n = buf.readVarInt();
+        List<SpecChoice> out = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) out.add(new SpecChoice(buf.readUtf(), buf.readVarInt(), buf.readBoolean()));
+        return out;
     }
 
     // ------------------------------------------------------------------ red
@@ -129,8 +156,30 @@ public class ShopMenu extends AbstractContainerMenu {
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        if (!(player instanceof ServerPlayer sp) || id < 0 || id >= offers.size()) return false;
+        if (!(player instanceof ServerPlayer sp) || id < 0) return false;
+        if (id >= SPEC_BASE) return changeSpecialty(sp, id - SPEC_BASE);
+        if (id >= offers.size()) return false;
         purchase(sp, offers.get(id));
+        return true;
+    }
+
+    /** Pagar Kirkys para que el aldeano cambie de especialidad (el precio sube con la rareza de la nueva). */
+    private boolean changeSpecialty(ServerPlayer p, int idx) {
+        if (!(villager instanceof Villager v) || idx < 0 || idx >= specs.size()) return false;
+        SpecChoice c = specs.get(idx);
+        if (c.current()) return true;
+        if (Wallet.countKirkys(p) < c.cost()) {
+            p.sendSystemMessage(colored(Component.translatable("gitanoland.shop.change.fail", c.cost()), ChatFormatting.RED));
+            p.level().playSound(null, p.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1f, 1f);
+            return true;
+        }
+        Wallet.takeKirkys(p, c.cost());
+        v.getPersistentData().putString(Shops.SPEC_KEY, c.id());
+        p.sendSystemMessage(colored(Component.translatable("gitanoland.shop.changed",
+                Component.translatable("gitanoland.specialty." + theme + "." + c.id())), ChatFormatting.GREEN));
+        p.level().playSound(null, p.blockPosition(), SoundEvents.VILLAGER_YES, SoundSource.NEUTRAL, 1f, 1f);
+        // se vuelve a abrir la tienda para que enseñe ya las ofertas de la nueva especialidad
+        if (p.getServer() != null) p.getServer().execute(() -> Shops.openVillager(p, v, theme));
         return true;
     }
 

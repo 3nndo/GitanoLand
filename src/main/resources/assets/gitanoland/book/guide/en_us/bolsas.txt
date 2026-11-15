@@ -1,0 +1,3 @@
+Guardan solo Kirkys. Clic derecho: guarda los que lleves. Shift + clic derecho: saca un stack.
+<NEWLINE>
+Pequeña 500, normal 1000 y grande 3000 (pide nether star). Al mejorarla se conservan los Kirkys.

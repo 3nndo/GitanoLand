@@ -1,0 +1,41 @@
+{
+  "parent": "root.json",
+  "text": "tiendas.txt",
+  "title": "gitanoland.book.tiendas",
+  "linked_page_buttons": [],
+  "images": [],
+  "item_renders": [
+    {
+      "item": "gitanoland:gunsmith_spawn_egg",
+      "x": 25,
+      "y": 14,
+      "page": 0,
+      "scale": 2.0
+    },
+    {
+      "item": "gitanoland:gunsmith_spawn_egg",
+      "x": 40,
+      "y": 40,
+      "page": 1,
+      "scale": 3.0
+    },
+    {
+      "item": "gitanoland:ammo_maker_spawn_egg",
+      "x": 120,
+      "y": 60,
+      "page": 1,
+      "scale": 3.0
+    },
+    {
+      "item": "gitanoland:weedsguy_spawn_egg",
+      "x": 40,
+      "y": 140,
+      "page": 1,
+      "scale": 3.0
+    }
+  ],
+  "recipes": [],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

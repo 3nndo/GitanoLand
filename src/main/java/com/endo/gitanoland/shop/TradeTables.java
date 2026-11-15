@@ -179,6 +179,26 @@ public final class TradeTables {
         return t.specialties().get(0);
     }
 
+    /** Especialidad con posible cambio pagado: si el aldeano tiene una elegida (override) manda esa; si no, la de su semilla. */
+    public static Specialty specialty(Table t, long seed, String override) {
+        if (override != null && !override.isEmpty()) {
+            for (Specialty s : t.specialties()) if (s.id().equals(override)) return s;
+        }
+        return specialty(t, seed);
+    }
+
+    /** Ofertas de un aldeano con su especialidad elegida (override vacio = la de su semilla). */
+    public static Result buildLeveled(Table t, int villagerLevel, long seed, String override) {
+        return buildLeveledFor(t, specialty(t, seed, override), villagerLevel, seed);
+    }
+
+    /** Kirkys que cuesta cambiar a esta especialidad: proporcional a su rareza (peso total / peso). */
+    public static int changeCost(Table t, Specialty s) {
+        int total = 0;
+        for (Specialty x : t.specialties()) total += x.weight();
+        return (int) Math.round(com.endo.gitanoland.Config.SPECIALTY_CHANGE_BASE.get() * (double) total / s.weight());
+    }
+
     /** Ofertas de un aldeano: todos los niveles hasta el actual. Lo "lucky" es estable por aldeano (semilla). */
     public static Result buildLeveled(Table t, int villagerLevel, long seed) {
         return buildLeveledFor(t, specialty(t, seed), villagerLevel, seed);
