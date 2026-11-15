@@ -1,0 +1,7 @@
+{
+  "neoforge:conditions": [
+    { "type": "neoforge:mod_loaded", "modid": "etched" }
+  ],
+  "type": "gitanoland:copy_disc",
+  "category": "misc"
+}

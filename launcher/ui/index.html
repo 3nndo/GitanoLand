@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>GitanoLand</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- efecto "liquid glass": filtro de refraccion que se usa en backdrop-filter (ver .glass en style.css) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <filter id="liquid" x="-3%" y="-3%" width="106%" height="106%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.010 0.016" numOctaves="2" seed="11" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="2.5" result="soft"/>
+      <feDisplacementMap in="SourceGraphic" in2="soft" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs></svg>
+  <div id="bg"><div class="aurora"><i></i><i></i><i></i><i></i></div></div>
+  <div id="titlebar" class="glass">
+    <div class="drag pywebview-drag-region"><img class="logo" src="img/logo.png" alt=""><span class="ver" id="ver"></span></div>
+    <button class="wbtn" id="min" title="Minimizar">&#8212;</button>
+    <button class="wbtn close" id="close" title="Cerrar">&#10005;</button>
+  </div>
+  <div id="view"></div>
+  <div id="modal"></div>
+  <div id="toast"></div>
+  <script>
+    // modo prueba en el navegador (sin Python): index.html?mock
+    if (location.search.includes("mock")) {
+      window.__MOCK__ = true;
+      document.write('<script src="mock.js"><\/script>');
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

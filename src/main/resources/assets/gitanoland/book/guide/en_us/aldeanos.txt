@@ -1,0 +1,5 @@
+Los aldeanos normales tienen un trato especial por nivel: piden objetos difíciles y pagan Kirkys (hasta 150).
+<NEWLINE>
+Cada trato se puede hacer 2 veces (3 si le caes muy bien).
+<NEWLINE>
+El Stoner de Smokeleaf está en todas las aldeas y paga casi todo en Kirkys.

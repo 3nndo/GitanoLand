@@ -1,0 +1,34 @@
+{
+  "parent": "root.json",
+  "text": "especialidades.txt",
+  "title": "gitanoland.book.especialidades",
+  "linked_page_buttons": [],
+  "images": [],
+  "item_renders": [
+    {
+      "item": "minecraft:name_tag",
+      "x": 25,
+      "y": 14,
+      "page": 0,
+      "scale": 2.0
+    },
+    {
+      "item": "minecraft:name_tag",
+      "x": 60,
+      "y": 60,
+      "page": 1,
+      "scale": 4.0
+    },
+    {
+      "item": "gitanoland:kirky",
+      "x": 150,
+      "y": 90,
+      "page": 1,
+      "scale": 3.0
+    }
+  ],
+  "recipes": [],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

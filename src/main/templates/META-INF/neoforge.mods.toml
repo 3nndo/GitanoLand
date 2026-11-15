@@ -50,8 +50,8 @@ Los Kirkys, la moneda de GitanoLand.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
-#[[mixins]]
-#config="${mod_id}.mixins.json"
+[[mixins]]
+config="${mod_id}.mixins.json"
 
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
@@ -98,6 +98,14 @@ Los Kirkys, la moneda de GitanoLand.
     modId="smokeleafindustries"
     type="required"
     versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+# Citadel: el libro-guia usa su sistema de libros (el mismo que el Animal Dictionary de Alex's Mobs).
+[[dependencies.${mod_id}]]
+    modId="citadel"
+    type="required"
+    versionRange="[2.0,)"
     ordering="AFTER"
     side="BOTH"
 

@@ -2,7 +2,13 @@ package com.endo.gitanoland.compat;
 
 import com.endo.gitanoland.GitanoLand;
 import com.endo.gitanoland.Config;
+import net.exavior.jackpot.block.CardDeckBlock;
+import net.exavior.jackpot.block.PlinkoBlock;
+import net.exavior.jackpot.block.PoolTableBlock;
 import net.exavior.jackpot.block.SlotMachineBlock;
+import net.exavior.jackpot.block.entity.CardDeckBlockEntity;
+import net.exavior.jackpot.block.entity.PlinkoBlockEntity;
+import net.exavior.jackpot.block.entity.PoolTableBlockEntity;
 import net.exavior.jackpot.block.entity.SlotMachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -21,14 +27,40 @@ public final class JackpotCompat {
     private static void onPlace(BlockEvent.EntityPlaceEvent event) {
         if (!Config.AUTO_SLOTS.get()) return;
         if (!(event.getLevel() instanceof ServerLevel level)) return;
-        if (!(event.getPlacedBlock().getBlock() instanceof SlotMachineBlock)) return;
+        var block = event.getPlacedBlock().getBlock();
+        if (!(block instanceof SlotMachineBlock || block instanceof PlinkoBlock || block instanceof CardDeckBlock
+                || block instanceof PoolTableBlock)) return;
         BlockPos pos = event.getPos().immutable();
         // Un tick después, para asegurarnos de que el block entity ya existe.
         level.getServer().execute(() -> configure(level, pos));
     }
 
     private static void configure(ServerLevel level, BlockPos pos) {
-        if (!(level.getBlockEntity(pos) instanceof SlotMachineBlockEntity slot)) return;
+        var be = level.getBlockEntity(pos);
+        boolean infinite = Config.INFINITE_REWARDS.get();
+        // Plinko, mesa de cartas (blackjack/poker) y billar: solo se configuran si estan "vacios" (no pisamos nada)
+        if (be instanceof PlinkoBlockEntity p) {
+            if (!p.getPlayCost().isEmpty() || !p.getReward().isEmpty()) return;
+            p.setPlayCost(kirkys(Config.PLINKO_COST.get()));
+            p.setReward(kirkys(Config.PLINKO_REWARD.get()));
+            p.setConfig(p.getChipTexture(), p.allowMultipleChips, p.loop, infinite);
+            return;
+        }
+        if (be instanceof CardDeckBlockEntity c) {
+            if (!c.getPlayCost().isEmpty() || !c.getReward().isEmpty()) return;
+            c.setPlayCost(kirkys(Config.CARDS_COST.get()));
+            c.setReward(kirkys(Config.CARDS_REWARD.get()));
+            c.setConfig(c.getTableMode(), c.getBlackjackMode(), c.getDifficultyMode(), infinite);
+            return;
+        }
+        if (be instanceof PoolTableBlockEntity t) {
+            if (!t.getPlayCost().isEmpty() || !t.getReward().isEmpty()) return;
+            t.setPlayCost(kirkys(Config.POOL_COST.get()));
+            t.setReward(kirkys(Config.POOL_REWARD.get()));
+            t.setConfig(t.getTableMode(), t.getDifficulty(), t.getAiStyle(), t.isLowFriction(), infinite);
+            return;
+        }
+        if (!(be instanceof SlotMachineBlockEntity slot)) return;
         // Solo máquinas "vacías": no pisamos una configuración que ya exista.
         if (!slot.getPlayCost().isEmpty()
                 || !slot.getTwoMatchReward().isEmpty()

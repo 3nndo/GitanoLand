@@ -48,6 +48,9 @@ public class GitanoLand {
     public static final DeferredItem<Item> KIRKY = ITEMS.registerSimpleItem("kirky", new Item.Properties());
     // Solo para el icono de la pestaña creativa: cambia textures/item/tab_icon.png por la tuya.
     public static final DeferredItem<Item> TAB_ICON = ITEMS.registerSimpleItem("tab_icon", new Item.Properties());
+    // Libro-guia con paginas, iconos y recetas (Citadel).
+    public static final DeferredItem<Item> GUIDE_BOOK = ITEMS.registerItem("guide_book",
+            p -> new com.endo.gitanoland.item.GuideBookItem(p), new Item.Properties().stacksTo(1));
     // Huevo para invocar al WeedsGuy (también: /summon gitanoland:weedsguy).
     public static final DeferredItem<Item> WEEDSGUY_EGG = ITEMS.register("weedsguy_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.WEEDSGUY, 0x2F5D2A, 0xC9E37A, new Item.Properties()));
@@ -77,6 +80,7 @@ public class GitanoLand {
                         output.accept(WEEDSGUY_EGG.get());
                         output.accept(AMMO_MAKER_EGG.get());
                         output.accept(GUNSMITH_EGG.get());
+                        output.accept(GUIDE_BOOK.get());
                     })
                     .build());
 
@@ -84,6 +88,7 @@ public class GitanoLand {
         ITEMS.register(modEventBus);
         TABS.register(modEventBus);
         COMPONENTS.register(modEventBus);
+        com.endo.gitanoland.recipe.CopyDiscRecipe.SERIALIZERS.register(modEventBus);
         ModVillagers.register(modEventBus);
         ModEntities.register(modEventBus);
         ModMenus.register(modEventBus);

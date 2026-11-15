@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [" S ", "NBN", "DDD"],
+  "key": {
+    "S": {"item": "minecraft:nether_star"},
+    "N": {"item": "minecraft:netherite_ingot"},
+    "D": {"item": "minecraft:diamond"},
+    "B": {"item": "gitanoland:kirky_bag"}
+  },
+  "result": {"id": "gitanoland:kirky_bag_large", "count": 1}
+}

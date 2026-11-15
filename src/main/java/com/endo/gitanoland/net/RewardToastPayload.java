@@ -31,6 +31,8 @@ public record RewardToastPayload(int kirkys, boolean challenge) implements Custo
             var registrar = event.registrar("1").optional();
             registrar.playToClient(TYPE, CODEC,
                     (payload, ctx) -> ctx.enqueueWork(() -> com.endo.gitanoland.client.RewardToast.show(payload.kirkys(), payload.challenge())));
+            registrar.playToClient(TeamHudPayload.TYPE, TeamHudPayload.CODEC,
+                    (payload, ctx) -> ctx.enqueueWork(() -> com.endo.gitanoland.client.TeamHud.set(payload.team(), payload.members())));
             registrar.playToServer(OpenRewardsPayload.TYPE, OpenRewardsPayload.CODEC, OpenRewardsPayload::handle);
         }
     }

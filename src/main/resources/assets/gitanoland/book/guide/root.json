@@ -1,0 +1,101 @@
+{
+  "parent": "",
+  "text": "root.txt",
+  "title": "gitanoland.book.title",
+  "linked_page_buttons": [
+    {
+      "linked_page": "kirkys.json",
+      "text": "gitanoland.book.kirkys",
+      "x": 97,
+      "y": 80,
+      "page": 0,
+      "icon": "gitanoland:kirky"
+    },
+    {
+      "linked_page": "bolsas.json",
+      "text": "gitanoland.book.bolsas",
+      "x": 97,
+      "y": 102,
+      "page": 0,
+      "icon": "gitanoland:kirky_bag_large"
+    },
+    {
+      "linked_page": "tiendas.json",
+      "text": "gitanoland.book.tiendas",
+      "x": 97,
+      "y": 124,
+      "page": 0,
+      "icon": "gitanoland:gunsmith_spawn_egg"
+    },
+    {
+      "linked_page": "especialidades.json",
+      "text": "gitanoland.book.especialidades",
+      "x": 97,
+      "y": 146,
+      "page": 0,
+      "icon": "minecraft:name_tag"
+    },
+    {
+      "linked_page": "aldeanos.json",
+      "text": "gitanoland.book.aldeanos",
+      "x": 291,
+      "y": 12,
+      "page": 0,
+      "icon": "minecraft:emerald"
+    },
+    {
+      "linked_page": "armas.json",
+      "text": "gitanoland.book.armas",
+      "x": 291,
+      "y": 34,
+      "page": 0,
+      "icon": "tacz:gun_smith_table"
+    },
+    {
+      "linked_page": "discos.json",
+      "text": "gitanoland.book.discos",
+      "x": 291,
+      "y": 56,
+      "page": 0,
+      "icon": "etched:blank_music_disc"
+    },
+    {
+      "linked_page": "casinos.json",
+      "text": "gitanoland.book.casinos",
+      "x": 291,
+      "y": 78,
+      "page": 0,
+      "icon": "jackpot:red_slot_machine"
+    },
+    {
+      "linked_page": "atentado.json",
+      "text": "gitanoland.book.atentado",
+      "x": 291,
+      "y": 100,
+      "page": 0,
+      "icon": "minecraft:tnt"
+    },
+    {
+      "linked_page": "comandos.json",
+      "text": "gitanoland.book.comandos",
+      "x": 291,
+      "y": 122,
+      "page": 0,
+      "icon": "minecraft:command_block"
+    },
+    {
+      "linked_page": "servidor.json",
+      "text": "gitanoland.book.servidor",
+      "x": 291,
+      "y": 144,
+      "page": 0,
+      "icon": "minecraft:writable_book"
+    }
+  ],
+  "images": [],
+  "item_renders": [],
+  "recipes": [],
+  "tabula_renders": [],
+  "entity_renders": [],
+  "entity_buttons": []
+}

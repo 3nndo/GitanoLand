@@ -2,7 +2,7 @@
  "specialties": [
   {
    "id": "pistolero",
-   "weight": 3,
+   "weight": 4,
    "levels": [
     {
      "level": 1,
@@ -92,109 +92,109 @@
       },
       {
        "type": "tacz",
-       "kirkys": 190,
+       "kirkys": 162,
        "id": "tacz:glock_17",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 10
+         "count": 5
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 195,
+       "kirkys": 166,
        "id": "daffas_arsenal:welrod",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 10
+         "count": 5
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 205,
+       "kirkys": 174,
        "id": "daffas_arsenal:p99_hak",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 10
+         "count": 5
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 205,
+       "kirkys": 174,
        "id": "tacz:lonetrail",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 10
+         "count": 5
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 220,
+       "kirkys": 187,
        "id": "daffas_arsenal:p99_nohak",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 11
+         "count": 6
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 225,
+       "kirkys": 191,
        "id": "daffas_arsenal:hk45",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 11
+         "count": 6
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 225,
+       "kirkys": 191,
        "id": "daffas_arsenal:hk45_sup",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 11
+         "count": 6
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 270,
+       "kirkys": 230,
        "id": "tacz:m9a4",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 14
+         "count": 7
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 270,
+       "kirkys": 230,
        "id": "tacz:rhino357",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 14
+         "count": 7
         }
        ]
       }
@@ -205,79 +205,79 @@
      "trades": [
       {
        "type": "tacz",
-       "kirkys": 305,
+       "kirkys": 259,
        "id": "tacz:m1911",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 15
+         "count": 8
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 330,
+       "kirkys": 280,
        "id": "tacz:deagle_golden",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 16
+         "count": 8
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 350,
+       "kirkys": 298,
        "id": "tacz:cz75",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 18
+         "count": 9
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 350,
+       "kirkys": 298,
        "id": "tacz:p320",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 18
+         "count": 9
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 360,
+       "kirkys": 306,
        "id": "tacz:timeless50",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 18
+         "count": 9
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 380,
+       "kirkys": 323,
        "id": "tacz:deagle",
        "count": 1,
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 19
+         "count": 10
         }
        ]
       },
       {
        "type": "tacz",
-       "kirkys": 445,
+       "kirkys": 378,
        "id": "tacz:taurus500",
        "count": 1,
        "extra": [
@@ -289,7 +289,7 @@
       },
       {
        "type": "tacz",
-       "kirkys": 450,
+       "kirkys": 382,
        "id": "tacz:b93r",
        "count": 1,
        "extra": [
@@ -301,7 +301,7 @@
       },
       {
        "type": "tacz",
-       "kirkys": 450,
+       "kirkys": 382,
        "id": "tacz:tec_9",
        "count": 1,
        "extra": [
@@ -317,7 +317,7 @@
   },
   {
    "id": "fusilero",
-   "weight": 3,
+   "weight": 2,
    "levels": [
     {
      "level": 1,
@@ -454,7 +454,7 @@
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 18
+         "count": 9
         }
        ]
       },
@@ -925,7 +925,7 @@
   },
   {
    "id": "escopetero",
-   "weight": 2,
+   "weight": 3,
    "levels": [
     {
      "level": 1,
@@ -1014,7 +1014,7 @@
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 16
+         "count": 8
         }
        ]
       },
@@ -1026,7 +1026,7 @@
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 18
+         "count": 9
         }
        ]
       },
@@ -1038,7 +1038,7 @@
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 18
+         "count": 9
         }
        ]
       },
@@ -1050,7 +1050,7 @@
        "extra": [
         {
          "item": "minecraft:iron_ingot",
-         "count": 20
+         "count": 10
         }
        ]
       },
@@ -1317,7 +1317,7 @@
   },
   {
    "id": "cazador",
-   "weight": 2,
+   "weight": 3,
    "levels": [
     {
      "level": 1,

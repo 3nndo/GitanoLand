@@ -1,0 +1,5 @@
+Cada Gunsmith y Ammo Maker vende una especialidad: pistolas, fusiles, escopetas, rifles de caza...
+<NEWLINE>
+Botón CAMBIAR (arriba a la derecha de la tienda): pagas Kirkys y el aldeano cambia de especialidad. Cuanto más rara es la nueva, más cuesta.
+<NEWLINE>
+La especialidad elegida se queda guardada en ese aldeano.

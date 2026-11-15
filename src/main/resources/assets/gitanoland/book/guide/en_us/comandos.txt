@@ -1,0 +1,9 @@
+/gitanoland rewards: menú de recompensas (también Alt + K).
+<NEWLINE>
+/gitanoland libro: te da este libro.
+<NEWLINE>
+/atentado ...: atentado en equipo.
+<NEWLINE>
+/atentadohud mover: cuadro de vida del equipo.
+<NEWLINE>
+/banco ...: banco digital (experimental, apagado por defecto).

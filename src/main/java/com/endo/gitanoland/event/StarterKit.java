@@ -16,8 +16,12 @@ public class StarterKit {
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         int amount = Config.STARTER_KIRKYS.get();
-        if (amount <= 0 || player.getTags().contains(TAG)) return;
+        if (player.getTags().contains(TAG)) return;
         player.addTag(TAG);
+        // el librillo con la guia del mod (tambien se puede pedir con /gitanoland libro)
+        ItemStack book = com.endo.gitanoland.item.GuideBook.create();
+        if (!player.getInventory().add(book)) player.drop(book, false);
+        if (amount <= 0) return;
 
         for (int left = amount; left > 0; ) {
             int n = Math.min(64, left);

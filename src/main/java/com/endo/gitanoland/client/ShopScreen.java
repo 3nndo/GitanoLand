@@ -38,6 +38,31 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     private final ItemStack kirkyIcon = new ItemStack(GitanoLand.KIRKY.get());
     private int scroll = 0;
     private int have = 0;
+    private boolean showSpecs = false;            // panel "cambiar especialidad" abierto
+    private static final int SPEC_ROW_H = 17;
+    private static final int CHG_W = 62;
+    private static final int CHG_H = 12;
+
+    /** Hay mas de una especialidad: se puede pagar para cambiarla. */
+    private boolean canChange() {
+        return menu.specs().size() > 1;
+    }
+
+    private int chgX() { return leftPos + imageWidth - CHG_W - 6; }
+    private int chgY() { return topPos + 3; }
+
+    private boolean overChange(double mx, double my) {
+        return canChange() && mx >= chgX() && mx < chgX() + CHG_W && my >= chgY() && my < chgY() + CHG_H;
+    }
+
+    /** Fila del panel de especialidades bajo el raton, o -1. */
+    private int specAt(double mx, double my) {
+        if (!showSpecs) return -1;
+        double rx = mx - leftPos - LIST_X, ry = my - topPos - LIST_Y - 16;
+        if (rx < 0 || rx >= LIST_W || ry < 0) return -1;
+        int i = (int) (ry / SPEC_ROW_H);
+        return i < menu.specs().size() ? i : -1;
+    }
 
     public ShopScreen(ShopMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
@@ -92,7 +117,8 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         // lista
         g.fill(x + LIST_X - 1, y + LIST_Y - 1, x + LIST_X + LIST_W + 1, y + LIST_Y + VISIBLE * ROW_H + 1, th.listBg());
         List<ShopOffer> offers = menu.offers();
-        for (int i = 0; i < VISIBLE; i++) {
+        int rows = showSpecs ? 0 : VISIBLE;        // con el panel de especialidades abierto no se dibuja la lista debajo (se solapaba)
+        for (int i = 0; i < rows; i++) {
             int idx = scroll + i;
             if (idx >= offers.size()) break;
             ShopOffer o = offers.get(idx);
@@ -134,12 +160,40 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         }
 
         // barra de scroll
-        if (offers.size() > VISIBLE) {
+        if (!showSpecs && offers.size() > VISIBLE) {
             int trackH = VISIBLE * ROW_H;
             int barH = Math.max(10, trackH * VISIBLE / offers.size());
             int barY = y + LIST_Y + (trackH - barH) * scroll / maxScroll();
             g.fill(x + LIST_X + LIST_W + 2, y + LIST_Y, x + LIST_X + LIST_W + 4, y + LIST_Y + trackH, 0xFF555555);
             g.fill(x + LIST_X + LIST_W + 2, barY, x + LIST_X + LIST_W + 4, barY + barH, 0xFFFFFFFF);
+        }
+
+        // boton "Cambiar" (arriba a la derecha) y su panel de especialidades
+        if (canChange()) {
+            boolean hb = mouseX >= chgX() && mouseX < chgX() + CHG_W && mouseY >= chgY() && mouseY < chgY() + CHG_H;
+            g.fill(chgX(), chgY(), chgX() + CHG_W, chgY() + CHG_H, hb || showSpecs ? th.rowHover() : th.row());
+            String lbl = Component.translatable("gitanoland.shop.change").getString();
+            g.drawString(font, lbl, chgX() + (CHG_W - font.width(lbl)) / 2, chgY() + 2, 0xFFFFFF, false);
+        }
+        if (showSpecs) {
+            int px = x + LIST_X, py = y + LIST_Y;
+            g.fill(px - 1, py - 1, px + LIST_W + 1, py + VISIBLE * ROW_H + 1, th.listBg());
+            g.drawString(font, Component.translatable("gitanoland.shop.change.title"), px + 4, py + 4, th.balance(), false);
+            int hov = specAt(mouseX, mouseY);
+            for (int i = 0; i < menu.specs().size(); i++) {
+                ShopMenu.SpecChoice c = menu.specs().get(i);
+                int ry = py + 16 + i * SPEC_ROW_H;
+                boolean can = c.current() || have >= c.cost();
+                g.fill(px, ry, px + LIST_W, ry + SPEC_ROW_H - 1, i == hov ? th.rowHover() : (can ? th.row() : th.rowNo()));
+                String name = Component.translatable("gitanoland.specialty." + menu.theme() + "." + c.id()).getString();
+                g.drawString(font, (c.current() ? "✓ " : "") + name, px + 4, ry + 4, 0xFFFFFF, true);
+                if (!c.current()) {
+                    String t = String.valueOf(c.cost());
+                    int tw = font.width(t);
+                    smallItem(g, kirkyIcon, px + LIST_W - tw - 14, ry + 3);
+                    g.drawString(font, t, px + LIST_W - tw - 4, ry + 4, have >= c.cost() ? 0xFFFFFF : 0xFF5555, true);
+                }
+            }
         }
 
         // marcos de los slots del inventario
@@ -160,7 +214,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
         // Título arriba; el saldo en su propia línea debajo de la lista, así no se pisan.
-        String t = font.plainSubstrByWidth(title.getString(), imageWidth - 16);
+        String t = font.plainSubstrByWidth(title.getString(), imageWidth - 16 - (canChange() ? CHG_W + 4 : 0));
         g.drawString(font, t, 8, 6, th.title(), false);
         String balance = Component.translatable("gitanoland.shop.balance", have).getString();
         g.drawString(font, balance, imageWidth - 8 - font.width(balance), LIST_Y + VISIBLE * ROW_H + 5, th.balance(), false);
@@ -169,7 +223,7 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         super.render(g, mouseX, mouseY, partialTick);
-        int idx = rowAt(mouseX, mouseY);
+        int idx = showSpecs ? -1 : rowAt(mouseX, mouseY);
         if (idx >= 0) {
             ShopOffer o = menu.offers().get(idx);
             List<Component> tip = new ArrayList<>(Screen.getTooltipFromItem(minecraft, o.result()));
@@ -198,6 +252,22 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0 && overChange(mouseX, mouseY)) {
+            showSpecs = !showSpecs;
+            return true;
+        }
+        if (showSpecs && button == 0) {
+            int si = specAt(mouseX, mouseY);
+            if (si >= 0) {
+                if (!menu.specs().get(si).current()) {
+                    minecraft.gameMode.handleInventoryButtonClick(menu.containerId, ShopMenu.SPEC_BASE + si);
+                }
+                showSpecs = false;
+                return true;
+            }
+            showSpecs = false;   // clic fuera del panel: se cierra
+            return true;
+        }
         int idx = rowAt(mouseX, mouseY);
         if (idx >= 0 && button == 0) {
             minecraft.gameMode.handleInventoryButtonClick(menu.containerId, idx);

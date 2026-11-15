@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": ["GDG", "EBE", "GDG"],
+  "key": {
+    "G": {"item": "minecraft:gold_ingot"},
+    "D": {"item": "minecraft:diamond"},
+    "E": {"item": "minecraft:ender_pearl"},
+    "B": {"item": "gitanoland:kirky_bag_small"}
+  },
+  "result": {"id": "gitanoland:kirky_bag", "count": 1}
+}

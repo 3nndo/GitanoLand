@@ -1,0 +1,3 @@
+Disco en blanco (Etched): 4 plástico de cáñamo (Smokeleaf) en cruz y 1 lingote de hierro.
+<NEWLINE>
+Copiar un disco: pon un disco de música y un disco en blanco en la mesa de crafteo. Sale una copia y el original se queda.

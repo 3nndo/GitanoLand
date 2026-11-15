@@ -10,6 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.Villager;
 
 public final class Shops {
+    /** Dato del aldeano con la especialidad que se le ha pagado para cambiar. */
+    public static final String SPEC_KEY = "gitanoland_spec";
+
     private Shops() {}
 
     public static void openVillager(ServerPlayer player, Villager villager, String profession) {
@@ -37,17 +40,24 @@ public final class Shops {
     private static void doOpenVillager(ServerPlayer player, Villager villager, String profession) {
         TradeTables.Table table = TradeTables.load(profession);
         long seed = villager.getUUID().getLeastSignificantBits();
-        TradeTables.Result res = TradeTables.buildLeveled(table,
+        String override = villager.getPersistentData().getString(SPEC_KEY);
+        TradeTables.Specialty spec = TradeTables.specialty(table, seed, override);
+        TradeTables.Result res = TradeTables.buildLeveledFor(table, spec,
                 Config.UNLOCK_ALL_TIERS.get() ? 5 : villager.getVillagerData().getLevel(), seed);
         warn(player, profession, res);
         int markup = Markup.get(villager);
-        TradeTables.Specialty spec = TradeTables.specialty(table, seed);
+        java.util.List<ShopMenu.SpecChoice> specs = new java.util.ArrayList<>();
+        if (table.specialties().size() > 1) {
+            for (TradeTables.Specialty sp : table.specialties()) {
+                specs.add(new ShopMenu.SpecChoice(sp.id(), TradeTables.changeCost(table, sp), sp == spec));
+            }
+        }
         Component title = Component.translatable("gitanoland.shop.title." + profession);
         if (spec != null) {
             title = title.copy().append(" · ")
                     .append(Component.translatable("gitanoland.specialty." + profession + "." + spec.id()));
         }
-        ShopMenu.open(player, title, profession, markup, Markup.apply(res.offers(), markup), villager);
+        ShopMenu.open(player, title, profession, markup, Markup.apply(res.offers(), markup), villager, specs);
     }
 
     private static void doOpenWeedsGuy(ServerPlayer player, WeedsGuyEntity trader) {
@@ -58,7 +68,7 @@ public final class Shops {
         warn(player, "weedsguy", res);
         int markup = Markup.get(trader);
         ShopMenu.open(player, Component.translatable("gitanoland.shop.title.weedsguy"), "weedsguy", markup,
-                Markup.apply(res.offers(), markup), trader);
+                Markup.apply(res.offers(), markup), trader, java.util.List.of());
     }
 
     /** Una oferta de esta tienda que el jugador puede pagar con los Kirkys que lleva (para "ofrecerle algo"). */
@@ -76,7 +86,8 @@ public final class Shops {
             } else if (e instanceof Villager v) {
                 shop = net.minecraft.core.registries.BuiltInRegistries.VILLAGER_PROFESSION
                         .getKey(v.getVillagerData().getProfession()).getPath();
-                offers = TradeTables.buildLeveled(TradeTables.load(shop), 5, v.getUUID().getLeastSignificantBits()).offers();
+                offers = TradeTables.buildLeveled(TradeTables.load(shop), 5, v.getUUID().getLeastSignificantBits(),
+                        v.getPersistentData().getString(SPEC_KEY)).offers();
             } else {
                 return null;
             }

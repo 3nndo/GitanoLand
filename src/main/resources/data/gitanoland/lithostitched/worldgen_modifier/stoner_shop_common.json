@@ -1,0 +1,15 @@
+{
+  "type": "lithostitched:add_template_pool_elements",
+  "template_pools": ["minecraft:village/plains/houses", "minecraft:village/savanna/houses", "minecraft:village/snowy/houses", "minecraft:village/taiga/houses"],
+  "elements": [
+    {
+      "weight": 20,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "smokeleafindustries:village/plains/village_shop",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+/atentado equipo [nombre] [jugador] [jugador]
+<NEWLINE>
+Sale ATENTADO para todos y tu equipo ve su vida en pantalla.
+<NEWLINE>
+/atentado chat: habla con tu equipo. /atentado fin: termina.
+<NEWLINE>
+/atentadohud mover: coloca el cuadro de vida.

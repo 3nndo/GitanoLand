@@ -122,7 +122,7 @@ public final class Missions {
         }
         if (pool.isEmpty()) return null;
         MerchantOffer base = pool.get(r.nextInt(pool.size()));
-        int kirkys = 2 + r.nextInt(4); // 2 a 5
+        int kirkys = 3 + r.nextInt(6); // 3 a 8
         if (base.getResult().is(Items.EMERALD)) {
             // el aldeano compra el objeto y paga en Kirkys en vez de esmeraldas
             Optional<ItemCost> b = base.getItemCostB();

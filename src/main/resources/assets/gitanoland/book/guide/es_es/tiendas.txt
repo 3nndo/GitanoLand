@@ -1,0 +1,9 @@
+Clic derecho a un aldeano con profesión de tienda:
+<NEWLINE>
+• Gunsmith: vende armas y accesorios.
+<NEWLINE>
+• Ammo Maker: vende munición.
+<NEWLINE>
+• WeedsGuy: cosas de Smokeleaf. Aparece solo de vez en cuando, como el mercader errante.
+<NEWLINE>
+Se paga con Kirkys y a veces con materiales. Si le pegas a un aldeano, suben los precios.

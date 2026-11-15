@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    { "type": "neoforge:mod_loaded", "modid": "etched" },
+    { "type": "neoforge:mod_loaded", "modid": "smokeleafindustries" }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [" P ", "PIP", " P "],
+  "key": {
+    "P": {"item": "smokeleafindustries:hemp_plastic"},
+    "I": {"item": "minecraft:iron_ingot"}
+  },
+  "result": {"id": "etched:blank_music_disc", "count": 1}
+}
