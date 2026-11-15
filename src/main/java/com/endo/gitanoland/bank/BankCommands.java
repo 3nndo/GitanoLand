@@ -20,6 +20,7 @@ public class BankCommands {
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("banco")
+                .requires(src -> Config.BANK_ENABLED.get())
                 .executes(ctx -> balance(ctx.getSource()))
                 .then(Commands.literal("saldo").executes(ctx -> balance(ctx.getSource())))
                 .then(Commands.literal("depositar")

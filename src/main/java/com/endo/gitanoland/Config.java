@@ -87,9 +87,20 @@ public class Config {
             .comment("Kirkys de la recompensa diaria (una vez por día real).")
             .defineInRange("dailyKirkys", 10, 0, 1000);
 
-    public static final ModConfigSpec.IntValue BANK_TAX_PERCENT = B
-            .comment("Impuesto (en %) que se cobra al depositar Kirkys en el banco (/banco). Retirar es gratis (0 = sin impuesto).")
-            .defineInRange("bankDepositTaxPercent", 5, 0, 100);
+    // ---- EXPERIMENTAL: funciones en pruebas, desactivadas por defecto ----
+    public static final ModConfigSpec.BooleanValue BANK_ENABLED;
+    public static final ModConfigSpec.IntValue BANK_TAX_PERCENT;
+
+    static {
+        B.push("experimental");
+        BANK_ENABLED = B
+                .comment("EXPERIMENTAL: banco digital (/banco saldo | depositar | retirar). Esta en pruebas; false = el comando no existe.")
+                .define("bankEnabled", false);
+        BANK_TAX_PERCENT = B
+                .comment("Impuesto (en %) que se cobra al depositar Kirkys en el banco. Retirar es gratis (0 = sin impuesto).")
+                .defineInRange("bankDepositTaxPercent", 5, 0, 100);
+        B.pop();
+    }
 
     public static final ModConfigSpec SPEC = B.build();
 }
