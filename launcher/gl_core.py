@@ -19,7 +19,7 @@ import zlib
 import shutil
 
 REPO = "3nndo/GitanoLand"
-LAUNCHER_VERSION = "2.0.1"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
+LAUNCHER_VERSION = "2.0.2"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 IS_WIN = sys.platform == "win32"
 IS_LINUX = sys.platform.startswith("linux")
@@ -484,6 +484,19 @@ def profile_asset(rel, profile):
     raise IOError(f"La release {rel['tag_name']} no tiene el perfil {profile}")
 
 
+def lp(path):
+    """Ruta apta para mas de 260 caracteres en Windows (prefijo extendido). En Linux no cambia nada."""
+    if sys.platform != "win32":
+        return path
+    path = os.path.abspath(path)
+    pre = chr(92) * 2 + "?" + chr(92)
+    if path.startswith(pre):
+        return path
+    if path.startswith(chr(92) * 2):
+        return pre + "UNC" + chr(92) + path[2:]
+    return pre + path
+
+
 def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21"):
     """Deja la carpeta igual que el zip de la release, bajando solo lo que cambia.
 
@@ -508,17 +521,17 @@ def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21")
         if rel_path == "instance.cfg" and not first_install:
             continue
         target = os.path.join(dest, *rel_path.split("/"))
-        if rel_path in KEEP_FILES and os.path.exists(target):
+        if rel_path in KEEP_FILES and os.path.exists(lp(target)):
             continue  # sensibilidad, teclas, servidores...: nunca se tocan una vez instalados
-        if os.path.exists(target):
-            local_crc = file_crc(target) if os.path.getsize(target) == e.usize else None
+        if os.path.exists(lp(target)):
+            local_crc = file_crc(lp(target)) if os.path.getsize(lp(target)) == e.usize else None
             if local_crc == e.crc:
                 continue  # ya esta
             old = installed.get(rel_path)
             if old is not None and old == e.crc:
                 continue  # la release no lo cambio: respeta lo que hayas tocado tu
             if old is not None and not rel_path.startswith(mods_prefix):
-                if file_crc(target) != old:
+                if file_crc(lp(target)) != old:
                     continue  # lo cambiaste tu y la release tambien: gana lo tuyo (salvo mods)
         todo.append((rel_path, e))
 
@@ -530,19 +543,19 @@ def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21")
     for e, data in fetch_entries(url, todo_entries, progress):
         out = inflate(e, data)
         target = os.path.join(dest, *names[e.name].split("/"))
-        os.makedirs(os.path.dirname(target), exist_ok=True)
-        tmp = target + ".gltmp"
+        os.makedirs(lp(os.path.dirname(target)), exist_ok=True)
+        tmp = lp(target) + ".gltmp"
         with open(tmp, "wb") as f:
             f.write(out)
-        os.replace(tmp, target)
+        os.replace(tmp, lp(target))
 
     # mods que ya no estan en la version nueva
     removed = 0
     for rel_path in list(installed):
         if rel_path.startswith(mods_prefix) and rel_path not in remote:
             p = os.path.join(dest, *rel_path.split("/"))
-            if os.path.exists(p):
-                os.remove(p)
+            if os.path.exists(lp(p)):
+                os.remove(lp(p))
                 removed += 1
     if is_full(mode):
         if first_install:
