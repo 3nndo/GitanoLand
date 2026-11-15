@@ -6,6 +6,10 @@ Este archivo es el "backend": instalar, actualizar, jugar, RAM, borrar, errores.
 - Otros launchers (TLauncher, CurseForge...): guia paso a paso.
 - Nunca pisa options.txt (sensibilidad, teclas) ni servers.dat al actualizar. Se actualiza solo.
 """
+import gl_selfcheck
+
+gl_selfcheck.ensure_own_bundle()  # antes de importar nada mas (ver gl_selfcheck)
+
 import json
 import os
 import shutil
@@ -83,7 +87,7 @@ class Api:
             self.emit(type="selfupdate_start")
             time.sleep(0.6)
             core.apply_update(newer[1], sys.executable, lambda fr: self.emit(type="selfupdate", frac=fr))
-            subprocess.Popen([sys.executable], cwd=os.path.dirname(sys.executable))
+            subprocess.Popen([sys.executable], cwd=os.path.dirname(sys.executable), env=gl_selfcheck.clean_env())
             self._window.destroy()
         except Exception as e:  # noqa: BLE001
             core.log("No se pudo actualizar el launcher: " + traceback.format_exc())
@@ -132,7 +136,7 @@ class Api:
         try:
             dst = core.install_to_system(True)
             self.save_cfg(skip_install=False)
-            subprocess.Popen([dst], cwd=os.path.dirname(dst))
+            subprocess.Popen([dst], cwd=os.path.dirname(dst), env=gl_selfcheck.clean_env())
             threading.Timer(0.5, self._window.destroy).start()
             return {"ok": True}
         except Exception as e:  # noqa: BLE001

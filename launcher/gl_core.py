@@ -19,7 +19,7 @@ import zlib
 import shutil
 
 REPO = "3nndo/GitanoLand"
-LAUNCHER_VERSION = "2.0.0"
+LAUNCHER_VERSION = "2.0.1"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 HOME = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "GitanoLand")
 # Carpeta donde se instala todo (Prism/Freesm, instancias...). Por defecto HOME; el usuario puede cambiarla.
