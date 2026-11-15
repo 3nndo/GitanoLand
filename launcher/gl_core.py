@@ -21,7 +21,12 @@ import shutil
 REPO = "3nndo/GitanoLand"
 LAUNCHER_VERSION = "2.0.1"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
-HOME = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "GitanoLand")
+IS_WIN = sys.platform == "win32"
+IS_LINUX = sys.platform.startswith("linux")
+if IS_WIN:
+    HOME = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "GitanoLand")
+else:  # Linux: ~/.local/share/GitanoLand (respeta XDG_DATA_HOME)
+    HOME = os.path.join(os.environ.get("XDG_DATA_HOME") or os.path.join(os.path.expanduser("~"), ".local", "share"), "GitanoLand")
 # Carpeta donde se instala todo (Prism/Freesm, instancias...). Por defecto HOME; el usuario puede cambiarla.
 BASE = [HOME]
 
@@ -30,12 +35,15 @@ def base_dir():
     return BASE[0]
 # Launchers de la familia Prism que el launcher prepara solo (instancia completa): Prism (cuenta de Microsoft)
 # y Freesm (acepta cuentas sin conexion y de Microsoft).
+# En Linux se baja el .tar.gz "Portable" (trae su propio Qt y un script PrismLauncher/FreesmLauncher en la raiz).
 FLAVORS = {
-    "prism": {"name": "Prism Launcher", "folder": "Prism", "exe": "prismlauncher.exe", "api": PRISM_API,
-              "asset": "PrismLauncher-Windows-MSVC-Portable-", "marker": "prismlauncher_portable.txt"},
-    "freesm": {"name": "Freesm Launcher", "folder": "Freesm", "exe": "freesmlauncher.exe",
+    "prism": {"name": "Prism Launcher", "folder": "Prism", "api": PRISM_API,
+              **({"exe": "prismlauncher.exe", "asset": "PrismLauncher-Windows-MSVC-Portable-", "marker": "prismlauncher_portable.txt", "ext": ".zip"}
+                 if IS_WIN else {"exe": "PrismLauncher", "asset": "PrismLauncher-Linux-Qt6-Portable-", "marker": "portable.txt", "ext": ".tar.gz"})},
+    "freesm": {"name": "Freesm Launcher", "folder": "Freesm",
                "api": "https://api.github.com/repos/FreesmTeam/FreesmLauncher/releases/latest",
-               "asset": "FreesmLauncher-Windows-MSVC-Portable-", "marker": "portable.txt"},
+               **({"exe": "freesmlauncher.exe", "asset": "FreesmLauncher-Windows-MSVC-Portable-", "marker": "portable.txt", "ext": ".zip"}
+                  if IS_WIN else {"exe": "FreesmLauncher", "asset": "FreesmLauncher-Linux-Qt6-Portable-", "marker": "portable.txt", "ext": ".tar.gz"})},
 }
 CUR = ["prism"]  # launcher de la familia Prism en uso
 
@@ -53,7 +61,9 @@ VARIANTS = {
     "java21": "Java 21 (recomendado: el mas compatible)",
     "java25": "Java 25 (con Reimagined Intro; el launcher baja su propia Java 25)",
 }
-JDK25_URL = "https://aka.ms/download-jdk/microsoft-jdk-25.0.1-windows-x64.zip"
+JDK25_URL = ("https://aka.ms/download-jdk/microsoft-jdk-25.0.1-windows-x64.zip" if IS_WIN
+             else "https://aka.ms/download-jdk/microsoft-jdk-25.0.1-linux-x64.tar.gz")
+JAVA_BIN = "javaw.exe" if IS_WIN else "java"
 PROFILES = {
     "Alto": "PC bueno: shaders y todos los efectos (8 GB de RAM o mas)",
     "Medio": "PC medio: shaders ligeros, sin extras pesados (6 GB de RAM)",
@@ -203,14 +213,14 @@ def ensure_jdk25(log, progress):
     root = os.path.join(HOME, "Java25")
 
     def find():
-        hits = glob.glob(os.path.join(root, "*", "bin", "javaw.exe"))
+        hits = glob.glob(os.path.join(root, "*", "bin", JAVA_BIN))
         return hits[0].replace(chr(92), "/") if hits else None
     found = find()
     if found:
         return found
     log("Descargando Java 25 (una sola vez, unos 220 MB)...")
     os.makedirs(root, exist_ok=True)
-    tmp = os.path.join(HOME, "jdk25.zip")
+    tmp = os.path.join(HOME, "jdk25.zip" if IS_WIN else "jdk25.tar.gz")
     with http(JDK25_URL, timeout=120) as r, open(tmp, "wb") as f:
         size = int(r.headers.get("Content-Length") or 220_000_000)
         done = 0
@@ -221,13 +231,33 @@ def ensure_jdk25(log, progress):
             f.write(b)
             done += len(b)
             progress(done / size)
-    with zipfile.ZipFile(tmp) as z:
-        z.extractall(root)
+    if IS_WIN:
+        with zipfile.ZipFile(tmp) as z:
+            z.extractall(root)
+    else:
+        extract_tar(tmp, root)
     os.remove(tmp)
     found = find()
     if not found:
-        raise IOError("No se encontro javaw.exe tras descomprimir Java 25")
+        raise IOError("No se encontro " + JAVA_BIN + " tras descomprimir Java 25")
     return found
+
+
+def extract_tar(src, dest, strip_top=False):
+    """Descomprime un .tar.gz (ruta o fichero en memoria) conservando permisos. strip_top: quita una carpeta raiz unica."""
+    import tarfile
+    os.makedirs(dest, exist_ok=True)
+    with (tarfile.open(src, "r:gz") if isinstance(src, str) else tarfile.open(fileobj=src, mode="r:gz")) as t:
+        members = t.getmembers()
+        tops = {m.name.split("/")[0] for m in members if m.name not in (".", "")}
+        for m in members:
+            if strip_top and len(tops) == 1 and m.name.split("/")[0] in tops and "/" in m.name:
+                m.name = m.name.split("/", 1)[1]
+            elif strip_top and len(tops) == 1 and m.name in tops and m.isdir():
+                continue
+            if m.name.startswith("/") or ".." in m.name.split("/"):
+                continue
+            t.extract(m, dest)
 
 
 def patch_java(profile, variant, javaw):
@@ -255,7 +285,7 @@ def ensure_prism(log, progress):
     log(f"Descargando {fl()['name']} (una sola vez)...")
     rel = get_json(fl()["api"])
     asset = next(a for a in rel["assets"]
-                 if a["name"].startswith(fl()["asset"]) and a["name"].endswith(".zip"))
+                 if a["name"].startswith(fl()["asset"]) and a["name"].endswith(fl()["ext"]))
     buf = io.BytesIO()
     with http(asset["browser_download_url"], timeout=120) as r:
         size = int(r.headers.get("Content-Length") or asset["size"])
@@ -266,8 +296,12 @@ def ensure_prism(log, progress):
             buf.write(b)
             progress(buf.tell() / size)
     os.makedirs(fl()["dir"], exist_ok=True)
-    with zipfile.ZipFile(buf) as z:
-        z.extractall(fl()["dir"])
+    if fl()["ext"] == ".zip":
+        with zipfile.ZipFile(buf) as z:
+            z.extractall(fl()["dir"])
+    else:
+        buf.seek(0)
+        extract_tar(buf, fl()["dir"], strip_top=True)
     open(os.path.join(fl()["dir"], fl()["marker"]), "a").close()
     if not os.path.exists(prism_exe()):
         raise IOError(f"No se encontro {fl()['exe']} tras descomprimir {fl()['name']}")
@@ -297,13 +331,23 @@ def vtuple(tag):
     return tuple(int(n) for n in nums if n.isdigit())
 
 
+LAUNCHER_EXT = ".exe" if IS_WIN else ".appimage"
+
+
+def self_path():
+    """Archivo del launcher que se puede reemplazar al actualizar (Windows: el exe; Linux: el .AppImage). None si no se puede."""
+    if not getattr(sys, "frozen", False):
+        return None
+    return sys.executable if IS_WIN else (os.environ.get("APPIMAGE") or None)
+
+
 def newer_launcher():
     """(tag, url) de la release del launcher mas nueva que la actual, o None."""
     best = None
     for rel in get_json(f"https://api.github.com/repos/{REPO}/releases?per_page=30"):
         if rel.get("draft") or not rel["tag_name"].startswith("launcher-"):
             continue
-        asset = next((a for a in rel["assets"] if a["name"].lower().endswith(".exe")), None)
+        asset = next((a for a in rel["assets"] if a["name"].lower().endswith(LAUNCHER_EXT)), None)
         if asset and (best is None or vtuple(rel["tag_name"]) > vtuple(best[0])):
             best = (rel["tag_name"], asset["browser_download_url"])
     if best and vtuple(best[0]) > vtuple(LAUNCHER_VERSION):
@@ -329,14 +373,17 @@ def apply_update(url, exe, progress):
         raise IOError("La descarga del launcher salio incompleta")
     if os.path.exists(old):
         os.remove(old)
+    if not IS_WIN:
+        os.chmod(new, 0o755)
     os.replace(exe, old)
     os.replace(new, exe)
 
 
 def cleanup_old_exe():
-    if getattr(sys, "frozen", False):
+    me = self_path()
+    if me:
         try:
-            os.remove(sys.executable + ".old")
+            os.remove(me + ".old")
         except OSError:
             pass
 
@@ -347,7 +394,7 @@ NEOFORGE_INSTALLER = f"https://maven.neoforged.net/releases/net/neoforged/neofor
 
 
 def appdata():
-    return os.environ.get("APPDATA", os.path.expanduser("~"))
+    return os.environ.get("APPDATA", os.path.expanduser("~")) if IS_WIN else os.path.expanduser("~")
 
 
 def minecraft_dir():
@@ -371,6 +418,9 @@ def find_java():
     j = shutil.which("java")
     if j:
         cands.append(j)
+    for pat in (("/usr/lib/jvm/*/bin/java", "/opt/*/bin/java", os.path.join(appdata(), ".minecraft", "runtime", "*", "*", "bin", "java"))
+                if not IS_WIN else ()):
+        cands += sorted(glob.glob(pat), reverse=True)
     for pat in ("C:/Program Files/Java/*/bin/java.exe", "C:/Program Files/Eclipse Adoptium/*/bin/java.exe",
                 "C:/Program Files/Microsoft/jdk*/bin/java.exe", "C:/Program Files/Zulu/*/bin/java.exe",
                 os.path.join(appdata(), ".minecraft", "runtime", "*", "*", "*", "bin", "java.exe"),
@@ -553,6 +603,8 @@ def install_dir():
 
 
 def installed_here():
+    if not IS_WIN:
+        return True  # el AppImage ya es portable: no hay instalacion en el sistema
     """True si el exe en marcha ya esta en la carpeta de instalacion del sistema."""
     if not getattr(sys, "frozen", False):
         return True  # en desarrollo no se instala nada
@@ -660,6 +712,15 @@ def anonymize(text):
 
 def ram_total_gb():
     """RAM fisica del PC en GB (0 si no se puede saber)."""
+    if not IS_WIN:
+        try:
+            with open("/proc/meminfo", encoding="utf-8") as f:
+                for line in f:
+                    if line.startswith("MemTotal:"):
+                        return round(int(line.split()[1]) / (1024 ** 2))
+        except (OSError, ValueError):
+            pass
+        return 0
     try:
         import ctypes
 
@@ -674,6 +735,28 @@ def ram_total_gb():
         return round(m.ullTotalPhys / (1024 ** 3))
     except Exception:  # noqa: BLE001
         return 0
+
+
+def open_in_system(path):
+    """Abre una carpeta o archivo con el programa por defecto del sistema."""
+    if IS_WIN:
+        os.startfile(path)
+    else:
+        import gl_selfcheck
+        subprocess.Popen(["xdg-open", path], env=gl_selfcheck.child_env(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def os_label():
+    if IS_WIN:
+        return "Windows " + (str(sys.getwindowsversion().major) if hasattr(sys, "getwindowsversion") else "?")
+    try:
+        with open("/etc/os-release", encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("PRETTY_NAME="):
+                    return "Linux - " + line.split("=", 1)[1].strip().strip('"')
+    except OSError:
+        pass
+    return "Linux"
 
 
 def issue_url(title, body):

@@ -20,6 +20,12 @@ import time
 import traceback
 import webbrowser
 
+if sys.platform.startswith("linux"):
+    # Linux: la ventana usa Qt WebEngine (viene dentro del AppImage). El sandbox de Chromium no funciona en muchas distros
+    # sin permisos especiales; aqui solo se carga la interfaz local del launcher.
+    os.environ.setdefault("PYWEBVIEW_GUI", "qt")
+    os.environ.setdefault("QTWEBENGINE_CHROMIUM_FLAGS", "--no-sandbox")
+
 import webview
 
 import gl_core as core
@@ -77,7 +83,8 @@ class Api:
 
     def _check_launcher_update(self):
         """El launcher se actualiza solo (sin preguntar): baja la version nueva y se reinicia."""
-        if not getattr(sys, "frozen", False):
+        me = core.self_path()
+        if not me:
             return
         try:
             newer = core.newer_launcher()
@@ -86,8 +93,8 @@ class Api:
             core.log(f"Actualizando el launcher a {newer[0]}")
             self.emit(type="selfupdate_start")
             time.sleep(0.6)
-            core.apply_update(newer[1], sys.executable, lambda fr: self.emit(type="selfupdate", frac=fr))
-            subprocess.Popen([sys.executable], cwd=os.path.dirname(sys.executable), env=gl_selfcheck.clean_env())
+            core.apply_update(newer[1], me, lambda fr: self.emit(type="selfupdate", frac=fr))
+            subprocess.Popen([me], cwd=os.path.dirname(me), env=gl_selfcheck.clean_env())
             self._window.destroy()
         except Exception as e:  # noqa: BLE001
             core.log("No se pudo actualizar el launcher: " + traceback.format_exc())
@@ -122,14 +129,14 @@ class Api:
 
     def open_path(self, p):
         if p and os.path.exists(p):
-            os.startfile(p)
+            core.open_in_system(p)
 
     def open_url(self, u):
         webbrowser.open(u)
 
     def open_logs(self):
         os.makedirs(core.LOG_DIR, exist_ok=True)
-        os.startfile(core.LOG_DIR)
+        core.open_in_system(core.LOG_DIR)
 
     # ---------------------------------------------------------- instalar en el sistema
     def install_system(self):
@@ -239,7 +246,7 @@ class Api:
             elif not accounts:
                 return {"need_login": True}
             core.log("Lanzar: " + " ".join(cmd))
-            subprocess.Popen(cmd, cwd=core.fl()["dir"])
+            subprocess.Popen(cmd, cwd=core.fl()["dir"], env=gl_selfcheck.child_env())
             return {"ok": True}
         except Exception as e:  # noqa: BLE001
             core.log("launch: " + traceback.format_exc())
@@ -250,7 +257,7 @@ class Api:
         core.CUR[0] = w["mode"]
         name = core.fl()["name"]
         exe, cwd = core.prism_exe(), core.fl()["dir"]
-        threading.Thread(target=lambda: subprocess.Popen([exe], cwd=cwd), daemon=True).start()
+        threading.Thread(target=lambda: subprocess.Popen([exe], cwd=cwd, env=gl_selfcheck.child_env()), daemon=True).start()
         return {"title": "Inicia sesión con tu cuenta", "steps": [
             {"t": f"Se abre {name}", "b": f"Ahora se abre {name}. Espera a que cargue su ventana."},
             {"t": "Inicia sesión", "b": "Arriba a la derecha pulsa tu cuenta > «Gestionar cuentas» > «Añadir Microsoft» y entra con tu cuenta. Solo tienes que hacerlo una vez."},
@@ -312,7 +319,7 @@ class Api:
     def make_report(self, error=""):
         err = core.anonymize(error or self._last_error or "(sin mensaje)")
         tail = core.anonymize(core.log_tail(60))
-        body = (f"**Launcher:** {core.LAUNCHER_VERSION}\n**Windows:** {sys.getwindowsversion().major if hasattr(sys, 'getwindowsversion') else '?'}\n"
+        body = (f"**Launcher:** {core.LAUNCHER_VERSION}\n**Sistema:** {core.os_label()}\n"
                 f"**Modo:** {self._cfg.get('mode')} / {self._cfg.get('profile')} / {self._cfg.get('variant')}\n\n"
                 f"**Error:**\n```\n{err}\n```\n\n<details><summary>Registro</summary>\n\n```\n{tail}\n```\n</details>\n")
         return {"text": body, "url": core.issue_url("Error en el launcher: " + err.splitlines()[0][:70], body), "path": core.log_path()}
@@ -321,8 +328,23 @@ class Api:
 _MUTEX_KEEP = []
 
 
+def _already_running_posix(demo=False):
+    """Linux: un fichero de bloqueo (flock); lo suelta solo el sistema al cerrarse el proceso."""
+    import fcntl
+    os.makedirs(core.HOME, exist_ok=True)
+    f = open(os.path.join(core.HOME, "launcher-demo.lock" if demo else "launcher.lock"), "w")
+    try:
+        fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return True
+    _MUTEX_KEEP.append(f)
+    return False
+
+
 def already_running(demo=False):
     """Solo una ventana a la vez: si ya hay otra abierta, la trae al frente y esta se cierra."""
+    if not core.IS_WIN:
+        return _already_running_posix(demo)
     import ctypes
     k32, u32 = ctypes.windll.kernel32, ctypes.windll.user32
     _MUTEX_KEEP.append(k32.CreateMutexW(None, False, ("GitanoLandLauncherDemo" if demo else "GitanoLandLauncherSingleton")))

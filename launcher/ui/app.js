@@ -267,7 +267,7 @@ function setRam(v) {
 }
 function askRam(v, after) {
   modal(`<h3>Eso es más RAM de la que tu PC puede dar</h3>
-    <p>Tu PC tiene <b>${S.sys.ram_total} GB</b> y has puesto <b>${v} GB</b>. Si le das tanta al juego, Windows se queda sin memoria y todo puede ir <b>peor</b>, colgarse o no abrir.</p>
+    <p>Tu PC tiene <b>${S.sys.ram_total} GB</b> y has puesto <b>${v} GB</b>. Si le das tanta al juego, el sistema se queda sin memoria y todo puede ir <b>peor</b>, colgarse o no abrir.</p>
     <p>Lo recomendable es como máximo <b>${maxSafeRam()} GB</b>.</p>
     <div class="row"><div class="btn" id="m-risk">Insistir</div><div class="btn primary" id="m-safe">Poner ${maxSafeRam()} GB (recomendado)</div></div>`, (m) => {
     $("#m-safe").onclick = () => { closeModal(); if (S.screen === "wizard1") setRam(maxSafeRam()); else S.w.ram = maxSafeRam(); after && after(); };
