@@ -16,3 +16,6 @@ Python (`gitanoland_launcher.py` = API que llama la interfaz; `gl_core.py` = red
 `GitanoLand-Launcher-Demo.exe` (se compila con `demo_launcher.py`, igual que el comando de arriba pero con `demo_launcher.py` y `--name GitanoLand-Launcher-Demo`; **no se publica**). Backend simulado (`ui/mock.js`) y un panel «DEMO · estados» arriba a la derecha (se despliega al pulsarlo) con botones para saltar a cualquier pantalla: bienvenida, asistente, aviso de RAM, instalación simulada (con o sin error), pantalla principal (al día / actualización naranja / sin conexión), borrar, guías, etc. La ventana (minimizar, cerrar, arrastrar) es real. Variable `GL_DEMO_STATE="<nombre del botón>"` abre directamente un estado.
 Modo bajo consumo: añadir `?lowfx` a la URL (navegador) desactiva el cristal y el movimiento del fondo.
 Efecto liquid glass: clase `.glass` (y reglas del final de `style.css`) + filtro SVG `#liquid` de `index.html`.
+
+## Linux (AppImage)
+Ver `launcher/linux/README.md`: mismo launcher con Qt WebEngine, Prism/Freesm portables de Linux y Java 25 de Linux; se compila en Docker (Ubuntu 22.04).
