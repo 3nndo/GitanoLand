@@ -255,7 +255,7 @@ ACT.wNext = async (step) => {
     }
     if (S.w.ram > maxSafeRam() && !S.w.ramRiskOk) return askRam(S.w.ram, () => show("wizard2"));
   }
-  if (step < 2) show("wizard" + (step + 1)); else startInstall(false, false);
+  if (step < 2) show("wizard" + (step + 1)); else askExisting(() => startInstall(false, false));
 };
 ACT.ram = (v) => { v = +v; if (v > maxSafeRam() && !S.w.ramRiskOk) return askRam(v); setRam(v); };
 ACT.ramCustom = () => { $("#ramcustom").style.display = "block"; $("#ramcustom").focus(); $$("#ramchips .chip").forEach((c) => c.classList.remove("on")); $$("#ramchips .chip")[4].classList.add("on"); S.w.ramTouched = true; };
@@ -285,6 +285,21 @@ function askRam(v, after) {
 }
 ACT.java = (v) => { S.w.variant = v; $$("[data-act=java]").forEach((c) => c.classList.toggle("on", c.dataset.arg === v)); };
 ACT.pickFolder = async () => { const d = await API().pick_folder(S.w.base); if (d) { S.w.base = d; $("#basepath").textContent = d; } };
+
+/* ¿ya tienes Prism/Freesm? */
+function askExisting(go) {
+  S.w.useExisting = false;
+  Promise.resolve(API().detect_launcher(S.w.mode)).then((f) => {
+    if (!f) return go();
+    modal(`<h3>Ya tienes ${f.name} instalado</h3>
+      <p>He encontrado tu <b>${f.name}</b> en <b>${f.exe}</b>.</p>
+      <p>Puedo meter la instancia de GitanoLand ahí, sin instalar otro (no toco tus otras instancias ni tus cuentas). O instalar uno aparte solo para GitanoLand.</p>
+      <div class="row"><div class="btn" id="m-new">Instalar uno aparte</div><div class="btn primary" id="m-use">Usar el que tengo</div></div>`, () => {
+      $("#m-use").onclick = () => { S.w.useExisting = true; closeModal(); go(); };
+      $("#m-new").onclick = () => { S.w.useExisting = false; closeModal(); go(); };
+    });
+  }).catch(() => go());
+}
 
 /* instalacion */
 function startInstall(update, playAfter) {
@@ -372,7 +387,21 @@ ACT.openPath = (p) => API().open_path(p);
 
 /* errores */
 ACT.retry = () => startInstall(false, false);
-ACT.reportIssue = async () => { const r = await API().make_report(S.lastError || ""); API().open_url(r.url); toast("Abro GitHub con el aviso ya preparado. Revísalo y dale a enviar."); };
+function copyText(t) {
+  try { return navigator.clipboard.writeText(t).catch(() => legacyCopy(t)); } catch (e) { return legacyCopy(t); }
+}
+function legacyCopy(t) {
+  const a = document.createElement("textarea"); a.value = t; a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select();
+  try { document.execCommand("copy"); } catch (e) { /* nada */ } a.remove();
+}
+ACT.reportIssue = async () => {
+  try {
+    const r = await API().make_report(S.lastError || "");
+    await copyText(r.text);
+    await API().open_url(r.url);
+    toast("Abro GitHub con un resumen. El informe completo está copiado: pégalo (Ctrl+V) en el aviso y envíalo.", false, 6000);
+  } catch (e) { toast("No se pudo abrir GitHub. Usa «Copiar informe» y pégalo en Discord.", true, 6000); }
+};
 ACT.copyReport = async () => { const r = await API().make_report(S.lastError || ""); navigator.clipboard.writeText(r.text).then(() => toast("Informe copiado. Pégalo en Discord.")); };
 ACT.openLogs = () => API().open_logs();
 

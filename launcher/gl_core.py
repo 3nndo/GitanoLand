@@ -19,7 +19,7 @@ import zlib
 import shutil
 
 REPO = "3nndo/GitanoLand"
-LAUNCHER_VERSION = "2.0.2"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
+LAUNCHER_VERSION = "2.0.3"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 IS_WIN = sys.platform == "win32"
 IS_LINUX = sys.platform.startswith("linux")
@@ -46,11 +46,18 @@ FLAVORS = {
                   if IS_WIN else {"exe": "FreesmLauncher", "asset": "FreesmLauncher-Linux-Qt6-Portable-", "marker": "portable.txt", "ext": ".tar.gz"})},
 }
 CUR = ["prism"]  # launcher de la familia Prism en uso
+EXT = {}  # launcher que el usuario ya tenia y quiere usar: {"prism": {"exe": ..., "data": ...}}
 
 
 def fl():
     f = dict(FLAVORS[CUR[0]])
-    f["dir"] = os.path.join(base_dir(), f["folder"])
+    ext = EXT.get(CUR[0])
+    if ext:
+        f["dir"] = ext["data"]  # carpeta de datos (instances, icons, accounts.json) del launcher ya instalado
+        f["exe_path"] = ext["exe"]
+        f["external"] = True
+    else:
+        f["dir"] = os.path.join(base_dir(), f["folder"])
     return f
 
 
@@ -203,8 +210,25 @@ def instance_id(profile, variant="java21"):
     return f"GitanoLand-{profile}" + ("-J25" if variant == "java25" else "")
 
 
+def instances_root():
+    """Carpeta de instancias del launcher en uso (en uno ya instalado puede estar cambiada en su .cfg)."""
+    f = fl()
+    if f.get("external"):
+        try:
+            cfg = os.path.join(f["dir"], os.path.splitext(os.path.basename(f["exe_path"]))[0].lower() + ".cfg")
+            with open(cfg, encoding="utf-8", errors="replace") as fh:
+                for line in fh:
+                    if line.startswith("InstanceDir="):
+                        v = line.split("=", 1)[1].strip()
+                        if v:
+                            return v if os.path.isabs(v) else os.path.join(f["dir"], v)
+        except OSError:
+            pass
+    return os.path.join(f["dir"], "instances")
+
+
 def instance_dir(profile, variant="java21"):
-    return os.path.join(fl()["dir"], "instances", instance_id(profile, variant))
+    return os.path.join(instances_root(), instance_id(profile, variant))
 
 
 def ensure_jdk25(log, progress):
@@ -276,12 +300,63 @@ def patch_java(profile, variant, javaw):
 
 # ------------------------------------------------------------------ Prism
 def prism_exe():
-    return os.path.join(fl()["dir"], fl()["exe"])
+    f = fl()
+    return f.get("exe_path") or os.path.join(f["dir"], f["exe"])
+
+
+def find_existing(flavor):
+    """Busca un Prism/Freesm ya instalado en el PC (que no sea el de este launcher). Devuelve {"exe", "data"} o None."""
+    import shutil
+    names = {"prism": ("PrismLauncher", "prismlauncher"), "freesm": ("FreesmLauncher", "freesmlauncher")}
+    folder, exe = names[flavor]
+    if IS_WIN:
+        env = os.environ.get
+        data = os.path.join(env("APPDATA", ""), folder)
+        roots = [os.path.join(env("LOCALAPPDATA", ""), "Programs", folder)]
+        roots += [os.path.join(env(k, ""), folder) for k in ("ProgramFiles", "ProgramFiles(x86)")]
+        try:
+            import winreg
+            for hive in (winreg.HKEY_CURRENT_USER, winreg.HKEY_LOCAL_MACHINE):
+                try:
+                    k = winreg.OpenKey(hive, r"Software\Microsoft\Windows\CurrentVersion\Uninstall")
+                except OSError:
+                    continue
+                with k:
+                    for i in range(winreg.QueryInfoKey(k)[0]):
+                        try:
+                            with winreg.OpenKey(k, winreg.EnumKey(k, i)) as sk:
+                                name = str(winreg.QueryValueEx(sk, "DisplayName")[0]).lower().replace(" ", "")
+                                if folder.lower() in name:
+                                    loc = str(winreg.QueryValueEx(sk, "InstallLocation")[0]).strip('"')
+                                    if loc:
+                                        roots.append(loc)
+                        except OSError:
+                            continue
+        except Exception:  # noqa: BLE001
+            pass
+        exe_name = exe + ".exe"
+    else:
+        data = os.path.join(os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share"), folder)
+        w = shutil.which(exe)
+        roots = [os.path.dirname(w)] if w else []
+        exe_name = exe
+    mine = os.path.normcase(os.path.abspath(base_dir()))
+    for r in roots:
+        e = os.path.join(r, exe_name)
+        if not os.path.isfile(e) or os.path.normcase(os.path.abspath(e)).startswith(mine):
+            continue  # el que instalo este launcher no cuenta
+        portable = any(os.path.exists(os.path.join(r, m)) for m in ("portable.txt", "prismlauncher_portable.txt"))
+        d = r if portable else data
+        if os.path.isdir(d):
+            return {"exe": e, "data": d}
+    return None
 
 
 def ensure_prism(log, progress):
     if os.path.exists(prism_exe()):
         return
+    if fl().get("external"):
+        raise IOError(f"No encuentro {fl()['name']} en {prism_exe()}. Vuelve a abrir el asistente y elige instalar uno aparte.")
     log(f"Descargando {fl()['name']} (una sola vez)...")
     rel = get_json(fl()["api"])
     asset = next(a for a in rel["assets"]
@@ -438,14 +513,17 @@ def find_java():
     return None
 
 
-def ensure_neoforge(log):
+def ensure_neoforge(log, progress=None):
     """Instala NeoForge en .minecraft (para TLauncher y similares) si no esta."""
     mc = minecraft_dir()
     if os.path.isdir(os.path.join(mc, "versions", f"neoforge-{NEOFORGE}")):
         return
     java = find_java()
     if not java:
-        raise IOError("No encuentro Java 17 o superior. Instala Java 21 (adoptium.net), o abre una vez Minecraft desde tu launcher, y vuelve a probar.")
+        # sin Java en el PC: usa la Java 25 propia del launcher (la baja una vez); el instalador necesita java, no javaw
+        log("No hay Java instalado en este PC: uso la del launcher.")
+        j = ensure_jdk25(log, progress or (lambda x: None))
+        java = os.path.join(os.path.dirname(j), "java.exe" if IS_WIN else "java")
     log(f"Descargando NeoForge {NEOFORGE}...")
     os.makedirs(mc, exist_ok=True)
     installer = os.path.join(HOME, "neoforge-installer.jar")
@@ -662,13 +740,23 @@ def install_to_system(shortcuts=True):
 def move_base(new_base, log, progress):
     """Mueve todo lo instalado (Prism/Freesm/Juego-*) a otra carpeta y actualiza el estado."""
     old = base_dir()
-    if os.path.normcase(old) == os.path.normcase(new_base):
+    if os.path.normcase(os.path.abspath(old)) == os.path.normcase(os.path.abspath(new_base)):
         return
-    os.makedirs(new_base, exist_ok=True)
+    n_low = os.path.normcase(os.path.abspath(new_base)).replace(chr(92), "/") + "/"
+    o_low = os.path.normcase(os.path.abspath(old)).replace(chr(92), "/") + "/"
+    if n_low.startswith(o_low):
+        raise IOError("La carpeta elegida esta dentro de la carpeta actual del launcher. Elige otra (por ejemplo D:/GitanoLand).")
+    if any(x in n_low for x in ("/freesmlauncher", "/prismlauncher", "/.minecraft/", "/curseforge/")):
+        raise IOError("La carpeta elegida es una carpeta interna de otro launcher (Freesm, Prism, CurseForge o Minecraft). "
+                      "Elige una carpeta propia, por ejemplo C:/GitanoLand o D:/GitanoLand.")
+    os.makedirs(lp(new_base), exist_ok=True)
     names = [n for n in os.listdir(old) if n in ("Prism", "Freesm") or n.startswith("Juego-")] if os.path.isdir(old) else []
     for i, n in enumerate(names):
         log(f"Moviendo {n}...")
-        shutil.move(os.path.join(old, n), os.path.join(new_base, n))
+        try:
+            shutil.move(lp(os.path.join(old, n)), lp(os.path.join(new_base, n)))
+        except PermissionError as e:
+            raise IOError(f"No se puede mover {n} porque esta en uso. Cierra Freesm/Prism y Minecraft y vuelve a intentarlo.") from e
         progress((i + 1) / max(1, len(names)))
     state = load_state()
     for k, v in state.items():
@@ -775,4 +863,12 @@ def os_label():
 def issue_url(title, body):
     """Enlace a 'nuevo aviso' de GitHub con el informe ya rellenado (el usuario solo le da a enviar)."""
     from urllib.parse import quote
-    return f"https://github.com/{REPO}/issues/new?title={quote(title)}&body={quote(body[:5500])}"
+    # Windows no abre enlaces de mas de ~2000 caracteres: el enlace lleva solo un resumen y el informe completo va al portapapeles
+    t = quote(title)
+    short = body
+    while len(short) > 200:
+        url = f"https://github.com/{REPO}/issues/new?title={t}&body={quote(short)}"
+        if len(url) <= 1800:
+            return url
+        short = short[: int(len(short) * 0.8)]
+    return f"https://github.com/{REPO}/issues/new?title={t}"

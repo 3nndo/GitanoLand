@@ -46,6 +46,7 @@ class Api:
         self._demo = demo
         self._window = None
         self._cfg = core.load_state().get("_config", {})
+        core.EXT.update(self._cfg.get("ext", {}))
         if self._cfg.get("base"):
             core.BASE[0] = self._cfg["base"]
         self._last_error = ""
@@ -132,7 +133,23 @@ class Api:
             core.open_in_system(p)
 
     def open_url(self, u):
-        webbrowser.open(u)
+        try:
+            if sys.platform == "win32":
+                os.startfile(u)  # webbrowser.open falla con algunos navegadores por defecto y enlaces largos
+                return True
+            return bool(webbrowser.open(u))
+        except Exception:  # noqa: BLE001
+            core.log("open_url: " + traceback.format_exc())
+            return bool(webbrowser.open(u))
+
+    def detect_launcher(self, mode):
+        """Prism/Freesm que el usuario ya tenia (si no esta ya elegido uno)."""
+        if not core.is_full(mode):
+            return None
+        f = core.find_existing(mode)
+        if f:
+            f["name"] = core.FLAVORS[mode]["name"]
+        return f
 
     def open_logs(self):
         os.makedirs(core.LOG_DIR, exist_ok=True)
@@ -182,6 +199,13 @@ class Api:
                     core.BASE[0] = w["base"]
             if full:
                 core.CUR[0] = mode
+                if w.get("useExisting"):
+                    found = core.find_existing(mode)
+                    if found:
+                        core.EXT[mode] = found
+                        log(f"Uso tu {core.fl()['name']} ya instalado: {found['exe']}")
+                else:
+                    core.EXT.pop(mode, None)
                 core.ensure_prism(log, prog)
                 core.install_icon()
                 dest = core.instance_dir(profile, variant)
@@ -206,9 +230,11 @@ class Api:
             if full:
                 core.set_ram(profile, variant, ram)
             else:
-                core.ensure_neoforge(log)
+                core.ensure_neoforge(log, prog)
             mark(3)
-            self.save_cfg(installed=True, kind=w["kind"], mode=mode, profile=profile, variant=variant, ram=ram,
+            if full and core.EXT.get(mode):
+                log(f"Si {core.fl()['name']} esta abierto, cierralo y abrelo otra vez para que aparezca la instancia.")
+            self.save_cfg(ext=dict(core.EXT), installed=True, kind=w["kind"], mode=mode, profile=profile, variant=variant, ram=ram,
                           nick=w.get("nick", ""), base=core.base_dir(), dest=dest, javaw=javaw or "")
             time.sleep(0.4)
             cfg = dict(self._cfg)
@@ -301,11 +327,13 @@ class Api:
             base = core.base_dir()
             core.log(f"Borrar instancia: {dest} (launcher tambien: {also_launcher})")
             # solo se borra dentro de la carpeta de instalacion del launcher (nunca una carpeta ajena)
-            if dest and os.path.isdir(dest) and os.path.normcase(os.path.abspath(dest)).startswith(os.path.normcase(os.path.abspath(base))):
+            roots = [base] + ([core.instances_root()] if core.EXT.get(w["mode"]) else [])
+            if dest and os.path.isdir(dest) and os.path.basename(dest).startswith("GitanoLand") and any(
+                    os.path.normcase(os.path.abspath(dest)).startswith(os.path.normcase(os.path.abspath(r))) for r in roots):
                 shutil.rmtree(dest, ignore_errors=True)
             st = core.load_state()
             st.pop(key, None)
-            if also_launcher and core.is_full(w["mode"]) and os.path.isdir(core.fl()["dir"]):
+            if also_launcher and core.is_full(w["mode"]) and not core.EXT.get(w["mode"]) and os.path.isdir(core.fl()["dir"]):
                 shutil.rmtree(core.fl()["dir"], ignore_errors=True)
             self._cfg.update(installed=False)
             st["_config"] = self._cfg
