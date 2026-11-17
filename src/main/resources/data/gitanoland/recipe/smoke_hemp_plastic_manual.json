@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {"item": "smokeleafindustries:bio_composite"},
+    {"item": "smokeleafindustries:bio_composite"}
+  ],
+  "result": {"id": "smokeleafindustries:hemp_plastic", "count": 4}
+}
