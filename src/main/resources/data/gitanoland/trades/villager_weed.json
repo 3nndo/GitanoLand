@@ -1,0 +1,29 @@
+{
+  "_comment": "Aldeanos normales que compran weed por Kirkys. Precio = base x cantidad x (1 + THC*thc_per_point + CBD*cbd_per_point, con tope max_multiplier) x multiplicador de rareza. Pon enabled en false para desactivarlo.",
+  "enabled": true,
+  "buyer_chance": 0.35,
+  "max_kirkys_per_offer": 64,
+  "skip_professions": ["minecraft:none", "minecraft:nitwit", "smokeleafindustries:stoner"],
+  "price": {
+    "thc_per_point": 0.01,
+    "cbd_per_point": 0.005,
+    "max_multiplier": 3.0
+  },
+  "wants": [
+    { "item": "smokeleafindustries:weed", "level": 1, "count": 4, "base": 4, "max_uses": 6, "xp": 5 },
+    { "item": "smokeleafindustries:bud", "level": 3, "count": 1, "base": 14, "max_uses": 4, "xp": 10 },
+    { "item": "smokeleafindustries:extract", "level": 5, "count": 1, "base": 30, "max_uses": 3, "xp": 15 }
+  ],
+  "rarity_score": {
+    "_comment": "Puntos de rareza: efecto fuerte +2, efecto suave +1, cada efecto extra +1, THC+CBD >= 28 +1, >= 33 +2 y >= 40 +3, amplificador mayor que 1 +1 por nivel, duracion >= 230 +1, cepa cruzada +1.",
+    "strong_effects": ["minecraft:regeneration", "minecraft:resistance", "minecraft:strength", "minecraft:health_boost", "minecraft:absorption", "minecraft:luck"],
+    "mild_effects": ["minecraft:speed", "minecraft:haste", "minecraft:night_vision", "minecraft:dolphins_grace", "minecraft:jump_boost", "minecraft:fire_resistance", "minecraft:water_breathing", "minecraft:invisibility", "minecraft:slow_falling", "minecraft:wind_charged", "minecraft:glowing"]
+  },
+  "rarities": [
+    { "name": "Común", "min_score": 0, "multiplier": 1.0 },
+    { "name": "Poco común", "min_score": 2, "multiplier": 1.25 },
+    { "name": "Rara", "min_score": 3, "multiplier": 1.6 },
+    { "name": "Épica", "min_score": 4, "multiplier": 2.2 },
+    { "name": "Legendaria", "min_score": 5, "multiplier": 3.0 }
+  ]
+}

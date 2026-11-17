@@ -31,6 +31,7 @@ function startSlides() {
   next();
   setInterval(next, 9000);
 }
+function gearVisible(v) { const g = $("#gear"); if (g) g.style.display = v ? "" : "none"; }
 function bgMode(mode) { document.body.classList.toggle("hero", mode === "hero"); }   // solo la pantalla principal enseña la foto de fondo
 
 /* ---------------------------------------------------------------- utilidades de interfaz */
@@ -55,6 +56,7 @@ function show(name, args = {}, dir = 1) {
   el.innerHTML = home ? SCREENS[name].render(args) : `<div class="wrap">${SCREENS[name].render(args)}</div>`;
   view.appendChild(el);
   bgMode(SCREENS[name].bg);
+  gearVisible(name === "home");
   S.screen = name;
   // al instante: fuera todo lo que no sea la pantalla que se va ni la nueva (nunca se acumulan)
   $$(".screen", view).forEach((n) => { if (n !== el && n !== prev) n.remove(); });
@@ -360,6 +362,28 @@ async function launch() {
 }
 ACT.edit = () => { S.w = { ...S.w, edit: true, reinstall: false, ramTouched: true, ramRiskOk: S.w.ram > maxSafeRam() }; show("wizard0"); };
 ACT.reinstall = () => { S.w = { ...S.w, edit: false, reinstall: true }; show("welcome"); };
+/* opciones: efectos opcionales (solo editan configs, no quitan mods) */
+async function openOptions() {
+  if (!S.cfg || !S.cfg.installed) return toast("Primero instala GitanoLand.", true);
+  const r = await API().fx_list(S.w);
+  const rows = (r.fx || []).map((f) => `<div class="fx ${f.on && f.available ? "on" : ""} ${f.available ? "" : "off"}" data-id="${f.id}" data-av="${f.available ? 1 : 0}"><div class="t"><b>${esc(f.name)}</b><span>${esc(f.desc)}${f.available ? "" : " (no incluido en tu perfil)"}</span></div><div class="sw"></div></div>`).join("");
+  modal(`<h3>Opciones</h3><p>Efectos especiales opcionales. Apágalos si tu PC va justo o no te gustan. Se aplican la próxima vez que abras el juego.</p>
+    <div class="fxlist">${rows || "<p>No hay opciones disponibles.</p>"}</div>
+    <div class="row"><div class="btn primary" id="fx-ok">Cerrar</div></div>`, (m) => {
+    m.querySelector(".dialog").classList.add("wide");
+    $("#fx-ok").onclick = closeModal;
+    $$(".fx", m).forEach((el) => el.onclick = async () => {
+      if (el.dataset.av !== "1") return;
+      const on = !el.classList.contains("on");
+      el.classList.toggle("on", on);
+      const res = await API().fx_set(S.w, el.dataset.id, on);
+      if (!res.ok) { el.classList.toggle("on", !on); toast("No se pudo cambiar esa opción.", true); }
+    });
+  });
+}
+ACT.options = openOptions;
+$("#gear").onclick = openOptions;
+
 ACT.del = () => modal(`<h3>Borrar la instancia</h3>
   <p>Se borra la instancia <b>${esc(S.w.profile)}</b> con sus mods, ajustes y <b>mundos guardados</b>. <b>No se puede deshacer.</b></p>
   <label class="chk"><input type="checkbox" id="d-l"> Borrar también el launcher descargado (${S.w.mode === "freesm" ? "Freesm" : "Prism"})</label>

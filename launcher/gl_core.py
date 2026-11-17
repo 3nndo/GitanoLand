@@ -19,7 +19,7 @@ import zlib
 import shutil
 
 REPO = "3nndo/GitanoLand"
-LAUNCHER_VERSION = "2.0.3"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
+LAUNCHER_VERSION = "2.0.4"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 IS_WIN = sys.platform == "win32"
 IS_LINUX = sys.platform.startswith("linux")
@@ -646,6 +646,132 @@ def sync(key, profile, rel, dest, log, progress, mode="prism", variant="java21")
 
 
 
+# ------------------------------------------------------------------ efectos opcionales (Opciones)
+# Cada efecto es un interruptor que solo edita el archivo de configuracion del mod correspondiente (no quita ningun mod).
+# Solo se aplican los que el jugador ha tocado; el resto queda como lo trae la version.
+_PH = ("physicsmod", "physics_client_config.json")
+
+
+def _json_edit(path, fn):
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    fn(d)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(d, f, indent=2)
+
+
+def _toml_set(path, values):
+    """Cambia `clave = valor` (en cualquier tabla) conservando comentarios y el resto del archivo."""
+    import re
+    with open(path, encoding="utf-8") as f:
+        txt = f.read()
+    for k, v in values.items():
+        txt = re.sub(r"(?m)^(\s*" + re.escape(k) + r"\s*=\s*).*$", lambda m, v=v: m.group(1) + v, txt)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(txt)
+
+
+def _props_set(path, key, val):
+    import re
+    with open(path, encoding="utf-8") as f:
+        txt = f.read()
+    txt = re.sub(r"(?m)^" + re.escape(key) + r"=.*$", key + "=" + val, txt)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(txt)
+
+
+def _physics(keys, extra=None):
+    def go(cfg, on):
+        def edit(d):
+            for k in keys:
+                d[k] = bool(on)
+            if extra:
+                extra(d, on)
+        _json_edit(os.path.join(cfg, *_PH), edit)
+    return go
+
+
+def _scenes(cfg, on):
+    import re
+    path = os.path.join(cfg, "cinematic-client.toml")
+    with open(path, encoding="utf-8") as f:
+        txt = f.read()
+    # solo la tabla [scenes.blocks]: table, furnace, anvil...
+    head, sep, rest = txt.partition("[scenes.blocks]")
+    rest = re.sub(r"(?m)^(\s*[a-z_]+\s*=\s*)(true|false)\s*$", lambda m: m.group(1) + ("true" if on else "false"), rest)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(head + sep + rest)
+    dl = os.path.join(cfg, "cinematic_delight.properties")
+    if os.path.exists(dl):
+        _props_set(dl, "enabled", "true" if on else "false")
+
+
+FX = [
+    {"id": "items", "name": "Física de objetos", "desc": "Los objetos soltados caen, ruedan y rebotan.",
+     "jar": "physics-mod", "file": os.path.join(*_PH), "apply": _physics(["itemPhysics", "itemBreakPhysics"])},
+    {"id": "blocks", "name": "Física de bloques rotos", "desc": "Los bloques se rompen en trozos con física en vez de partículas.",
+     "jar": "physics-mod", "file": os.path.join(*_PH),
+     "apply": _physics([], lambda d, on: d.setdefault("blockSettings", {}).update({"Physics Type": 5 if on else 3}))},
+    {"id": "mobs", "name": "Física de mobs", "desc": "Los mobs y jugadores caen como muñecos de trapo (ragdoll) al morir.",
+     "jar": "physics-mod", "file": os.path.join(*_PH),
+     "apply": _physics([], lambda d, on: d.setdefault("mobSettings", {}).update({"Physics Type": 0 if on else 4}))},
+    {"id": "vines", "name": "Plantas, telas y cuerdas", "desc": "Lianas, capas, pancartas, cañas de pescar y correas se mueven.",
+     "jar": "physics-mod", "file": os.path.join(*_PH),
+     "apply": _physics(["vinePhysics", "capePhysics", "bannerPhysics", "fishingRodPhysics", "leashPhysics"])},
+    {"id": "snow", "name": "Nieve con física", "desc": "Huellas y nieve que se hunde al pisarla.",
+     "jar": "physics-mod", "file": os.path.join(*_PH), "apply": _physics(["snowPhysics", "snowTracks"])},
+    {"id": "scenes", "name": "Escenas cinemáticas", "desc": "Mesas, hornos, yunques…: la cámara se acerca y ves cómo lo usas. Si lo apagas se abre la ventana de siempre.",
+     "jar": "cinematic", "file": "cinematic-client.toml", "apply": _scenes},
+    {"id": "dynlights", "name": "Luces dinámicas", "desc": "Las antorchas y objetos que brillan iluminan a tu alrededor al llevarlos.",
+     "jar": "lambdynlights", "file": "lambdynlights.toml",
+     "apply": lambda cfg, on: _toml_set(os.path.join(cfg, "lambdynlights.toml"), {"mode": '"fancy"' if on else '"off"'})},
+    {"id": "soundphys", "name": "Sonido realista", "desc": "El sonido rebota y se apaga según las cuevas y paredes.",
+     "jar": "sound-physics", "file": os.path.join("sound_physics_remastered", "soundphysics.properties"),
+     "apply": lambda cfg, on: _props_set(os.path.join(cfg, "sound_physics_remastered", "soundphysics.properties"), "enabled", "true" if on else "false")},
+]
+
+
+def mc_dir(key, mode):
+    """Carpeta .minecraft (la que lleva config/ y mods/) de la instancia instalada con esa clave."""
+    d = load_state().get(key, {}).get("dest")
+    if not d:
+        return None
+    return os.path.join(d, "minecraft") if is_full(mode) else d
+
+
+def fx_state(key, mode, chosen):
+    """Lista de efectos con su estado. chosen: {id: bool} lo que ha elegido el jugador."""
+    mc = mc_dir(key, mode)
+    mods = []
+    if mc and os.path.isdir(os.path.join(mc, "mods")):
+        mods = [n.lower() for n in os.listdir(os.path.join(mc, "mods")) if n.lower().endswith(".jar")]
+    out = []
+    for e in FX:
+        have = bool(mc) and any(e["jar"] in n for n in mods) and os.path.exists(os.path.join(mc, "config", e["file"]))
+        out.append({"id": e["id"], "name": e["name"], "desc": e["desc"], "available": have, "on": bool(chosen.get(e["id"], True))})
+    return out
+
+
+def apply_fx(key, mode, chosen):
+    """Escribe en las configs lo que el jugador ha elegido (se repite tras cada actualizacion). Devuelve los que fallaron."""
+    mc = mc_dir(key, mode)
+    bad = []
+    if not mc:
+        return bad
+    cfg = os.path.join(mc, "config")
+    for e in FX:
+        if e["id"] not in chosen:
+            continue
+        if not os.path.exists(os.path.join(cfg, e["file"])):
+            continue
+        try:
+            e["apply"](cfg, bool(chosen[e["id"]]))
+        except Exception as ex:  # noqa: BLE001
+            log(f"Efecto {e['id']}: {ex}")
+            bad.append(e["id"])
+    return bad
+
+
 # ------------------------------------------------------------------ ajustes de la instancia, actualizaciones, instalacion
 RAM_CHOICES = (4, 6, 8, 12)
 
@@ -703,18 +829,44 @@ def installed_here():
 
 
 def desktop_dir():
-    try:
-        out = subprocess.run(["powershell", "-NoProfile", "-Command", "[Environment]::GetFolderPath('Desktop')"],
-                             capture_output=True, text=True, timeout=20,
-                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)).stdout.strip()
-        if out and os.path.isdir(out):
-            return out
-    except Exception:  # noqa: BLE001
-        pass
+    # Sin lanzar PowerShell (los antivirus desconfian de un .exe que abre PowerShell): se pregunta a Windows directamente.
+    if IS_WIN:
+        try:
+            import ctypes
+            from ctypes import wintypes
+
+            class GUID(ctypes.Structure):
+                _fields_ = [("a", ctypes.c_ulong), ("b", ctypes.c_ushort), ("c", ctypes.c_ushort), ("d", ctypes.c_ubyte * 8)]
+
+            fid = GUID(0xB4BFCC3A, 0xDB2C, 0x424C, (ctypes.c_ubyte * 8)(0xB0, 0x29, 0x7F, 0xE9, 0x9A, 0x87, 0xC6, 0x41))
+            out = ctypes.c_wchar_p()
+            fn = ctypes.windll.shell32.SHGetKnownFolderPath
+            fn.argtypes = [ctypes.POINTER(GUID), wintypes.DWORD, wintypes.HANDLE, ctypes.POINTER(ctypes.c_wchar_p)]
+            if fn(ctypes.byref(fid), 0, None, ctypes.byref(out)) == 0 and out.value and os.path.isdir(out.value):
+                path = out.value
+                ctypes.windll.ole32.CoTaskMemFree(out)
+                return path
+        except Exception:  # noqa: BLE001
+            pass
     return os.path.join(os.path.expanduser("~"), "Desktop")
 
 
 def make_shortcut(lnk, target, workdir, icon=None):
+    try:  # .NET (ya va dentro del launcher por la ventana): crea el acceso directo sin abrir otros programas
+        import clr  # noqa: F401
+        from System import Type, Activator, Array, Object
+        from System.Reflection import BindingFlags
+        t = Type.GetTypeFromProgID("WScript.Shell")
+        sh = Activator.CreateInstance(t)
+        o = t.InvokeMember("CreateShortcut", BindingFlags.InvokeMethod, None, sh, Array[Object]([lnk]))
+        ot = o.GetType()
+        props = [("TargetPath", target), ("WorkingDirectory", workdir)] + ([("IconLocation", icon)] if icon else [])
+        for k, v in props:
+            ot.InvokeMember(k, BindingFlags.SetProperty, None, o, Array[Object]([v]))
+        ot.InvokeMember("Save", BindingFlags.InvokeMethod, None, o, None)
+        return
+    except Exception as e:  # noqa: BLE001
+        log("Acceso directo por .NET fallo, uso PowerShell: " + str(e))
     cmd = ("$s=(New-Object -ComObject WScript.Shell).CreateShortcut('" + lnk.replace("'", "''") + "');"
            "$s.TargetPath='" + target.replace("'", "''") + "';$s.WorkingDirectory='" + workdir.replace("'", "''") + "';"
            + ("$s.IconLocation='" + icon.replace("'", "''") + "';" if icon else "") + "$s.Save()")

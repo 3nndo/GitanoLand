@@ -12,7 +12,7 @@ import os
 import subprocess
 import sys
 
-BUILD = "2.0.3"
+BUILD = "2.0.4"
 
 
 def child_env():
