@@ -57,6 +57,7 @@ function show(name, args = {}, dir = 1) {
   view.appendChild(el);
   bgMode(SCREENS[name].bg);
   gearVisible(name === "home");
+  if (name === "home") window.gearIntro && window.gearIntro();
   S.screen = name;
   // al instante: fuera todo lo que no sea la pantalla que se va ni la nueva (nunca se acumulan)
   $$(".screen", view).forEach((n) => { if (n !== el && n !== prev) n.remove(); });
@@ -383,6 +384,24 @@ async function openOptions() {
 }
 ACT.options = openOptions;
 $("#gear").onclick = openOptions;
+
+/* engranaje: brilla hasta que lo abres; la burbuja "Personaliza tu experiencia" sale al pasar el raton y unos segundos al llegar a la pantalla principal */
+(function () {
+  const g = $("#gear"), tip = $("#geartip");
+  const seen = () => { try { return localStorage.getItem("gl_gear_seen") === "1"; } catch (_) { return false; } };
+  const done = () => { try { localStorage.setItem("gl_gear_seen", "1"); } catch (_) { /* nada */ } g.classList.remove("glow"); tip.classList.remove("show", "pinned"); };
+  if (seen()) g.classList.remove("glow");
+  g.addEventListener("mouseenter", () => tip.classList.add("show"));
+  g.addEventListener("mouseleave", () => { if (!tip.classList.contains("pinned")) tip.classList.remove("show"); });
+  g.addEventListener("click", done);
+  $("#gearok").addEventListener("click", done);
+  // la primera vez la burbuja se queda fija con un boton OK hasta que la cierres o abras las opciones
+  window.gearIntro = () => {
+    if (seen()) return;
+    clearTimeout(gearIntro.t);
+    gearIntro.t = setTimeout(() => { if (g.style.display !== "none") tip.classList.add("show", "pinned"); }, 900);
+  };
+})();
 
 ACT.del = () => modal(`<h3>Borrar la instancia</h3>
   <p>Se borra la instancia <b>${esc(S.w.profile)}</b> con sus mods, ajustes y <b>mundos guardados</b>. <b>No se puede deshacer.</b></p>

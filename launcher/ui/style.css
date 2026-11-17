@@ -328,3 +328,20 @@ h1 { font-size: 30px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .45); background-clip: padding-box; }
 ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
 .dialog.wide { padding-right: 18px; scrollbar-gutter: stable; }
+
+/* ---------- engranaje con brillo + burbuja ---------- */
+#gear { position: relative; }
+#gear.glow { color: #fff; animation: gearGlow 2.2s ease-in-out infinite; }
+#gear.glow svg { animation: gearSpin 14s linear infinite; }
+@keyframes gearGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(82, 204, 96, .0), 0 0 8px 1px rgba(82, 204, 96, .35); background: rgba(82, 204, 96, .10); }
+  50% { box-shadow: 0 0 0 4px rgba(82, 204, 96, .12), 0 0 18px 4px rgba(82, 204, 96, .6); background: rgba(82, 204, 96, .22); } }
+@keyframes gearSpin { to { transform: rotate(360deg); } }
+#gear:hover svg { animation-duration: 3s; }
+#geartip { position: fixed; top: 66px; right: 58px; z-index: 60; padding: 9px 16px; border-radius: 12px; background: #1d3a25; color: #eaffee; font-size: 13px; font-weight: 600;
+  border: 1px solid rgba(82, 204, 96, .55); box-shadow: 0 8px 26px rgba(0, 0, 0, .55), 0 0 16px rgba(82, 204, 96, .35); opacity: 0; transform: translateY(-6px); pointer-events: none; transition: .25s; white-space: nowrap; }
+#geartip::before { content: ""; position: absolute; top: -6px; right: 22px; width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(82, 204, 96, .55); border-top: 1px solid rgba(82, 204, 96, .55); transform: rotate(45deg); }
+#geartip.show { opacity: 1; transform: none; }
+#geartip button { display: none; margin-left: 14px; height: 26px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--green); color: #fff; font-weight: 700; font-size: 12.5px; cursor: pointer; }
+#geartip button:hover { background: var(--green-hi); }
+#geartip.pinned { pointer-events: auto; }
+#geartip.pinned button { display: inline-block; }
