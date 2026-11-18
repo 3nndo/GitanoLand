@@ -207,3 +207,5 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - Quitado el mod Waystones2Waypoints2 (xaeros_waystones_compatibility 2.1.0) de GitanoLand, Alto, Medio, Bajo, server y test107 (copias en D:\GitanoLand-releaseemoved\w2w2_*.jar). Pendiente: publicar en 1.0.15 o borrarlo a mano en Exaroton.
 
 - Sr. Washee Washee: client/WasheeWashee.java (textura gui/washee.png). Aparece en una esquina ~1/1500 por segundo (~25 min de media) y se va al escribir "washee washee" en el chat. Compilado en el jar 1.0.14 local, sin instalar (juego abierto). Anticheat: PixelsAntiCheat solo expulsa por mods sospechosos, no por volar; el kick por volar es el vanilla allow-flight=false.
+
+- Screamer del esqueleto: client/SkeletonScreamer.java (textura gui/skeleton_run.png, sprite sheet 6x4 de 24 frames a partir del webm sin fondo del usuario). Cruza la pantalla en ~1.8 s con sonido, ~1/3000 por segundo (~50 min); /esqueleto lo prueba (comando de cliente). Compilado en el jar 1.0.14 local, sin instalar ni probar en juego (la marca de agua de stock se ve).
