@@ -1,5 +1,7 @@
-Las tragaperras, el Plinko, las cartas y el billar (mod Jackpot) se configuran solas con Kirkys al colocarlas.
+The casino is the MineVegas mod: roulette, blackjack, poker, slot machine, fortune wheel, Plinko and duck derby. Here EVERYTHING is played with Kirkys: you bet Kirkys and win Kirkys.
 <NEWLINE>
-El dueño de cada máquina puede cambiar precios y probabilidades en su pantalla de configuración.
+To build one, read the casino guide (crafting recipe) and hire a croupier in a village.
 <NEWLINE>
-Y si un casino te parece una estafa... existe el ATENTADO.
+Operators can tune the bets, payouts and odds of each machine with the Croupier's Hand.
+<NEWLINE>
+And if a casino feels like a scam... there is the ATTACK.
