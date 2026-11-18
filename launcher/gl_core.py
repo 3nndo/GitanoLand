@@ -19,7 +19,7 @@ import zlib
 import shutil
 
 REPO = "3nndo/GitanoLand"
-LAUNCHER_VERSION = "2.0.4"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
+LAUNCHER_VERSION = "2.0.5"  # igual que gl_selfcheck.BUILD (el sello gl_build.txt del exe)
 PRISM_API = "https://api.github.com/repos/PrismLauncher/PrismLauncher/releases/latest"
 IS_WIN = sys.platform == "win32"
 IS_LINUX = sys.platform.startswith("linux")
