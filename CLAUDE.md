@@ -205,3 +205,5 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - 18-11: waystones sin precio: waystones-common.toml enableCosts=false (apaga todo coste de XP; cooldowns y durabilidad de piedras de teletransporte siguen) en servidor, test107 y las 4 instancias. Sin publicar (los zips 1.0.14 tienen enableCosts=true); en Exaroton basta subir config/waystones-common.toml. Pendiente decidir: quitar w2w2 (xaeros_waystones_compatibility) para que no creen waypoints.
 
 - Quitado el mod Waystones2Waypoints2 (xaeros_waystones_compatibility 2.1.0) de GitanoLand, Alto, Medio, Bajo, server y test107 (copias en D:\GitanoLand-releaseemoved\w2w2_*.jar). Pendiente: publicar en 1.0.15 o borrarlo a mano en Exaroton.
+
+- Sr. Washee Washee: client/WasheeWashee.java (textura gui/washee.png). Aparece en una esquina ~1/1500 por segundo (~25 min de media) y se va al escribir "washee washee" en el chat. Compilado en el jar 1.0.14 local, sin instalar (juego abierto). Anticheat: PixelsAntiCheat solo expulsa por mods sospechosos, no por volar; el kick por volar es el vanilla allow-flight=false.
