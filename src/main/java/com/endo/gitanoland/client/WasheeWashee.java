@@ -21,8 +21,10 @@ public class WasheeWashee {
     private static final ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(GitanoLand.MODID, "textures/gui/washee.png");
     private static final int TEX_W = 218, TEX_H = 747;
     private static final int W = 40, H = 137;           // tamanyo en pantalla (pequenyo)
-    /** Una vez por segundo se tira un dado de 1 entre CHANCE: de media ~ cada 25 minutos. */
-    private static final int CHANCE = 1500;
+    /** Cada 30 minutos de juego (36000 ticks) se tira un dado: 1 entre 250 de que salga. */
+    private static final int INTERVAL = 36000;
+    private static final int CHANCE = 250;
+    private static int wait = 0;
 
     private static boolean here = false;
     private static boolean right = true;
@@ -31,10 +33,13 @@ public class WasheeWashee {
     public static void tick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) { here = false; return; }
-        if (here || mc.player.tickCount % 20 != 0) return;
-        if (mc.player.getRandom().nextInt(CHANCE) == 0) {
-            here = true;
-            right = mc.player.getRandom().nextBoolean();
+        if (here) return;
+        if (++wait >= INTERVAL) {
+            wait = 0;
+            if (mc.player.getRandom().nextInt(CHANCE) == 0) {
+                here = true;
+                right = mc.player.getRandom().nextBoolean();
+            }
         }
     }
 
