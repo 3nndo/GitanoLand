@@ -1,28 +1,26 @@
 package com.endo.gitanoland.client;
 
 import com.endo.gitanoland.GitanoLand;
-import java.util.Locale;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientChatEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 
 /**
  * El Sr. Washee Washee aparece de vez en cuando en una esquina de la pantalla y se queda ahi,
- * sin molestar mucho, hasta que escribes "washee washee" en el chat.
+ * sin molestar mucho, hasta que escribes "washee washee" en el chat (el servidor te da 30-120 Kirkys).
  */
 @EventBusSubscriber(modid = GitanoLand.MODID, value = Dist.CLIENT)
 public class WasheeWashee {
     private static final ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(GitanoLand.MODID, "textures/gui/washee.png");
     private static final int TEX_W = 218, TEX_H = 747;
     private static final int W = 40, H = 137;           // tamanyo en pantalla (pequenyo)
-    /** Cada 30 minutos de juego (36000 ticks) se tira un dado: 1 entre 250 de que salga. */
-    private static final int INTERVAL = 36000;
+    /** Cada 2 h 30 min de juego (180000 ticks) se tira un dado: 1 entre 250 de que salga. */
+    private static final int INTERVAL = 180000;
     private static final int CHANCE = 250;
     private static int wait = 0;
 
@@ -39,15 +37,15 @@ public class WasheeWashee {
             if (mc.player.getRandom().nextInt(CHANCE) == 0) {
                 here = true;
                 right = mc.player.getRandom().nextBoolean();
+                net.neoforged.neoforge.network.PacketDistributor.sendToServer(new com.endo.gitanoland.net.WasheePayload.Appear());
             }
         }
     }
 
-    @SubscribeEvent
-    public static void chat(ClientChatEvent event) {
-        if (!here) return;
-        String m = event.getMessage().toLowerCase(Locale.ROOT).replaceAll("[^a-z ]", " ").replaceAll("\\s+", " ");
-        if (m.contains("washee washee")) here = false;
+    /** El servidor ha oido "washee washee": se va (y si ha cobrado, sale el toast de Kirkys). */
+    public static void bye(int kirkys) {
+        here = false;
+        if (kirkys > 0) RewardToast.show(kirkys, false);
     }
 
     @SubscribeEvent
