@@ -308,7 +308,9 @@ h1 { font-size: 30px; }
 
 /* ---------- opciones (efectos) ---------- */
 #gear svg { display: block; margin: auto; }
-.dialog.wide { width: 640px; max-height: 86vh; overflow: auto; }
+.dialog.wide { width: 640px; max-height: 86vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.dialog.wide .fxlist { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 8px; scrollbar-gutter: stable; }
+.dialog.wide .row.foot { flex: none; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
 .fxlist { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
 .fx { display: flex; align-items: center; gap: 16px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, .06); border: 1px solid var(--line); cursor: pointer; }
 .fx.off { opacity: .45; cursor: default; }
@@ -327,7 +329,6 @@ h1 { font-size: 30px; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .22); border-radius: 999px; border: 3px solid transparent; background-clip: padding-box; transition: background .2s; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .45); background-clip: padding-box; }
 ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
-.dialog.wide { padding-right: 18px; scrollbar-gutter: stable; }
 
 /* ---------- engranaje con brillo + burbuja ---------- */
 #gear { position: relative; }
@@ -345,3 +346,11 @@ h1 { font-size: 30px; }
 #geartip button:hover { background: var(--green-hi); }
 #geartip.pinned { pointer-events: auto; }
 #geartip.pinned button { display: inline-block; }
+
+/* ---------- X y confirmacion de salir sin guardar ---------- */
+.xbtn { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, .06); color: #eee; font-size: 22px; line-height: 1; cursor: pointer; transition: .15s; z-index: 2; }
+.xbtn:hover { background: rgba(255, 90, 90, .25); border-color: rgba(255, 120, 120, .6); }
+.fxask { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(8, 6, 14, .72); border-radius: inherit; z-index: 5; animation: pop .15s ease; }
+.fxask .box { width: min(360px, 86%); padding: 22px; border-radius: 16px; background: #231f33; border: 1px solid var(--line); box-shadow: 0 18px 50px rgba(0, 0, 0, .6); }
+.fxask h4 { font-size: 18px; margin-bottom: 6px; }
+.fxask p { margin-bottom: 4px; }

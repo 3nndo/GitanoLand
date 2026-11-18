@@ -368,18 +368,40 @@ async function openOptions() {
   if (!S.cfg || !S.cfg.installed) return toast("Primero instala GitanoLand.", true);
   const r = await API().fx_list(S.w);
   const rows = (r.fx || []).map((f) => `<div class="fx ${f.on && f.available ? "on" : ""} ${f.available ? "" : "off"}" data-id="${f.id}" data-av="${f.available ? 1 : 0}"><div class="t"><b>${esc(f.name)}</b><span>${esc(f.desc)}${f.available ? "" : " (no incluido en tu perfil)"}</span></div><div class="sw"></div></div>`).join("");
-  modal(`<h3>Opciones</h3><p>Efectos especiales opcionales. Apágalos si tu PC va justo o no te gustan. Se aplican la próxima vez que abras el juego.</p>
+  modal(`<button class="xbtn" id="fx-x" aria-label="Cerrar" title="Cerrar">&times;</button><h3>Opciones</h3><p>Efectos especiales opcionales. Apágalos si tu PC va justo o no te gustan. Se aplican la próxima vez que abras el juego.</p>
     <div class="fxlist">${rows || "<p>No hay opciones disponibles.</p>"}</div>
-    <div class="row"><div class="btn primary" id="fx-ok">Cerrar</div></div>`, (m) => {
+    <div class="row foot"><div class="btn" id="fx-cancel">Cancelar</div><div class="btn primary" id="fx-ok">Guardar</div></div>`, (m) => {
     m.querySelector(".dialog").classList.add("wide");
-    $("#fx-ok").onclick = closeModal;
-    $$(".fx", m).forEach((el) => el.onclick = async () => {
+    const orig = {};                                  // estado al abrir, para saber si hay cambios sin guardar
+    $$(".fx", m).forEach((el) => { orig[el.dataset.id] = el.classList.contains("on"); });
+    const changed = () => $$(".fx", m).filter((el) => el.dataset.av === "1" && el.classList.contains("on") !== orig[el.dataset.id]);
+    const ask = () => {
+      if (!changed().length) return closeModal();
+      if ($("#fx-ask", m)) return;
+      const q = document.createElement("div");
+      q.id = "fx-ask"; q.className = "fxask";
+      q.innerHTML = `<div class="box"><h4>¿Salir sin guardar?</h4><p>Los cambios que hiciste se perderán.</p><div class="row"><div class="btn" id="fx-no">No</div><div class="btn orange" id="fx-yes">Sí</div></div></div>`;
+      m.querySelector(".dialog").appendChild(q);
+      $("#fx-no", m).onclick = () => q.remove();
+      $("#fx-yes", m).onclick = closeModal;
+    };
+    $("#fx-x").onclick = ask;
+    $("#fx-cancel").onclick = ask;
+    m.onclick = (e) => { if (e.target === m) ask(); };
+    $$(".fx", m).forEach((el) => el.onclick = () => {
       if (el.dataset.av !== "1") return;
-      const on = !el.classList.contains("on");
-      el.classList.toggle("on", on);
-      const res = await API().fx_set(S.w, el.dataset.id, on);
-      if (!res.ok) { el.classList.toggle("on", !on); toast("No se pudo cambiar esa opción.", true); }
+      el.classList.toggle("on");
     });
+    $("#fx-ok").onclick = async () => {
+      let fail = 0;
+      for (const el of changed()) {
+        const on = el.classList.contains("on");
+        const res = await API().fx_set(S.w, el.dataset.id, on);
+        if (res && res.ok) orig[el.dataset.id] = on; else fail++;
+      }
+      if (fail) return toast("No se pudieron guardar " + fail + " opciones.", true);
+      closeModal(); toast("Opciones guardadas.");
+    };
   });
 }
 ACT.options = openOptions;
