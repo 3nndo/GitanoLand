@@ -24,8 +24,10 @@ public class SkeletonScreamer {
     private static final int COLS = 6, FRAMES = 24, FW = 160, FH = 290;
     private static final int TEX_W = COLS * FW, TEX_H = 4 * FH;
     private static final int DURATION = 36;          // ticks que tarda en cruzar la pantalla (~1.8 s)
-    /** Una vez por segundo se tira un dado de 1 entre CHANCE: de media ~ cada 50 minutos. */
-    private static final int CHANCE = 3000;
+    /** Cada 30 minutos de juego (36000 ticks) se tira un dado: 1 entre 100 de que salga. */
+    private static final int INTERVAL = 36000;
+    private static final int CHANCE = 100;
+    private static int wait = 0;
 
     private static int t = -1;                       // -1 = no esta corriendo
 
@@ -43,7 +45,10 @@ public class SkeletonScreamer {
             if (++t >= DURATION) t = -1;
             return;
         }
-        if (mc.player.tickCount % 20 == 0 && mc.player.getRandom().nextInt(CHANCE) == 0) start(mc);
+        if (++wait >= INTERVAL) {
+            wait = 0;
+            if (mc.player.getRandom().nextInt(CHANCE) == 0) start(mc);
+        }
     }
 
     @SubscribeEvent
