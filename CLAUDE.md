@@ -209,3 +209,5 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - Sr. Washee Washee: client/WasheeWashee.java (textura gui/washee.png). Aparece en una esquina cada 30 min de juego tira un dado, 1 entre 250 y se va al escribir "washee washee" en el chat. Compilado en el jar 1.0.14 local, sin instalar (juego abierto). Anticheat: PixelsAntiCheat solo expulsa por mods sospechosos, no por volar; el kick por volar es el vanilla allow-flight=false.
 
 - Screamer del esqueleto: client/SkeletonScreamer.java (textura gui/skeleton_run.png, sprite sheet 6x4 de 24 frames a partir del webm sin fondo del usuario). Cruza la pantalla en ~1.8 s con sonido, cada 30 min de juego tira un dado, 1 entre 100; /esqueleto lo prueba (comando de cliente). Compilado en el jar 1.0.14 local, sin instalar ni probar en juego (la marca de agua de stock se ve).
+
+- Release 1.0.15 publicada (v1.0.15-java21 Latest + v1.0.15-java25 pre-release): Washee Washee con recompensa, esqueleto screamer, waystones sin XP, sin w2w2. Jar 1.0.15 instalado en instancias, server y test107.
