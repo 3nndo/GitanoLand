@@ -203,3 +203,5 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 - **18-11: PUBLICADO launcher-2.0.5** (Endo: 'Si, publicalo'): release launcher-2.0.5 con GitanoLand-Launcher-2.0.5.exe (14376171 bytes, verificado), sin Latest (Latest sigue en v1.0.14-java21). Opciones con X, aviso 'salir sin guardar' y Guardar siempre visible. Sin Linux AppImage 2.0.5 (no compilado).
 
 - 18-11: waystones sin precio: waystones-common.toml enableCosts=false (apaga todo coste de XP; cooldowns y durabilidad de piedras de teletransporte siguen) en servidor, test107 y las 4 instancias. Sin publicar (los zips 1.0.14 tienen enableCosts=true); en Exaroton basta subir config/waystones-common.toml. Pendiente decidir: quitar w2w2 (xaeros_waystones_compatibility) para que no creen waypoints.
+
+- Quitado el mod Waystones2Waypoints2 (xaeros_waystones_compatibility 2.1.0) de GitanoLand, Alto, Medio, Bajo, server y test107 (copias en D:\GitanoLand-releaseemoved\w2w2_*.jar). Pendiente: publicar en 1.0.15 o borrarlo a mano en Exaroton.
