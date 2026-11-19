@@ -119,7 +119,7 @@ configurations {
 // NO todo tu modpack: en desarrollo se cargan TODOS los que haya ahí.
 def libsDir = file("libs")
 def libJars = libsDir.exists() ? libsDir.listFiles().findAll { it.name.toLowerCase().endsWith(".jar") } : []
-def requiredMods = ["jackpot", "tacz", "smokeleaf", "citadel"]
+def requiredMods = ["jackpot", "tacz", "smokeleaf", "citadel", "securitycraft"]
 requiredMods.each { modName ->
     if (!libJars.any { it.name.toLowerCase().contains(modName) }) {
         throw new GradleException("Falta el jar de '" + modName + "' en " + libsDir +

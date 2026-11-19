@@ -95,6 +95,11 @@ public class GitanoLand {
         container.registerConfig(ModConfig.Type.SERVER, Config.SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
 
+        // Bloques de Quark reforzables con SecurityCraft (solo si estan los dos mods).
+        if (ModList.get().isLoaded("securitycraft") && ModList.get().isLoaded("quark")) {
+            com.endo.gitanoland.compat.QuarkReinforced.init(modEventBus);
+        }
+
         // Integración opcional: la clase solo se carga si Jackpot está presente.
         if (ModList.get().isLoaded("jackpot")) {
             JackpotCompat.init();
