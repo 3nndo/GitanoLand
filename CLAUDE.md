@@ -218,3 +218,5 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 
 - Anadidos roomfortwo 0.3.1 (compartir cama) y leashall 1.5.1 (version 1.21.1 de Modrinth, la subida por el usuario era 26.3 = incompatible; requiere architectury) en instancias, server y test107; jars en D:\GitanoLand-release
 uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_blocks=false (solo dueño rompe) ya aplicado en server/instancias; en Exaroton hay que ponerlo en config/securitycraft-server.toml.
+
+- 1.0.16 (sin publicar): cigarrillo (gitanoland:cigarette, Velocidad I 30 s al fumarlo, receta tobacco+papel -> 4) y cajetilla de tabaco (gitanoland:cigarette_pack, 20 huecos, guarda cigarrillos y smokeleafindustries:joint, componente pack_contents; clic derecho saca uno, agachado guarda todos; receta 3 papel + pepita de hierro). Texturas 16x16 generadas por script (placeholder, se pueden mejorar). Compilado y el server test107 arranca; no probado en juego.

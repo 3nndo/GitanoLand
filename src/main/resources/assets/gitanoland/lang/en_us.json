@@ -336,5 +336,10 @@
   "block.gitanoland.reinforced_quark_yellow_corundum": "Reinforced Yellow Corundum",
   "block.gitanoland.reinforced_quark_yellow_shingles": "Reinforced Yellow Shingles",
   "block.gitanoland.reinforced_quark_yellow_shingles_slab": "Reinforced Yellow Shingles Slab",
-  "block.gitanoland.reinforced_quark_yellow_shingles_stairs": "Reinforced Yellow Shingles Stairs"
+  "block.gitanoland.reinforced_quark_yellow_shingles_stairs": "Reinforced Yellow Shingles Stairs",
+  "item.gitanoland.cigarette": "Cigarette",
+  "item.gitanoland.cigarette_pack": "Cigarette Pack",
+  "item.gitanoland.cigarette_pack.contents": "Inside: %s / %s",
+  "item.gitanoland.cigarette_pack.detail": "%s cigarettes, %s joints",
+  "item.gitanoland.cigarette_pack.help": "Right click: take one out. Shift + right click: store all cigarettes and joints from your inventory."
 }

@@ -336,5 +336,10 @@
   "block.gitanoland.reinforced_quark_yellow_corundum": "Yellow Corundum Reforzado",
   "block.gitanoland.reinforced_quark_yellow_shingles": "Yellow Shingles Reforzado",
   "block.gitanoland.reinforced_quark_yellow_shingles_slab": "Yellow Shingles Slab Reforzado",
-  "block.gitanoland.reinforced_quark_yellow_shingles_stairs": "Yellow Shingles Stairs Reforzado"
+  "block.gitanoland.reinforced_quark_yellow_shingles_stairs": "Yellow Shingles Stairs Reforzado",
+  "item.gitanoland.cigarette": "Cigarrillo",
+  "item.gitanoland.cigarette_pack": "Cajetilla de Tabaco",
+  "item.gitanoland.cigarette_pack.contents": "Dentro: %s / %s",
+  "item.gitanoland.cigarette_pack.detail": "%s cigarrillos, %s porros",
+  "item.gitanoland.cigarette_pack.help": "Clic derecho: saca uno. Agachado + clic derecho: guarda todos los cigarrillos y porros del inventario."
 }
