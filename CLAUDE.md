@@ -220,3 +220,5 @@ $env:GRADLE_USER_HOME="D:\gradle-home"   # la caché de Gradle en D: (C: casi ll
 uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_blocks=false (solo dueño rompe) ya aplicado en server/instancias; en Exaroton hay que ponerlo en config/securitycraft-server.toml.
 
 - 1.0.16 (sin publicar): cigarrillo (gitanoland:cigarette, Velocidad I 30 s al fumarlo, receta tobacco+papel -> 4) y cajetilla de tabaco (gitanoland:cigarette_pack, 20 huecos, guarda cigarrillos y smokeleafindustries:joint, componente pack_contents; clic derecho saca uno, agachado guarda todos; receta 3 papel + pepita de hierro). Texturas 16x16 generadas por script (placeholder, se pueden mejorar). Compilado y el server test107 arranca; no probado en juego.
+
+- 1.0.16 (sin publicar): el menu de recompensas se abre con un boton "Recompensas" encima del inventario (client/RewardsButton, ScreenEvent.Init.Post en InventoryScreen, esquina superior derecha); se elimina la tecla Alt+K (ClientKeys borrado) y se actualizan toast, guia y lang. /gitanoland rewards sigue. Compila; sin probar en juego (el boton podria solaparse con otros mods en el inventario).

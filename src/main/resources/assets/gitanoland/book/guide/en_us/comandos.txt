@@ -1,4 +1,4 @@
-/gitanoland rewards: menú de recompensas (también Alt + K).
+/gitanoland rewards: menú de recompensas (también el botón Recompensas del inventario).
 <NEWLINE>
 /gitanoland libro: te da este libro.
 <NEWLINE>
