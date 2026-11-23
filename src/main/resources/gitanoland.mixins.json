@@ -3,7 +3,11 @@
   "minVersion": "0.8",
   "package": "com.endo.gitanoland.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "CasinoHandMixin",
+    "CasinoBetRulesMixin",
+    "CasinoSettingsMixin"
+  ],
   "client": [
     "CinematicDelightHandsMixin",
     "Weather2LeafColorMixin"
