@@ -46,7 +46,25 @@ public class SafeKeyEvents {
             p.displayClientMessage(Component.translatable("gitanoland.safe.not_linkable"), true);
             return;
         }
-        linkTarget(p, key, WarehouseLinks.key(level, machine.getBlockPos()), Component.translatable("gitanoland.safe.linked"));
+        String mk = WarehouseLinks.key(level, machine.getBlockPos());
+        WarehouseLinks.Owner owner = WarehouseLinks.get(p.getServer()).ownerOf(mk);
+        if (owner != null && !owner.uuid().equals(p.getUUID().toString()) && !p.hasPermissions(2)) {
+            p.displayClientMessage(Component.translatable("gitanoland.casino.not_owner", owner.name()), true);
+            return;
+        }
+        if (owner == null && !p.isShiftKeyDown()) {
+            WarehouseLinks.get(p.getServer()).claim(mk, new WarehouseLinks.Owner(p.getUUID().toString(), p.getGameProfile().getName()));
+        }
+        linkTarget(p, key, mk, Component.translatable("gitanoland.safe.linked"));
+    }
+
+    /** Si se rompe una maquina del casino, se olvida su dueno y su enlace (la siguiente en ese sitio empieza de cero). */
+    @SubscribeEvent
+    public static void broken(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e) {
+        if (e.getLevel().isClientSide() || !(e.getLevel() instanceof Level level) || level.getServer() == null) return;
+        if (SafeKeyItem.machineAt(level, e.getPos()) == null) return;
+        BlockEntity m = SafeKeyItem.machineAt(level, e.getPos());
+        WarehouseLinks.get(level.getServer()).release(WarehouseLinks.key(level, m.getBlockPos()));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

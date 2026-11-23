@@ -1,34 +1,57 @@
 package com.endo.gitanoland.compat;
 
 import com.endo.gitanoland.Config;
-import java.util.Locale;
+import com.endo.gitanoland.GitanoLand;
+import com.endo.gitanoland.safe.WarehouseLinks;
+import fr.minevegas.casino.CroupierHandItem;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import com.endo.gitanoland.GitanoLand;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-/** Reglas de GitanoLand sobre MineVegas: quien puede usar la Mano del Crupier y que se puede apostar. Las usan los mixins. */
+/**
+ * Reglas de GitanoLand sobre MineVegas. Cualquiera puede fabricar la Mano del Crupier y abrir su propio casino:
+ * edita solo las maquinas de las que es dueno (el primero que usa la Mano o la Llave en una maquina sin dueno la reclama).
+ * Los ajustes globales (de todo el mundo o de todo un tipo de maquina) son solo de creativo/OP.
+ */
 public final class CasinoAccess {
     private CasinoAccess() {}
 
-    /** Creativo, OP (nivel 2) o jugador de la lista casinoOperators del config del servidor. */
-    public static boolean canOperate(Player p) {
+    /** Creativo u OP (nivel 2). En el cliente se deja pasar: el servidor es quien decide y guarda. */
+    public static boolean isAdmin(Player p) {
         if (p == null) return false;
         if (p.isCreative()) return true;
-        // En el cliente no se conoce la lista del servidor: deja pasar y que decida el servidor (el unico que guarda cambios).
         if (p.level().isClientSide) return true;
-        try {
-            if (p.hasPermissions(2)) return true;
-            String name = p.getGameProfile().getName().toLowerCase(Locale.ROOT);
-            for (Object o : Config.CASINO_OPERATORS.get()) {
-                if (o != null && o.toString().trim().toLowerCase(Locale.ROOT).equals(name)) return true;
-            }
-        } catch (Throwable ignored) {
-            // config todavia sin cargar: solo creativo
+        return p.hasPermissions(2);
+    }
+
+    /** Lleva la Mano del Crupier en alguna mano. */
+    public static boolean holdsHand(Player p) {
+        return p != null && (p.getMainHandItem().is(CroupierHandItem.ITEM) || p.getOffhandItem().is(CroupierHandItem.ITEM));
+    }
+
+    /** true = puede tocar esa maquina. Sin dueno: la reclama. De otro: avisa y devuelve false. Admin: siempre. */
+    public static boolean mayEdit(ServerPlayer p, BlockEntity machine) {
+        if (isAdmin(p)) return true;
+        Level level = machine.getLevel();
+        if (level == null || level.getServer() == null) return false;
+        WarehouseLinks links = WarehouseLinks.get(level.getServer());
+        String key = WarehouseLinks.key(level, machine.getBlockPos());
+        WarehouseLinks.Owner o = links.ownerOf(key);
+        String me = p.getUUID().toString();
+        if (o == null) {
+            links.claim(key, new WarehouseLinks.Owner(me, p.getGameProfile().getName()));
+            p.displayClientMessage(Component.translatable("gitanoland.casino.claimed"), true);
+            return true;
         }
+        if (o.uuid().equals(me)) return true;
+        p.displayClientMessage(Component.translatable("gitanoland.casino.not_owner", o.name()), true);
         return false;
     }
 
-    /** true = las maquinas solo aceptan Kirkys como apuesta, aunque el operador intente anadir otros objetos. */
+    /** true = las maquinas solo aceptan Kirkys como apuesta, aunque el dueno intente anadir otros objetos. */
     public static boolean kirkyOnly() {
         try {
             return Config.CASINO_KIRKY_ONLY.get();

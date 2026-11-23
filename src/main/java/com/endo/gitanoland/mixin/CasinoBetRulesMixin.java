@@ -13,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class CasinoBetRulesMixin {
     @Redirect(method = "edit", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isCreative()Z", remap = false), require = 0, remap = false)
     private static boolean gitanoland$operator(ServerPlayer p) {
-        return CasinoAccess.canOperate(p);
+        return CasinoAccess.isAdmin(p);
     }
 }

@@ -20,9 +20,6 @@ public class Config {
             .comment("Kirkys que caben en la Bolsa grande.")
             .defineInRange("bagCapacityLarge", 3000, 1, 1_000_000);
 
-    public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> CASINO_OPERATORS = B
-            .comment("MineVegas: nombres de jugadores que pueden usar la Mano del Crupier sin estar en creativo (los OP tambien pueden).")
-            .defineListAllowEmpty("casinoOperators", java.util.List.of(), () -> "", o -> o instanceof String);
     public static final ModConfigSpec.BooleanValue CASINO_KIRKY_ONLY = B
             .comment("MineVegas: true = todas las maquinas (tragaperras, plinko, poker, blackjack...) solo aceptan Kirkys como apuesta,",
                     "aunque alguien intente anadir otros objetos con la Mano del Crupier. Los premios en otros objetos siguen siendo configurables.")

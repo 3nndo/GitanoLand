@@ -5920,5 +5920,7 @@
   "block.gitanoland.reinforced_chipped_yellow_terracotta_column": "Reinforced Yellow Terracotta Column",
   "block.gitanoland.reinforced_chipped_yellow_terracotta_pillar": "Reinforced Yellow Terracotta Pillar",
   "block.gitanoland.reinforced_chipped_yellow_terracotta_tile": "Reinforced Yellow Terracotta Tile",
-  "block.gitanoland.reinforced_chipped_yellow_terracotta_tiles": "Reinforced Yellow Terracotta Tiles"
+  "block.gitanoland.reinforced_chipped_yellow_terracotta_tiles": "Reinforced Yellow Terracotta Tiles",
+  "gitanoland.casino.claimed": "You are now the owner of this machine",
+  "gitanoland.casino.not_owner": "This machine belongs to %s"
 }

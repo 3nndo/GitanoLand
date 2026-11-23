@@ -24,6 +24,30 @@ public class WarehouseLinks extends SavedData {
     public record Link(GlobalPos chest, String ownerUuid, String ownerName) {}
 
     private final Map<String, Link> links = new HashMap<>();
+    /** Dueno de cada maquina del casino (clave de maquina): quien la reclama primero con la Mano del Crupier o la Llave. */
+    public record Owner(String uuid, String name) {}
+    private final Map<String, Owner> owners = new HashMap<>();
+
+    /** Dueno de la maquina: el que la reclamo, o el dueno de su cofre enlazado. null = sin dueno todavia. */
+    @Nullable
+    public Owner ownerOf(String key) {
+        Owner o = owners.get(key);
+        if (o != null) return o;
+        Link l = links.get(key);
+        return l == null ? null : new Owner(l.ownerUuid(), l.ownerName());
+    }
+
+    public void claim(String key, Owner owner) {
+        owners.put(key, owner);
+        setDirty();
+    }
+
+    public void release(String key) {
+        boolean a = owners.remove(key) != null;
+        boolean b = links.remove(key) != null;
+        if (a || b) setDirty();
+    }
+
 
     public static WarehouseLinks get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(
@@ -60,6 +84,11 @@ public class WarehouseLinks extends SavedData {
             ResourceKey<Level> dim = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(t.getString("dim")));
             s.links.put(t.getString("key"), new Link(GlobalPos.of(dim, BlockPos.of(t.getLong("pos"))), t.getString("ownerUuid"), t.getString("ownerName")));
         }
+        ListTag os = tag.getList("owners", Tag.TAG_COMPOUND);
+        for (int i = 0; i < os.size(); i++) {
+            CompoundTag t = os.getCompound(i);
+            s.owners.put(t.getString("key"), new Owner(t.getString("uuid"), t.getString("name")));
+        }
         return s;
     }
 
@@ -76,6 +105,15 @@ public class WarehouseLinks extends SavedData {
             ls.add(t);
         }
         tag.put("links", ls);
+        ListTag os = new ListTag();
+        for (Map.Entry<String, Owner> e : owners.entrySet()) {
+            CompoundTag t = new CompoundTag();
+            t.putString("key", e.getKey());
+            t.putString("uuid", e.getValue().uuid());
+            t.putString("name", e.getValue().name());
+            os.add(t);
+        }
+        tag.put("owners", os);
         return tag;
     }
 }

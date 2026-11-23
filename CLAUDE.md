@@ -253,3 +253,6 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 otes{21,25}-1.0.17.md. Jar 1.0.17 instalado en 4 instancias, server y test107. Siguiente version sin publicar: 1.0.18.
 
 - AndonisMobs (23-11, despues de 1.0.17): config `andonismobs-common.toml` cambiada a enableBalancing=false (los vanilla no se tocan), modSpawnIntensity=0.25 (mobs del mod ~30 % de los monstruos), pesos por defecto. Copiada a instancias, server, test107 y D:\GitanoLand-release. OJO: el ServerFiles publicado de 1.0.17 lleva la config anterior (balanceo 0.3). Sin probar en juego.
+
+## 1.0.18 (sin publicar): casino abierto a todos (cambio pedido 23-11)
+- Endo NO quiere el casino "detras del servidor": se quita `casinoOperators`. Ahora cualquiera con la Mano del Crupier (craftable) edita SUS maquinas: `CasinoAccess.mayEdit` (dueno = quien la reclama primero con la Mano o la Llave, o dueno del cofre enlazado; `WarehouseLinks.owners`; se olvida al romper la maquina). `CasinoSettingsMixin`: `allowed` = lleva la Mano; `interact` y `edit` (HEAD) comprueban dueno; ajustes globales (target world/tipo) y `CasinoBetRules.edit` y `CroupierHandItem.use` solo creativo/OP. Lang `gitanoland.casino.claimed/not_owner`. mod_version=1.0.18. Compila, test107 arranca; sin probar en juego (ni que los mixins enganchen).
