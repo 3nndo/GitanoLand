@@ -33,6 +33,9 @@ public record RewardToastPayload(int kirkys, boolean challenge) implements Custo
                     (payload, ctx) -> ctx.enqueueWork(() -> com.endo.gitanoland.client.RewardToast.show(payload.kirkys(), payload.challenge())));
             registrar.playToClient(TeamHudPayload.TYPE, TeamHudPayload.CODEC,
                     (payload, ctx) -> ctx.enqueueWork(() -> com.endo.gitanoland.client.TeamHud.set(payload.team(), payload.members())));
+            registrar.playToServer(WasheePayload.Appear.TYPE, WasheePayload.Appear.CODEC, WasheePayload::onAppear);
+            registrar.playToClient(WasheePayload.Bye.TYPE, WasheePayload.Bye.CODEC,
+                    (payload, ctx) -> ctx.enqueueWork(() -> com.endo.gitanoland.client.WasheeWashee.bye(payload.kirkys())));
             registrar.playToServer(OpenRewardsPayload.TYPE, OpenRewardsPayload.CODEC, OpenRewardsPayload::handle);
         }
     }

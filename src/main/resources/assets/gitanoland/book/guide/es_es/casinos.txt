@@ -1,5 +1,7 @@
-Las tragaperras, el Plinko, las cartas y el billar (mod Jackpot) se configuran solas con Kirkys al colocarlas.
+El casino es el mod MineVegas: ruleta, blackjack, poker, tragaperras, rueda de la fortuna, Plinko y carreras de patos. Aqui TODO se juega con Kirkys: apuestas Kirkys y cobras Kirkys.
 <NEWLINE>
-El dueño de cada máquina puede cambiar precios y probabilidades en su pantalla de configuración.
+Para montar uno, mira la guia del casino (receta en la mesa de crafteo) y contrata un crupier en una aldea.
+<NEWLINE>
+Los operadores pueden ajustar apuestas, premios y probabilidades de cada maquina con la Mano del Crupier.
 <NEWLINE>
 Y si un casino te parece una estafa... existe el ATENTADO.

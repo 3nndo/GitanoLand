@@ -174,6 +174,7 @@ public class ShopMenu extends AbstractContainerMenu {
             return true;
         }
         Wallet.takeKirkys(p, c.cost());
+        com.endo.gitanoland.safe.SafeEconomy.income(villager, c.cost());
         v.getPersistentData().putString(Shops.SPEC_KEY, c.id());
         p.sendSystemMessage(colored(Component.translatable("gitanoland.shop.changed",
                 Component.translatable("gitanoland.specialty." + theme + "." + c.id())), ChatFormatting.GREEN));
@@ -192,6 +193,7 @@ public class ShopMenu extends AbstractContainerMenu {
             return;
         }
         Wallet.takeKirkys(p, o.kirkys());
+        com.endo.gitanoland.safe.SafeEconomy.income(villager, o.kirkys());
         for (ShopOffer.Cost c : o.extras()) Wallet.takeItem(p, c.item(), c.count());
 
         ItemStack out = o.result().copy();

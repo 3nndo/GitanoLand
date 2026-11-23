@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "smokeleafindustries:tobacco"
+    },
+    {
+      "item": "minecraft:paper"
+    }
+  ],
+  "result": {
+    "id": "gitanoland:cigarette",
+    "count": 4
+  }
+}

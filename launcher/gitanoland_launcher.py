@@ -232,6 +232,7 @@ class Api:
             else:
                 core.ensure_neoforge(log, prog)
             mark(3)
+            core.apply_fx(key, mode, self._cfg.get("fx", {}))  # conserva los efectos que el jugador apago
             if full and core.EXT.get(mode):
                 log(f"Si {core.fl()['name']} esta abierto, cierralo y abrelo otra vez para que aparezca la instancia.")
             self.save_cfg(ext=dict(core.EXT), installed=True, kind=w["kind"], mode=mode, profile=profile, variant=variant, ram=ram,
@@ -259,6 +260,27 @@ class Api:
         installed, latest = core.pending_update(key, w["variant"])
         return {"installed": installed, "latest": latest}
 
+    # ---------------------------------------------------------- opciones (efectos opcionales)
+    def fx_list(self, w):
+        try:
+            core.CUR[0] = w["mode"]
+            return {"fx": core.fx_state(state_key(w["mode"], w["profile"], w["variant"]), w["mode"], self._cfg.get("fx", {}))}
+        except Exception as e:  # noqa: BLE001
+            core.log("fx_list: " + traceback.format_exc())
+            return {"fx": [], "error": str(e)}
+
+    def fx_set(self, w, fx_id, on):
+        try:
+            core.CUR[0] = w["mode"]
+            fx = dict(self._cfg.get("fx", {}))
+            fx[fx_id] = bool(on)
+            self.save_cfg(fx=fx)
+            bad = core.apply_fx(state_key(w["mode"], w["profile"], w["variant"]), w["mode"], {fx_id: bool(on)})
+            return {"ok": not bad}
+        except Exception as e:  # noqa: BLE001
+            core.log("fx_set: " + traceback.format_exc())
+            return {"ok": False, "error": str(e)}
+
     # ---------------------------------------------------------- jugar
     def launch(self, w):
         try:
@@ -271,6 +293,7 @@ class Api:
                 cmd += ["--offline", w["nick"]]
             elif not accounts:
                 return {"need_login": True}
+            core.apply_fx(state_key(w["mode"], w["profile"], w["variant"]), w["mode"], self._cfg.get("fx", {}))
             core.log("Lanzar: " + " ".join(cmd))
             subprocess.Popen(cmd, cwd=core.fl()["dir"], env=gl_selfcheck.child_env())
             return {"ok": True}

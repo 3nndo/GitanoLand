@@ -31,6 +31,7 @@ function startSlides() {
   next();
   setInterval(next, 9000);
 }
+function gearVisible(v) { const g = $("#gear"); if (g) g.style.display = v ? "" : "none"; }
 function bgMode(mode) { document.body.classList.toggle("hero", mode === "hero"); }   // solo la pantalla principal enseña la foto de fondo
 
 /* ---------------------------------------------------------------- utilidades de interfaz */
@@ -55,6 +56,8 @@ function show(name, args = {}, dir = 1) {
   el.innerHTML = home ? SCREENS[name].render(args) : `<div class="wrap">${SCREENS[name].render(args)}</div>`;
   view.appendChild(el);
   bgMode(SCREENS[name].bg);
+  gearVisible(name === "home");
+  if (name === "home") window.gearIntro && window.gearIntro();
   S.screen = name;
   // al instante: fuera todo lo que no sea la pantalla que se va ni la nueva (nunca se acumulan)
   $$(".screen", view).forEach((n) => { if (n !== el && n !== prev) n.remove(); });
@@ -360,6 +363,68 @@ async function launch() {
 }
 ACT.edit = () => { S.w = { ...S.w, edit: true, reinstall: false, ramTouched: true, ramRiskOk: S.w.ram > maxSafeRam() }; show("wizard0"); };
 ACT.reinstall = () => { S.w = { ...S.w, edit: false, reinstall: true }; show("welcome"); };
+/* opciones: efectos opcionales (solo editan configs, no quitan mods) */
+async function openOptions() {
+  if (!S.cfg || !S.cfg.installed) return toast("Primero instala GitanoLand.", true);
+  const r = await API().fx_list(S.w);
+  const rows = (r.fx || []).map((f) => `<div class="fx ${f.on && f.available ? "on" : ""} ${f.available ? "" : "off"}" data-id="${f.id}" data-av="${f.available ? 1 : 0}"><div class="t"><b>${esc(f.name)}</b><span>${esc(f.desc)}${f.available ? "" : " (no incluido en tu perfil)"}</span></div><div class="sw"></div></div>`).join("");
+  modal(`<button class="xbtn" id="fx-x" aria-label="Cerrar" title="Cerrar">&times;</button><h3>Opciones</h3><p>Efectos especiales opcionales. Apágalos si tu PC va justo o no te gustan. Se aplican la próxima vez que abras el juego.</p>
+    <div class="fxlist">${rows || "<p>No hay opciones disponibles.</p>"}</div>
+    <div class="row foot"><div class="btn" id="fx-cancel">Cancelar</div><div class="btn primary" id="fx-ok">Guardar</div></div>`, (m) => {
+    m.querySelector(".dialog").classList.add("wide");
+    const orig = {};                                  // estado al abrir, para saber si hay cambios sin guardar
+    $$(".fx", m).forEach((el) => { orig[el.dataset.id] = el.classList.contains("on"); });
+    const changed = () => $$(".fx", m).filter((el) => el.dataset.av === "1" && el.classList.contains("on") !== orig[el.dataset.id]);
+    const ask = () => {
+      if (!changed().length) return closeModal();
+      if ($("#fx-ask", m)) return;
+      const q = document.createElement("div");
+      q.id = "fx-ask"; q.className = "fxask";
+      q.innerHTML = `<div class="box"><h4>¿Salir sin guardar?</h4><p>Los cambios que hiciste se perderán.</p><div class="row"><div class="btn" id="fx-no">No</div><div class="btn orange" id="fx-yes">Sí</div></div></div>`;
+      m.querySelector(".dialog").appendChild(q);
+      $("#fx-no", m).onclick = () => q.remove();
+      $("#fx-yes", m).onclick = closeModal;
+    };
+    $("#fx-x").onclick = ask;
+    $("#fx-cancel").onclick = ask;
+    m.onclick = (e) => { if (e.target === m) ask(); };
+    $$(".fx", m).forEach((el) => el.onclick = () => {
+      if (el.dataset.av !== "1") return;
+      el.classList.toggle("on");
+    });
+    $("#fx-ok").onclick = async () => {
+      let fail = 0;
+      for (const el of changed()) {
+        const on = el.classList.contains("on");
+        const res = await API().fx_set(S.w, el.dataset.id, on);
+        if (res && res.ok) orig[el.dataset.id] = on; else fail++;
+      }
+      if (fail) return toast("No se pudieron guardar " + fail + " opciones.", true);
+      closeModal(); toast("Opciones guardadas.");
+    };
+  });
+}
+ACT.options = openOptions;
+$("#gear").onclick = openOptions;
+
+/* engranaje: brilla hasta que lo abres; la burbuja "Personaliza tu experiencia" sale al pasar el raton y unos segundos al llegar a la pantalla principal */
+(function () {
+  const g = $("#gear"), tip = $("#geartip");
+  const seen = () => { try { return localStorage.getItem("gl_gear_seen") === "1"; } catch (_) { return false; } };
+  const done = () => { try { localStorage.setItem("gl_gear_seen", "1"); } catch (_) { /* nada */ } g.classList.remove("glow"); tip.classList.remove("show", "pinned"); };
+  if (seen()) g.classList.remove("glow");
+  g.addEventListener("mouseenter", () => tip.classList.add("show"));
+  g.addEventListener("mouseleave", () => { if (!tip.classList.contains("pinned")) tip.classList.remove("show"); });
+  g.addEventListener("click", done);
+  $("#gearok").addEventListener("click", done);
+  // la primera vez la burbuja se queda fija con un boton OK hasta que la cierres o abras las opciones
+  window.gearIntro = () => {
+    if (seen()) return;
+    clearTimeout(gearIntro.t);
+    gearIntro.t = setTimeout(() => { if (g.style.display !== "none") tip.classList.add("show", "pinned"); }, 900);
+  };
+})();
+
 ACT.del = () => modal(`<h3>Borrar la instancia</h3>
   <p>Se borra la instancia <b>${esc(S.w.profile)}</b> con sus mods, ajustes y <b>mundos guardados</b>. <b>No se puede deshacer.</b></p>
   <label class="chk"><input type="checkbox" id="d-l"> Borrar también el launcher descargado (${S.w.mode === "freesm" ? "Freesm" : "Prism"})</label>

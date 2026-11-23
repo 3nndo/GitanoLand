@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "gitanoland:blocks/reinforced_quark_chiseled_granite_bricks",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "gitanoland:reinforced_quark_chiseled_granite_bricks"
+        }
+      ]
+    }
+  ]
+}

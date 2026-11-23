@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["KKK", "KDK", "KGK"],
+  "key": {
+    "K": {"item": "gitanoland:kirky"},
+    "D": {"item": "minecraft:diamond"},
+    "G": {"item": "minecraft:gold_ingot"}
+  },
+  "result": {"id": "roulettecasino:croupier_hand", "count": 1},
+  "neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "roulettecasino"}]
+}

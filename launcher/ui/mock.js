@@ -26,6 +26,11 @@
     },
     guide: () => wait(50, { title: "Guía de TLauncher", steps: [{ t: "Abre TLauncher", b: "Ábrelo como siempre. Cuando veas su ventana principal, sigue." }, { t: "Carpeta del juego", b: "Pulsa el engranaje y pega esta ruta:", copy: "C:\\Users\\Endo\\AppData\\Local\\GitanoLand\\Juego-Medio", open: "x" }, { t: "¡A jugar!", b: "Pulsa JUGAR en TLauncher." }] }),
     login_guide: () => wait(50, { title: "Inicia sesión con tu cuenta", steps: [{ t: "Se abre Prism", b: "Espera a que cargue su ventana." }, { t: "Inicia sesión", b: "Tu cuenta > Gestionar cuentas > Añadir Microsoft." }, { t: "¡A jugar!", b: "Cierra Prism y pulsa Jugar aquí otra vez." }] }),
+    fx_list: () => wait(80, { fx: [
+      { id: "items", name: "Física de objetos", desc: "Los objetos soltados caen, ruedan y rebotan.", available: true, on: true },
+      { id: "scenes", name: "Escenas cinemáticas", desc: "Mesas, hornos, yunques…", available: true, on: false },
+      { id: "soundphys", name: "Sonido realista", desc: "El sonido rebota.", available: false, on: true }] }),
+    fx_set: () => wait(80, { ok: true }),
     delete_instance: () => wait(300, { ok: true, cfg: { ...cfg, installed: false } }),
     make_report: () => wait(50, { text: "informe de prueba", url: "https://github.com/3nndo/GitanoLand/issues/new", path: "x" }),
     install_system: () => wait(300, { ok: true }), skip_system: () => wait(10, true), is_demo: () => true,

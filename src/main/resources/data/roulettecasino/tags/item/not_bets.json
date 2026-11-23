@@ -1,0 +1,79 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:coal",
+    "minecraft:coal_block",
+    "minecraft:copper_ingot",
+    "minecraft:copper_block",
+    "minecraft:iron_ingot",
+    "minecraft:iron_block",
+    "minecraft:gold_ingot",
+    "minecraft:gold_block",
+    "minecraft:redstone",
+    "minecraft:redstone_block",
+    "minecraft:lapis_lazuli",
+    "minecraft:lapis_block",
+    "minecraft:emerald",
+    "minecraft:emerald_block",
+    "minecraft:diamond",
+    "minecraft:diamond_block",
+    "minecraft:netherite_ingot",
+    "minecraft:netherite_block",
+    {
+      "id": "#c:ingots",
+      "required": false
+    },
+    {
+      "id": "#c:gems",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets",
+      "required": false
+    },
+    {
+      "id": "#c:dusts",
+      "required": false
+    },
+    {
+      "id": "#c:ores",
+      "required": false
+    },
+    {
+      "id": "#forge:ingots",
+      "required": false
+    },
+    {
+      "id": "#forge:gems",
+      "required": false
+    },
+    {
+      "id": "#forge:storage_blocks",
+      "required": false
+    },
+    {
+      "id": "#forge:raw_materials",
+      "required": false
+    },
+    {
+      "id": "#forge:nuggets",
+      "required": false
+    },
+    {
+      "id": "#forge:dusts",
+      "required": false
+    },
+    {
+      "id": "#forge:ores",
+      "required": false
+    }
+  ]
+}

@@ -44,8 +44,20 @@ public class GitanoLand {
                     .networkSynchronized(ByteBufCodecs.VAR_INT)
                     .build());
 
+    // Contenido de la cajetilla de tabaco (cigarrillos y porros).
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<net.minecraft.world.item.component.ItemContainerContents>> PACK_CONTENTS =
+            COMPONENTS.register("pack_contents", () -> DataComponentType.<net.minecraft.world.item.component.ItemContainerContents>builder()
+                    .persistent(net.minecraft.world.item.component.ItemContainerContents.CODEC)
+                    .networkSynchronized(net.minecraft.world.item.component.ItemContainerContents.STREAM_CODEC)
+                    .build());
+
     // El Kirky: item normal, stackea hasta 64.
     public static final DeferredItem<Item> KIRKY = ITEMS.registerSimpleItem("kirky", new Item.Properties());
+    // Cigarrillo y cajetilla de tabaco (la cajetilla tambien guarda porros de Smokeleaf).
+    public static final DeferredItem<Item> CIGARETTE = ITEMS.registerItem("cigarette",
+            p -> new com.endo.gitanoland.item.CigaretteItem(p), new Item.Properties());
+    public static final DeferredItem<Item> CIGARETTE_PACK = ITEMS.registerItem("cigarette_pack",
+            p -> new com.endo.gitanoland.item.CigarettePackItem(p), new Item.Properties().stacksTo(1));
     // Solo para el icono de la pestaña creativa: cambia textures/item/tab_icon.png por la tuya.
     public static final DeferredItem<Item> TAB_ICON = ITEMS.registerSimpleItem("tab_icon", new Item.Properties());
     // Libro-guia con paginas, iconos y recetas (Citadel).
@@ -77,6 +89,9 @@ public class GitanoLand {
                         output.accept(KIRKY_BAG_SMALL.get());
                         output.accept(KIRKY_BAG.get());
                         output.accept(KIRKY_BAG_LARGE.get());
+                        output.accept(CIGARETTE.get());
+                        output.accept(CIGARETTE_PACK.get());
+                        output.accept(com.endo.gitanoland.safe.ModSafe.SAFE_KEY.get());
                         output.accept(WEEDSGUY_EGG.get());
                         output.accept(AMMO_MAKER_EGG.get());
                         output.accept(GUNSMITH_EGG.get());
@@ -86,6 +101,7 @@ public class GitanoLand {
 
     public GitanoLand(IEventBus modEventBus, ModContainer container) {
         ITEMS.register(modEventBus);
+        com.endo.gitanoland.safe.ModSafe.init(modEventBus);
         TABS.register(modEventBus);
         COMPONENTS.register(modEventBus);
         com.endo.gitanoland.recipe.CopyDiscRecipe.SERIALIZERS.register(modEventBus);
@@ -94,6 +110,15 @@ public class GitanoLand {
         ModMenus.register(modEventBus);
         container.registerConfig(ModConfig.Type.SERVER, Config.SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+
+        // Bloques de Quark reforzables con SecurityCraft (solo si estan los dos mods).
+        if (ModList.get().isLoaded("securitycraft") && ModList.get().isLoaded("quark")) {
+            com.endo.gitanoland.compat.QuarkReinforced.init(modEventBus);
+        }
+        // Idem con Chipped (cubos y pilares decorativos).
+        if (ModList.get().isLoaded("securitycraft") && ModList.get().isLoaded("chipped")) {
+            com.endo.gitanoland.compat.ChippedReinforced.init(modEventBus);
+        }
 
         // Integración opcional: la clase solo se carga si Jackpot está presente.
         if (ModList.get().isLoaded("jackpot")) {

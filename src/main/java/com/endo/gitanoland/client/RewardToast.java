@@ -17,7 +17,7 @@ public class RewardToast implements Toast {
 
     private RewardToast(int kirkys, boolean challenge) {
         this.title = Component.translatable(challenge ? "gitanoland.toast.title_challenge" : "gitanoland.toast.title");
-        this.line = Component.translatable("gitanoland.toast.line", kirkys, ClientKeys.REWARDS.getTranslatedKeyMessage());
+        this.line = Component.translatable("gitanoland.toast.line", kirkys);
         this.border = challenge ? 0xFFA45BD6 : 0xFF3FAE4B;
     }
 

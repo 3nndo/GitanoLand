@@ -109,6 +109,28 @@ config="${mod_id}.mixins.json"
     ordering="AFTER"
     side="BOTH"
 
+# Bloques reforzados de Quark con SecurityCraft: GitanoLand debe cargar DESPUES de los dos para ver sus bloques al registrar los suyos.
+[[dependencies.${mod_id}]]
+    modId="quark"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="chipped"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="securitycraft"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
 # Integración opcional con Jackpot: solo se activa si está instalado.
 [[dependencies.${mod_id}]]
     modId="jackpot"
