@@ -251,3 +251,5 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 
 - **Release 1.0.17 publicada (23-11):** v1.0.17-java21 (Latest) y v1.0.17-java25 (pre-release), notas "big update" en D:\GitanoLand-release
 otes{21,25}-1.0.17.md. Jar 1.0.17 instalado en 4 instancias, server y test107. Siguiente version sin publicar: 1.0.18.
+
+- AndonisMobs (23-11, despues de 1.0.17): config `andonismobs-common.toml` cambiada a enableBalancing=false (los vanilla no se tocan), modSpawnIntensity=0.25 (mobs del mod ~30 % de los monstruos), pesos por defecto. Copiada a instancias, server, test107 y D:\GitanoLand-release. OJO: el ServerFiles publicado de 1.0.17 lleva la config anterior (balanceo 0.3). Sin probar en juego.
