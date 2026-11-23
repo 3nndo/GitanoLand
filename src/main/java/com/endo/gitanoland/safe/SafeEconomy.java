@@ -57,6 +57,17 @@ public final class SafeEconomy {
 
     /** true = la jugada puede empezar. Si no, avisa al jugador y la maquina no arranca (las apuestas se quedan donde estan). */
     public static boolean gate(BlockEntity be, ServerPlayer player, SimpleContainer bets) {
+        return gate(be, player, kirkysIn(bets));
+    }
+
+    /** Igual, con las apuestas dadas como lista de objetos (mesas de poker/blackjack). Minimo 1 Kirky de apuesta. */
+    public static boolean gate(BlockEntity be, ServerPlayer player, List<ItemStack> stakes) {
+        long n = 0;
+        for (ItemStack s : stakes) if (!s.isEmpty() && s.is(GitanoLand.KIRKY.get())) n += s.getCount();
+        return gate(be, player, Math.max(1, n));
+    }
+
+    public static boolean gate(BlockEntity be, ServerPlayer player, long stakeKirkys) {
         if (!required()) return true;
         WarehouseLinks.Link link = linkOf(be);
         if (link == null) {
@@ -70,7 +81,7 @@ public final class SafeEconomy {
         } catch (Throwable t) {
             factor = 50;
         }
-        if (chest == null || Warehouse.balance(chest) < kirkysIn(bets) * factor) {
+        if (chest == null || Warehouse.balance(chest) < stakeKirkys * factor) {
             player.displayClientMessage(Component.translatable("gitanoland.safe.no_funds", link.ownerName()), true);
             return false;
         }

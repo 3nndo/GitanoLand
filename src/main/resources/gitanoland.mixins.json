@@ -11,7 +11,10 @@
     "CasinoSlotSafeMixin",
     "CasinoPlinkoSafeMixin",
     "CasinoRouletteSafeMixin",
-    "CasinoWheelSafeMixin"
+    "CasinoWheelSafeMixin",
+    "CasinoPokerSafeMixin",
+    "CasinoBlackjackSafeMixin",
+    "CasinoDerbySafeMixin"
   ],
   "client": [
     "CinematicDelightHandsMixin",
