@@ -238,3 +238,6 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 
 ## Invisibilidad sin particulas (1.0.17)
 - `events/InvisibilityNoParticles`: en EntityTickEvent.Post reaplica el efecto invisibilidad con visible=false (sin particulas). Sin probar en juego.
+
+## Wither skeletons: cabezas vanilla (1.0.17)
+- `events/WitherHeadDrops` quita de los drops de WitherSkeleton los player_head de More Mobs (custom_data ts.mm.custom); la calavera sale solo por el loot vanilla. Sin probar en juego.
