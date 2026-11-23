@@ -58,13 +58,33 @@ public class SafeKeyEvents {
         linkTarget(p, key, mk, Component.translatable("gitanoland.safe.linked"));
     }
 
-    /** Si se rompe una maquina del casino, se olvida su dueno y su enlace (la siguiente en ese sitio empieza de cero). */
+    /** Como en SecurityCraft, el dueno de una maquina del casino es quien la coloca. */
+    @SubscribeEvent
+    public static void placed(net.neoforged.neoforge.event.level.BlockEvent.EntityPlaceEvent e) {
+        if (!(e.getLevel() instanceof Level level) || level.isClientSide() || level.getServer() == null) return;
+        if (!(e.getEntity() instanceof ServerPlayer p)) return;
+        BlockEntity m = SafeKeyItem.machineAt(level, e.getPos());
+        if (m == null) return;
+        WarehouseLinks.get(level.getServer()).claim(WarehouseLinks.key(level, m.getBlockPos()),
+                new WarehouseLinks.Owner(p.getUUID().toString(), p.getGameProfile().getName()));
+        p.displayClientMessage(Component.translatable("gitanoland.casino.claimed"), true);
+    }
+
+    /** Solo el dueno (u OP) rompe su maquina; al romperla se olvida su dueno y su enlace. */
     @SubscribeEvent
     public static void broken(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e) {
         if (e.getLevel().isClientSide() || !(e.getLevel() instanceof Level level) || level.getServer() == null) return;
-        if (SafeKeyItem.machineAt(level, e.getPos()) == null) return;
         BlockEntity m = SafeKeyItem.machineAt(level, e.getPos());
-        WarehouseLinks.get(level.getServer()).release(WarehouseLinks.key(level, m.getBlockPos()));
+        if (m == null) return;
+        String key = WarehouseLinks.key(level, m.getBlockPos());
+        WarehouseLinks.Owner o = WarehouseLinks.get(level.getServer()).ownerOf(key);
+        net.minecraft.world.entity.player.Player pl = e.getPlayer();
+        if (o != null && !o.uuid().equals(pl.getUUID().toString()) && !pl.hasPermissions(2)) {
+            e.setCanceled(true);
+            pl.displayClientMessage(Component.translatable("gitanoland.casino.not_owner", o.name()), true);
+            return;
+        }
+        WarehouseLinks.get(level.getServer()).release(key);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
