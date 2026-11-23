@@ -248,3 +248,6 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 
 ## Optimizacion (23-11, 1.0.17)
 - Ya habia: Sodium, Iris, Lithium, FerriteCore, ModernFix, ImmediatelyFast, EntityCulling, Particle Core, Clumps. Anadidos (Modrinth, hash SHA-512 verificado): Noisium 2.3.0 y Saturn 0.1.5 (cliente + servidor: instancias, D:\GitanoLand-server, test107) y Dynamic FPS 3.11.4 (solo instancias). ScalableLux descartado (alpha). C2ME no existe para 1.21.1 NeoForge. Saturn solapa metodos con Lithium/ModernFix (warnings "overwrite conflict", se saltan, sin fallo); si da problemas, quitar Saturn. test107 arranca ("Done"); cliente sin probar.
+
+- **Release 1.0.17 publicada (23-11):** v1.0.17-java21 (Latest) y v1.0.17-java25 (pre-release), notas "big update" en D:\GitanoLand-release
+otes{21,25}-1.0.17.md. Jar 1.0.17 instalado en 4 instancias, server y test107. Siguiente version sin publicar: 1.0.18.
