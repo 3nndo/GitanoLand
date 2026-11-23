@@ -3,8 +3,10 @@ package com.endo.gitanoland.safe;
 import com.endo.gitanoland.Config;
 import com.endo.gitanoland.GitanoLand;
 import com.endo.gitanoland.shop.Wallet;
+import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -18,9 +20,9 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.TradeWithVillagerEvent;
 
 /**
- * Aldeanos que pagan en Kirkys (compradores de weed, el Stoner...): su dueño es quien enlaza su Caja fuerte con la Llave
- * (clic derecho al aldeano). Con npcShopRequireSafe, un aldeano sin caja no comercia con Kirkys: no se crean de la nada.
- * Lo que el jugador paga en Kirkys entra en la caja; lo que el aldeano paga sale de ella.
+ * Aldeanos que pagan en Kirkys (compradores de weed, el Stoner...): su dueno es quien enlaza su cofre de SecurityCraft con la Llave
+ * (clic derecho al aldeano). Con npcShopRequireSafe, un aldeano sin cofre no comercia con Kirkys: no se crean de la nada.
+ * Lo que el jugador paga en Kirkys entra en el cofre; lo que el aldeano paga sale de el.
  */
 @EventBusSubscriber(modid = GitanoLand.MODID)
 public class SafeShopEvents {
@@ -36,7 +38,7 @@ public class SafeShopEvents {
         return !s.isEmpty() && s.is(GitanoLand.KIRKY.get());
     }
 
-    private static int kirkyCost(java.util.Optional<ItemCost> c) {
+    private static int kirkyCost(Optional<ItemCost> c) {
         return c.isPresent() && c.get().itemStack().is(GitanoLand.KIRKY.get()) ? c.get().count() : 0;
     }
 
@@ -56,11 +58,11 @@ public class SafeShopEvents {
     public static void interact(PlayerInteractEvent.EntityInteract e) {
         if (e.getLevel().isClientSide || e.getHand() != InteractionHand.MAIN_HAND) return;
         if (!(e.getTarget() instanceof AbstractVillager v) || !(e.getEntity() instanceof ServerPlayer p)) return;
-        if (p.getMainHandItem().is(ModSafe.SAFE_KEY.get())) return; // la llave la maneja SafeKeyItem
+        if (p.getMainHandItem().is(ModSafe.SAFE_KEY.get())) return; // la llave la maneja SafeKeyEvents
         int min = smallestKirkyPayout(v);
         if (min == 0) return;
-        SafeVaults.Vault vault = SafeVaults.get(e.getLevel().getServer()).vaultOfLink(SafeVaults.entityKey(v.getUUID()));
-        if (vault == null) {
+        WarehouseLinks.Link link = WarehouseLinks.get(e.getLevel().getServer()).linkOf(WarehouseLinks.entityKey(v.getUUID()));
+        if (link == null) {
             if (required()) {
                 e.setCanceled(true);
                 e.setCancellationResult(InteractionResult.SUCCESS);
@@ -68,10 +70,11 @@ public class SafeShopEvents {
             }
             return;
         }
-        if (vault.balance < min) {
+        Container chest = Warehouse.container(e.getLevel().getServer(), link.chest());
+        if (chest == null || Warehouse.balance(chest) < min) {
             e.setCanceled(true);
             e.setCancellationResult(InteractionResult.SUCCESS);
-            p.displayClientMessage(Component.translatable("gitanoland.safe.npc_no_funds", vault.ownerName), true);
+            p.displayClientMessage(Component.translatable("gitanoland.safe.npc_no_funds", link.ownerName()), true);
         }
     }
 
@@ -79,20 +82,19 @@ public class SafeShopEvents {
     public static void traded(TradeWithVillagerEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer p) || p.level().getServer() == null) return;
         AbstractVillager v = e.getAbstractVillager();
-        SafeVaults vaults = SafeVaults.get(p.level().getServer());
-        SafeVaults.Vault vault = vaults.vaultOfLink(SafeVaults.entityKey(v.getUUID()));
-        if (vault == null) return;
+        WarehouseLinks.Link link = WarehouseLinks.get(p.level().getServer()).linkOf(WarehouseLinks.entityKey(v.getUUID()));
+        Container chest = link == null ? null : Warehouse.container(p.level().getServer(), link.chest());
+        if (chest == null) return;
         MerchantOffer o = e.getMerchantOffer();
-        // lo que paga el jugador en Kirkys entra en la caja
-        vault.balance += kirkyCost(java.util.Optional.of(o.getItemCostA())) + kirkyCost(o.getItemCostB());
-        // lo que paga el aldeano sale de la caja; si no llega, se le quita al jugador lo que sobre (no se crean Kirkys)
+        // lo que paga el jugador en Kirkys entra en el cofre (si esta lleno, cae al suelo junto al aldeano)
+        int in = kirkyCost(Optional.of(o.getItemCostA())) + kirkyCost(o.getItemCostB());
+        if (in > 0) SafeEconomy.income(v, in);
+        // lo que paga el aldeano sale del cofre; si no llega, se le quita al jugador lo que sobre (no se crean Kirkys)
         if (isKirky(o.getResult())) {
             int pay = o.getResult().getCount();
-            int fromSafe = (int) Math.min(pay, vault.balance);
-            vault.balance -= fromSafe;
-            int shortfall = pay - fromSafe;
-            if (shortfall > 0) Wallet.takeKirkys(p, shortfall);
+            long fromChest = Warehouse.withdraw(chest, pay);
+            long shortfall = pay - fromChest;
+            if (shortfall > 0) Wallet.takeKirkys(p, (int) shortfall);
         }
-        vaults.dirty();
     }
 }

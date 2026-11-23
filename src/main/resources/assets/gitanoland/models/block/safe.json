@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "top": "gitanoland:block/safe_top",
-    "front": "gitanoland:block/safe_front",
-    "side": "gitanoland:block/safe_side"
-  }
-}

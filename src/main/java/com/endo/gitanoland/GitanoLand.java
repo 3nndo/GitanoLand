@@ -91,7 +91,6 @@ public class GitanoLand {
                         output.accept(KIRKY_BAG_LARGE.get());
                         output.accept(CIGARETTE.get());
                         output.accept(CIGARETTE_PACK.get());
-                        output.accept(com.endo.gitanoland.safe.ModSafe.SAFE_ITEM.get());
                         output.accept(com.endo.gitanoland.safe.ModSafe.SAFE_KEY.get());
                         output.accept(WEEDSGUY_EGG.get());
                         output.accept(AMMO_MAKER_EGG.get());
