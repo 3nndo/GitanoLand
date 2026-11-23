@@ -6,7 +6,8 @@
   "mixins": [
     "CasinoHandMixin",
     "CasinoBetRulesMixin",
-    "CasinoSettingsMixin"
+    "CasinoSettingsMixin",
+    "CasinoPayoutBagsMixin"
   ],
   "client": [
     "CinematicDelightHandsMixin",
