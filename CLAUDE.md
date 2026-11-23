@@ -245,3 +245,6 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 
 ## Chipped reforzado (1.0.17)
 - `compat/ChippedReinforced` (copia de QuarkReinforced) + `chipped_reinforced.txt`: 5494 bloques de Chipped (cubos, pilares con axis; "glass" para vidrio/hielo) reforzables con SecurityCraft; assets generados con `gen_chipped_sc.py` desde el jar de Chipped (blockstates/modelos de Chipped). Sin escaleras/losas/puertas (Chipped casi no tiene) ni alfombras/flores/antorchas. mods.toml: chipped AFTER opcional. Jar pasa de 2,2 a 7,9 MB. Server test107: 5494 de 5494 enlazados; cliente sin probar.
+
+## Optimizacion (23-11, 1.0.17)
+- Ya habia: Sodium, Iris, Lithium, FerriteCore, ModernFix, ImmediatelyFast, EntityCulling, Particle Core, Clumps. Anadidos (Modrinth, hash SHA-512 verificado): Noisium 2.3.0 y Saturn 0.1.5 (cliente + servidor: instancias, D:\GitanoLand-server, test107) y Dynamic FPS 3.11.4 (solo instancias). ScalableLux descartado (alpha). C2ME no existe para 1.21.1 NeoForge. Saturn solapa metodos con Lithium/ModernFix (warnings "overwrite conflict", se saltan, sin fallo); si da problemas, quitar Saturn. test107 arranca ("Done"); cliente sin probar.
