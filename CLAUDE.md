@@ -235,3 +235,6 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 ## Almacen en Poker, Blackjack y Duck Derby (1.0.17, sin probar en juego)
 - Mixins `CasinoPokerSafeMixin`, `CasinoBlackjackSafeMixin` (gate en `beginRound`; `begin(be)` en `serverTick`/`menuButton`) y `CasinoDerbySafeMixin` (gate en `startSolo`/`joinGroup`/`start(player,int)`; `begin` en `launchPersonal`/`startLegacy`/`personalTick`). Todos `require=0`.
 - `SafeEconomy.gate` ahora acepta SimpleContainer, List<ItemStack> o long (minimo 1 Kirky de apuesta en mesas).
+
+## Invisibilidad sin particulas (1.0.17)
+- `events/InvisibilityNoParticles`: en EntityTickEvent.Post reaplica el efecto invisibilidad con visible=false (sin particulas). Sin probar en juego.
