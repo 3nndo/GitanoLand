@@ -241,3 +241,4 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 
 ## Wither skeletons: cabezas vanilla (1.0.17)
 - `events/WitherHeadDrops` quita de los drops de WitherSkeleton los player_head de More Mobs (custom_data ts.mm.custom); la calavera sale solo por el loot vanilla. Sin probar en juego.
+- Actualizado: la cabeza de More Mobs se SUSTITUYE por la calavera vanilla (invoca al Wither); si ya hay sustitucion se quita la calavera del loot vanilla (una por muerte). Prob. aprox: 3 % del mod.

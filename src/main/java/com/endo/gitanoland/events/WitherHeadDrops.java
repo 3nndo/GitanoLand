@@ -2,6 +2,7 @@ package com.endo.gitanoland.events;
 
 import com.endo.gitanoland.GitanoLand;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -12,7 +13,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 /**
  * More Mobs pone cabezas personalizadas (player_head con ts.mm.custom) a los wither skeletons y las suelta al morir.
- * Aqui se quitan de los drops: la calavera de wither skeleton sale solo por el loot vanilla (2,5 % + 1 % por nivel de Looting).
+ * Cuando una de esas cabezas cae, se cambia por la calavera de wither skeleton vanilla (la que sirve para invocar al Wither).
  */
 @EventBusSubscriber(modid = GitanoLand.MODID)
 public class WitherHeadDrops {
@@ -25,6 +26,21 @@ public class WitherHeadDrops {
     @SubscribeEvent
     public static void drops(LivingDropsEvent e) {
         if (!(e.getEntity() instanceof WitherSkeleton)) return;
-        e.getDrops().removeIf(it -> modHead(it.getItem()));
+        boolean replaced = false;
+        for (ItemEntity it : e.getDrops()) {
+            if (modHead(it.getItem())) {
+                it.setItem(new ItemStack(Items.WITHER_SKELETON_SKULL));
+                replaced = true;
+            }
+        }
+        if (!replaced) return;
+        // una sola calavera por muerte: si ya se sustituyo la cabeza del mod, se quita la del loot vanilla
+        boolean first = true;
+        for (java.util.Iterator<ItemEntity> i = e.getDrops().iterator(); i.hasNext(); ) {
+            ItemEntity it = i.next();
+            if (!it.getItem().is(Items.WITHER_SKELETON_SKULL)) continue;
+            if (first) first = false;
+            else i.remove();
+        }
     }
 }
