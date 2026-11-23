@@ -115,6 +115,10 @@ public class GitanoLand {
         if (ModList.get().isLoaded("securitycraft") && ModList.get().isLoaded("quark")) {
             com.endo.gitanoland.compat.QuarkReinforced.init(modEventBus);
         }
+        // Idem con Chipped (cubos y pilares decorativos).
+        if (ModList.get().isLoaded("securitycraft") && ModList.get().isLoaded("chipped")) {
+            com.endo.gitanoland.compat.ChippedReinforced.init(modEventBus);
+        }
 
         // Integración opcional: la clase solo se carga si Jackpot está presente.
         if (ModList.get().isLoaded("jackpot")) {

@@ -242,3 +242,6 @@ uevos. Server test107 arranca bien. SecurityCraft: allow_breaking_non_owned_bloc
 ## Wither skeletons: cabezas vanilla (1.0.17)
 - `events/WitherHeadDrops` quita de los drops de WitherSkeleton los player_head de More Mobs (custom_data ts.mm.custom); la calavera sale solo por el loot vanilla. Sin probar en juego.
 - Actualizado: la cabeza de More Mobs se SUSTITUYE por la calavera vanilla (invoca al Wither); si ya hay sustitucion se quita la calavera del loot vanilla (una por muerte). Prob. aprox: 3 % del mod.
+
+## Chipped reforzado (1.0.17)
+- `compat/ChippedReinforced` (copia de QuarkReinforced) + `chipped_reinforced.txt`: 5494 bloques de Chipped (cubos, pilares con axis; "glass" para vidrio/hielo) reforzables con SecurityCraft; assets generados con `gen_chipped_sc.py` desde el jar de Chipped (blockstates/modelos de Chipped). Sin escaleras/losas/puertas (Chipped casi no tiene) ni alfombras/flores/antorchas. mods.toml: chipped AFTER opcional. Jar pasa de 2,2 a 7,9 MB. Server test107: 5494 de 5494 enlazados; cliente sin probar.
