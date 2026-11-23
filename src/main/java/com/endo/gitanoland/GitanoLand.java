@@ -91,6 +91,8 @@ public class GitanoLand {
                         output.accept(KIRKY_BAG_LARGE.get());
                         output.accept(CIGARETTE.get());
                         output.accept(CIGARETTE_PACK.get());
+                        output.accept(com.endo.gitanoland.safe.ModSafe.SAFE_ITEM.get());
+                        output.accept(com.endo.gitanoland.safe.ModSafe.SAFE_KEY.get());
                         output.accept(WEEDSGUY_EGG.get());
                         output.accept(AMMO_MAKER_EGG.get());
                         output.accept(GUNSMITH_EGG.get());
@@ -100,6 +102,7 @@ public class GitanoLand {
 
     public GitanoLand(IEventBus modEventBus, ModContainer container) {
         ITEMS.register(modEventBus);
+        com.endo.gitanoland.safe.ModSafe.init(modEventBus);
         TABS.register(modEventBus);
         COMPONENTS.register(modEventBus);
         com.endo.gitanoland.recipe.CopyDiscRecipe.SERIALIZERS.register(modEventBus);

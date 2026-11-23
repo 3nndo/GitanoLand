@@ -7,7 +7,11 @@
     "CasinoHandMixin",
     "CasinoBetRulesMixin",
     "CasinoSettingsMixin",
-    "CasinoPayoutBagsMixin"
+    "CasinoPayoutBagsMixin",
+    "CasinoSlotSafeMixin",
+    "CasinoPlinkoSafeMixin",
+    "CasinoRouletteSafeMixin",
+    "CasinoWheelSafeMixin"
   ],
   "client": [
     "CinematicDelightHandsMixin",

@@ -28,6 +28,19 @@ public class Config {
                     "aunque alguien intente anadir otros objetos con la Mano del Crupier. Los premios en otros objetos siguen siendo configurables.")
             .define("casinoKirkyOnly", true);
 
+    public static final ModConfigSpec.BooleanValue CASINO_REQUIRE_SAFE = B
+            .comment("MineVegas: true = una tragaperras, Plinko, ruleta o rueda de la fortuna solo arranca si esta enlazada a una Caja fuerte",
+                    "(las apuestas entran en la caja y los premios en Kirkys salen de ella). false = como antes: crean los Kirkys de la nada.")
+            .define("casinoRequireSafe", true);
+    public static final ModConfigSpec.IntValue CASINO_SAFE_RESERVE_FACTOR = B
+            .comment("MineVegas: la caja enlazada debe tener al menos (apuesta en Kirkys x este numero) para dejar jugar; es una estimacion del premio maximo.")
+            .defineInRange("casinoSafeReserveFactor", 50, 1, 100000);
+
+    public static final ModConfigSpec.BooleanValue NPC_SHOP_REQUIRE_SAFE = B
+            .comment("true = los aldeanos que pagan en Kirkys (compradores de weed, el Stoner...) solo comercian si un jugador enlazo su Caja fuerte",
+                    "a ese aldeano con la Llave (los Kirkys salen de esa caja). false = como antes: se crean de la nada.")
+            .define("npcShopRequireSafe", true);
+
     public static final ModConfigSpec.BooleanValue UNLOCK_ALL_TIERS = B
             .comment("true = los aldeanos-tienda ofrecen TODOS los tratos desde el principio.",
                     "false = hay que comprar para subir de nivel y desbloquear los siguientes.")

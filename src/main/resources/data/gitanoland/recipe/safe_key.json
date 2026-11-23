@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "gitanoland:kirky"
+    }
+  ],
+  "result": {
+    "id": "gitanoland:safe_key",
+    "count": 1
+  }
+}
