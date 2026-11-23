@@ -11,7 +11,11 @@ import net.geforcemods.securitycraft.SCContent;
 import net.geforcemods.securitycraft.api.IReinforcedBlock;
 import net.geforcemods.securitycraft.blocks.reinforced.BaseReinforcedBlock;
 import net.geforcemods.securitycraft.blocks.reinforced.ReinforcedRotatedPillarBlock;
+import net.geforcemods.securitycraft.blocks.reinforced.ReinforcedFenceBlock;
+import net.geforcemods.securitycraft.blocks.reinforced.ReinforcedGlassBlock;
+import net.geforcemods.securitycraft.blocks.reinforced.ReinforcedPaneBlock;
 import net.geforcemods.securitycraft.blocks.reinforced.ReinforcedSlabBlock;
+import net.geforcemods.securitycraft.blocks.reinforced.ReinforcedWallBlock;
 import net.geforcemods.securitycraft.blocks.reinforced.ReinforcedStairsBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -59,14 +63,21 @@ public final class QuarkReinforced {
 
     private static void add(String name, String kind) {
         Supplier<Block> quark = () -> BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("quark", name));
-        SoundType sound = name.contains("planks") ? SoundType.WOOD : SoundType.STONE;
+        SoundType sound = name.contains("planks") || name.endsWith("_fence") ? SoundType.WOOD : (name.contains("glass") ? SoundType.GLASS : SoundType.STONE);
         String id = "reinforced_quark_" + name;
         DeferredBlock<Block> b = BLOCKS.register(id, () -> {
             BlockBehaviour.Properties props = BlockBehaviour.Properties.of().strength(2.0F, Float.MAX_VALUE).sound(sound);
+            // Estos tipos necesitan el bloque de Quark ya creado: GitanoLand va DESPUES de Quark (ordering AFTER en mods.toml).
+            Block q = quark.get();
+            if (q == Blocks.AIR) q = Blocks.STONE; // bloque que este Quark no tiene: se registra igual pero sin enlazar
             return switch (kind) {
                 case "pillar" -> new ReinforcedRotatedPillarBlock(props, quark);
                 case "slab" -> new ReinforcedSlabBlock(props, quark);
                 case "stairs" -> new ReinforcedStairsBlock(props, quark);
+                case "wall" -> new ReinforcedWallBlock(props, q);
+                case "fence" -> new ReinforcedFenceBlock(props, q);
+                case "glass" -> new ReinforcedGlassBlock(props.noOcclusion(), q);
+                case "pane" -> new ReinforcedPaneBlock(props.noOcclusion(), q);
                 default -> new BaseReinforcedBlock(props, quark);
             };
         });
